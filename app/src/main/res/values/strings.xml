@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ProductManagment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string-array name="typeOfPayment">
+        <item>Наличные</item>
+        <item>Дебетовая карта</item>
+        <item>Кредитная карта</item>
+        <item>Мобильный платеж</item>
+        <item>Интернет оплата</item>
+    </string-array>
+</resources>
