@@ -11,8 +11,10 @@ import android.view.MenuItem;
 import com.example.productmanagment.Injection;
 import com.example.productmanagment.R;
 
-public class AddExpenseActivity extends AppCompatActivity implements AddExpenseFragment.OnFragmentInteractionListener{
-    public static int REQUEST_ADD_EXPENSE = 1;
+public class AddExpenseActivity extends AppCompatActivity{
+    public static final int REQUEST_ADD_EXPENSE = 1;
+    public static final int REQUEST_PLACE_PICKER = 2;
+
     AddExpensePresenter presenter;
     AddExpenseFragment fragment;
     @Override
@@ -23,11 +25,7 @@ public class AddExpenseActivity extends AppCompatActivity implements AddExpenseF
         fragment = AddExpenseFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.addExpenseContent, fragment).commit();
-        presenter = new AddExpensePresenter(Injection.provideExpensesRepository(this), fragment, Injection.provideSchedulerProvider());
+        presenter = new AddExpensePresenter(Injection.provideExpensesRepository(this), fragment, Injection.provideSchedulerProvider(), getApplicationContext());
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }
