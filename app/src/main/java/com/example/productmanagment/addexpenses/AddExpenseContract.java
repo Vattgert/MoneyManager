@@ -13,12 +13,15 @@ public interface AddExpenseContract{
     interface Presenter extends BasePresenter{
         void showEmptyExpenseError();
         void showExpenses();
+        void choosePlace();
         void result(int requestCode, int resultCode, Intent data);
+        void saveExpense(double cost, String note, String marks, String receiver, String date, String time,
+                         String typeOfPayment, String place, String addition, String category);
     }
     interface View extends BaseView<Presenter>{
-        void saveExpense(double cost, String note, String marks, String category, String receiver, String date,
-                         String typeOfPayment, String place, String addition);
         void setChosenCategory(String title);
         void showExpenses();
+        void showChoosePlacePicker();
+        void setChosenPlace(String place);
     }
 }

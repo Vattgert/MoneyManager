@@ -18,12 +18,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.productmanagment.R;
 import com.example.productmanagment.categories.CategoryActivity;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,19 +41,18 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddExpenseFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link AddExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class AddExpenseFragment extends Fragment implements AddExpenseContract.View {
-    // TODO: Rename parameter arguments, choose names that match
-
-    private OnFragmentInteractionListener mListener;
     private AddExpenseContract.Presenter presenter;
     private EditText costTextView, noteEditText, categoryEditText, receiverEditText, dateEditText, timeEditText,
                      placeTextView, additionTextView;
+    private ImageButton choosePlaceButton, makeAdditionButton;
     private Spinner typeOfPaymentSpinner;
+
+    private TextView placeNameTextView;
 
     public AddExpenseFragment() {
         // Required empty public constructor
@@ -71,6 +74,8 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         super.onCreate(savedInstanceState);
     }
 
+    //TODO: Доделать чипсы (метки)
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,10 +91,16 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         categoryEditText = view.findViewById(R.id.categoryAddEditText);
         typeOfPaymentSpinner = view.findViewById(R.id.typeOfPaymentSpinner);
 
+        choosePlaceButton = view.findViewById(R.id.choosePlaceButton);
+
+        placeNameTextView = view.findViewById(R.id.placeTextView);
+
         //dateEditText.setOnFocusChangeListener(editTextFocus);
         dateEditText.setOnClickListener(editTextClick);
         categoryEditText.setOnClickListener(editTextClick);
         timeEditText.setOnClickListener(editTextClick);
+
+        choosePlaceButton.setOnClickListener(buttonClickListener);
         return view;
     }
 
@@ -103,7 +114,7 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_add:
-                showExpenses();
+                getDataAndSave();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -111,38 +122,9 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         return true;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     @Override
     public void setPresenter(AddExpenseContract.Presenter presenter) {
         this.presenter = presenter;
-    }
-
-    @Override
-    public void saveExpense(double cost, String note, String marks, String category, String receiver, String date, String typeOfPayment, String place, String addition) {
-
     }
 
     @Override
@@ -155,6 +137,26 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();
     }
+
+    @Override
+    public void showChoosePlacePicker() {
+
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        try {
+            startActivityForResult(builder.build(this.getActivity()), AddExpenseActivity.REQUEST_PLACE_PICKER);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.wtf("google error", e.getMessage());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.wtf("google error", e.getMessage());
+        }
+    }
+
+    @Override
+    public void setChosenPlace(String place) {
+        placeNameTextView.setText(place);
+    }
+
 
     private DatePickerDialog getDatePickerDialog(){
         Calendar calendar = GregorianCalendar.getInstance();
@@ -204,6 +206,17 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         }
     };
 
+    View.OnClickListener buttonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.choosePlaceButton:
+                    presenter.choosePlace();
+                    break;
+            }
+        }
+    };
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         presenter.result(requestCode, resultCode, data);
@@ -223,8 +236,18 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         calendar.set(Calendar.MINUTE, minute);
         return calendar;
     }
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+    private void getDataAndSave(){
+        double cost = 0.0; /*Double.valueOf(costTextView.getText().toString());*/
+        String note = noteEditText.getText().toString();
+        String category = categoryEditText.getText().toString();
+        String receiver = receiverEditText.getText().toString();
+        String place = ""; /*placeTextView.getText().toString();*/
+        String date = dateEditText.getText().toString();
+        String time = timeEditText.getText().toString();
+        String typeOfPayment = typeOfPaymentSpinner.getSelectedItem().toString();
+        String addition = "";
+        String marks = "";
+        presenter.saveExpense(cost, note, marks, receiver, date, time, typeOfPayment, place, addition, category);
     }
 }
