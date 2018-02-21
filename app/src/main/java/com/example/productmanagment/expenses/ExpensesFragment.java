@@ -18,15 +18,12 @@ import android.widget.TextView;
 import com.example.productmanagment.R;
 import com.example.productmanagment.addexpenses.AddExpenseActivity;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.expensedetailandedit.ExpenseDetailAndEditActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ExpensesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ExpensesFragment extends Fragment implements ExpensesContract.View {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,15 +31,8 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     private ExpensesAdapter expenseAdapter;
 
     public ExpensesFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @return A new instance of fragment ExpensesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ExpensesFragment newInstance() {
         ExpensesFragment fragment = new ExpensesFragment();
         return fragment;
@@ -134,10 +124,13 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     ExpensesItemListener itemListener = new ExpensesItemListener() {
         @Override
         public void onExpenseClick(Expense clicked) {
-
+            Intent intent = new Intent(getContext(), ExpenseDetailAndEditActivity.class);
+            intent.putExtra("expenseId", clicked.getId());
+            startActivity(intent);
         }
     };
 
+    //TODO: Не отображать текстовые поля если нет информации
     private static class ExpensesAdapter extends RecyclerView.Adapter<ExpensesFragment.ExpensesAdapter.ViewHolder>{
         private List<Expense> expenseList;
         ExpensesFragment.ExpensesItemListener itemListener;
@@ -183,6 +176,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 expenseTextView = view.findViewById(R.id.expenseTextView);
                 receiverTextView = view.findViewById(R.id.receiverTextView);
                 dateTextView = view.findViewById(R.id.dateTextView);
+                view.setOnClickListener(__ -> itemListener.onExpenseClick(expense));
             }
 
             public void bind(Expense expense){
