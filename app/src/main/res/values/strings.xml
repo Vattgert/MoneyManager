@@ -12,4 +12,5 @@
         <item>Мобильный платеж</item>
         <item>Интернет оплата</item>
     </string-array>
+    <string name="title_activity_place_choose">Map</string>
 </resources>
