@@ -53,7 +53,7 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
 
     @Override
     public void unsubscribe() {
-
+        compositeDisposable.clear();
     }
 
 

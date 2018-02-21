@@ -27,10 +27,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".addexpenses.AddExpenseActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".expensedetailandedit.ExpenseDetailAndEditActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
