@@ -15,4 +15,7 @@ import io.reactivex.Flowable;
 public interface ExpensesDataSource {
     Flowable<List<Expense>> getExpenses();
     void saveExpense(@NonNull Expense expense);
+    void deleteExpense(@NonNull String expenseId);
+    Flowable<Expense> getExpense(@NonNull String expenseId);
+    void updateExpense(@NonNull String expenseId, Expense expense);
 }

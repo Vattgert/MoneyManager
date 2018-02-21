@@ -16,35 +16,40 @@ public class Expense {
     private String note;
     private String receiver;
     private String date;
+    private String time;
     private String typeOfPayment;
     private String place;
     private String addition;
 
     public Expense(int id, double cost, @Nullable String marks, @Nullable String note,
-                   @Nullable String receiver, @Nullable String date, @Nullable String typeOfPayment,
-                   @Nullable String place, @Nullable String addition) {
+                   @Nullable String receiver, @Nullable String date, @Nullable  String time, @Nullable String typeOfPayment,
+                   @Nullable String place, @Nullable String addition, String category) {
         this.id = id;
         this.cost = cost;
         this.marks = marks;
         this.note = note;
         this.receiver = receiver;
         this.date = date;
+        this.time = time;
         this.typeOfPayment = typeOfPayment;
         this.place = place;
         this.addition = addition;
+        this.category = category;
     }
 
-    public Expense(double cost, @Nullable String note, @Nullable String marks, @Nullable String category,
-                   @Nullable String receiver, @Nullable String date, @Nullable String typeOfPayment,
-                   @Nullable String place, @Nullable String addition) {
+    public Expense(double cost, @Nullable String note, @Nullable String marks,
+                   @Nullable String receiver, @Nullable String date, String time, @Nullable String typeOfPayment,
+                   @Nullable String place, @Nullable String addition, @Nullable String category) {
         this.cost = cost;
         this.marks = marks;
         this.note = note;
         this.receiver = receiver;
         this.date = date;
+        this.time = time;
         this.typeOfPayment = typeOfPayment;
         this.place = place;
         this.addition = addition;
+        this.category = category;
     }
 
     public String getCategory() {
@@ -71,6 +76,14 @@ public class Expense {
 
     public String getDate() {
         return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getTypeOfPayment() {

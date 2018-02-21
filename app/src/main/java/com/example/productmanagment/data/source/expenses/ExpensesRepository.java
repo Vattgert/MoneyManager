@@ -43,4 +43,19 @@ public class ExpensesRepository implements ExpensesDataSource {
     public void saveExpense(@NonNull Expense expense) {
         localExpenseDataSource.saveExpense(expense);
     }
+
+    @Override
+    public void deleteExpense(@NonNull String expenseId) {
+        localExpenseDataSource.deleteExpense(expenseId);
+    }
+
+    @Override
+    public Flowable<Expense> getExpense(@NonNull String expenseId) {
+        return localExpenseDataSource.getExpense(expenseId);
+    }
+
+    @Override
+    public void updateExpense(@NonNull String expenseId, Expense expense) {
+        localExpenseDataSource.updateExpense(expenseId, expense);
+    }
 }

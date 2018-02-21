@@ -16,6 +16,7 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_NAME_CATEGORY = "category";
         public static final String COLUMN_NAME_RECEIVER = "receiver";
         public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_TIME = "time";
         public static final String COLUMN_NAME_TYPE_OF_PAYMENT = "typeOfPayment";
         public static final String COLUMN_NAME_PLACE = "place";
         public static final String COLUMN_ADDITION = "addition";
