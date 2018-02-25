@@ -32,6 +32,9 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
     private ArrayAdapter<CharSequence> spinnerAdapter;
 
     // TODO: Rename and change types of parameters
+
+    //TODO: Добавить диалог на подтверждение выхода без сохранения при нажатии на back
+
     private String mParam1;
 
     public ExpenseDetailAndEditFragment() {
