@@ -1,8 +1,11 @@
 package com.example.productmanagment.expensedetailandedit;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.example.productmanagment.utils.schedulers.SchedulerProvider;
@@ -44,10 +47,10 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
             view.showNoExpense();
             return;
         }
-        Disposable disposable = repository.getExpense(expenseId)
+        Disposable disposable = repository.getExpenseById(expenseId)
                 .subscribeOn(provider.computation())
                 .observeOn(provider.ui())
-                .subscribe(this::showExpense, throwable -> {});
+                .subscribe(this::showExpense, throwable -> {Log.wtf("tag", throwable.getMessage()); });
         compositeDisposable.add(disposable);
     }
 
@@ -58,8 +61,8 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
 
 
     @Override
-    public void editExpense(double cost, String note, String marks, String receiver, String date, String time, String typeOfPayment, String place, String addition, String category) {
-        Expense expense = new Expense(cost, note, marks, receiver, date, time, typeOfPayment, place, addition, category);
+    public void editExpense(double cost, Category category, ExpenseInformation information) {
+        Expense expense = new Expense(cost, category, information);
         repository.updateExpense(expenseId, expense);
         view.finish();
     }
@@ -71,11 +74,12 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
     }
 
     private void showExpense(@NonNull Expense expense){
+        Log.wtf("sqlite", "lol");
         view.showCost(expense.getCost());
-        view.showNote(expense.getNote());
-        view.showReceiver(expense.getReceiver());
-        view.showDate(expense.getDate());
-        view.showTime(expense.getTime());
-        view.showCategory(expense.getCategory());
+        view.showNote(expense.getExpenseInformation().getNote());
+        view.showReceiver(expense.getExpenseInformation().getReceiver());
+        view.showDate(expense.getExpenseInformation().getDate());
+        view.showTime(expense.getExpenseInformation().getTime());
+        view.showCategory(expense.getCategory().getName());
     }
 }

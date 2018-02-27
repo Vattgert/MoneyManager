@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.data.models.Category;
+import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.expenses.ExpensesActivity;
 
 /**
@@ -183,7 +185,8 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
     private void editExpense(){
         double cost = 100.0;
         String note = noteEditText.getText().toString();
-        String category = categoryEditText.getText().toString();
+        //TODO: Method in local datasource to get category obj by name
+        Category category = null;
         String receiver = receiverEditText.getText().toString();
         String place = ""; /*placeTextView.getText().toString();*/
         String date = dateEditText.getText().toString();
@@ -191,7 +194,8 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
         String typeOfPayment = typeOfPaymentSpinner.getSelectedItem().toString();
         String addition = "";
         String marks = "";
-        presenter.editExpense(cost, note, marks, receiver, date, time, typeOfPayment, place, addition,
-                category);
+        ExpenseInformation information = new ExpenseInformation(note, marks, receiver, date, time,
+                typeOfPayment, place, addition);
+        presenter.editExpense(cost,  category, information);
     }
 }
