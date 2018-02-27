@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ProductManagment.iml" filepath="$PROJECT_DIR$/ProductManagment.iml" />
+      <module fileurl="file://D:\AndroidProjects\Tsiupa-Home-Finans-manager\ProductManagment.iml" filepath="D:\AndroidProjects\Tsiupa-Home-Finans-manager\ProductManagment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tsiupa-Home-Finans-manager.iml" filepath="$PROJECT_DIR$/Tsiupa-Home-Finans-manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
