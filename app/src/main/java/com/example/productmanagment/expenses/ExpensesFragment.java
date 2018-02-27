@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.productmanagment.R;
 import com.example.productmanagment.addexpenses.AddExpenseActivity;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.expensedetailandedit.ExpenseDetailAndEditActivity;
 
 import java.util.ArrayList;
@@ -181,12 +182,13 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
 
             public void bind(Expense expense){
                 this.expense = expense;
-                categoryNameTextView.setText(expense.getCategory());
-                noteTextView.setText(expense.getNote());
-                placeTextView.setText(expense.getPlace());
-                payTypeTextView.setText(expense.getTypeOfPayment());
+                ExpenseInformation information = expense.getExpenseInformation();
+                categoryNameTextView.setText(expense.getCategory().getName());
+                noteTextView.setText(information.getNote());
+                placeTextView.setText(information.getPlace());
+                payTypeTextView.setText(information.getTypeOfPayment());
                 expenseTextView.setText(String.valueOf(expense.getCost()));
-                dateTextView.setText(expense.getDate());
+                dateTextView.setText(information.getDate());
             }
         }
     }
