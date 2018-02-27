@@ -9,7 +9,7 @@ public class ExpensePersistenceContract {
 
     public class ExpenseEntry{
         public static final String TABLE_NAME = "expense";
-        public static final String COLUMN_NAME_ID = "id";
+        public static final String COLUMN_NAME_ID = "id_expense";
         public static final String COLUMN_NAME_COST = "cost";
         public static final String COLUMN_NOTE = "note";
         public static final String COLUMN_NAME_MARKS = "marks";

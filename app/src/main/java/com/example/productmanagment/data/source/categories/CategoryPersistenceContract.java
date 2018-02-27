@@ -20,7 +20,7 @@ public class CategoryPersistenceContract {
     public abstract class SubcategoryEntry implements BaseColumns {
         public static final String TABLE_NAME = "subcategory";
         public static final String COLUMN_CATEGORY_ID = "category_id";
-        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_ID = "id_subcategory";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_IS_FAVOURITE = "isFavourite";
     }

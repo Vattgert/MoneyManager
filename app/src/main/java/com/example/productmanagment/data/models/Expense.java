@@ -10,50 +10,22 @@ import io.reactivex.annotations.Nullable;
 
 public class Expense {
     private int id;
-    private String category;
     private double cost;
-    private String marks;
-    private String note;
-    private String receiver;
-    private String date;
-    private String time;
-    private String typeOfPayment;
-    private String place;
-    private String addition;
+    private Category category;
+    private ExpenseInformation expenseInformation;
 
-    public Expense(int id, double cost, @Nullable String marks, @Nullable String note,
-                   @Nullable String receiver, @Nullable String date, @Nullable  String time, @Nullable String typeOfPayment,
-                   @Nullable String place, @Nullable String addition, String category) {
+
+    public Expense(int id, double cost, Category category, ExpenseInformation expenseInformation) {
         this.id = id;
         this.cost = cost;
-        this.marks = marks;
-        this.note = note;
-        this.receiver = receiver;
-        this.date = date;
-        this.time = time;
-        this.typeOfPayment = typeOfPayment;
-        this.place = place;
-        this.addition = addition;
         this.category = category;
+        this.expenseInformation = expenseInformation;
     }
 
-    public Expense(double cost, @Nullable String note, @Nullable String marks,
-                   @Nullable String receiver, @Nullable String date, String time, @Nullable String typeOfPayment,
-                   @Nullable String place, @Nullable String addition, @Nullable String category) {
+    public Expense(double cost, Category category, ExpenseInformation expenseInformation) {
         this.cost = cost;
-        this.marks = marks;
-        this.note = note;
-        this.receiver = receiver;
-        this.date = date;
-        this.time = time;
-        this.typeOfPayment = typeOfPayment;
-        this.place = place;
-        this.addition = addition;
         this.category = category;
-    }
-
-    public String getCategory() {
-        return category;
+        this.expenseInformation = expenseInformation;
     }
 
     public int getId() { return id; }
@@ -62,77 +34,23 @@ public class Expense {
         return cost;
     }
 
-    public String getMarks() {
-        return marks;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getTypeOfPayment() {
-        return typeOfPayment;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public String getAddition() {
-        return addition;
-    }
-
-    public void setId(int id) { this.id = id; }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public void setCost(double cost) {
         this.cost = cost;
     }
 
-    public void setMarks(String marks) {
-        this.marks = marks;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public ExpenseInformation getExpenseInformation() {
+        return expenseInformation;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setTypeOfPayment(String typeOfPayment) {
-        this.typeOfPayment = typeOfPayment;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    public void setAddition(String addition) {
-        this.addition = addition;
+    public void setExpenseInformation(ExpenseInformation expenseInformation) {
+        this.expenseInformation = expenseInformation;
     }
 }

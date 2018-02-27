@@ -8,7 +8,16 @@ public class Subcategory extends Category{
     private int categoryId;
     private int isFavourite;
 
-    public Subcategory(int id,String name, String icon, int categoryId, int isFavourite)  {
+    public Subcategory(int id, String name) {
+        super(id, name);
+    }
+
+    public Subcategory(int id, String name, int categoryId) {
+        super(id, name);
+        this.categoryId = categoryId;
+    }
+
+    public Subcategory(int id, String name, String icon, int categoryId, int isFavourite)  {
         super(id, name, icon);
         this.categoryId = categoryId;
         this.isFavourite = isFavourite;

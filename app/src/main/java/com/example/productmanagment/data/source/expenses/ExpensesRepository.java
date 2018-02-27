@@ -50,8 +50,8 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
-    public Flowable<Expense> getExpense(@NonNull String expenseId) {
-        return localExpenseDataSource.getExpense(expenseId);
+    public Flowable<Expense> getExpenseById(@NonNull String expenseId) {
+        return localExpenseDataSource.getExpenseById(expenseId);
     }
 
     @Override
