@@ -103,6 +103,7 @@ public class SubcategoryFragment extends Fragment implements SubcategoriesContra
         @Override
         public void onSubcategoryClick(Subcategory clicked) {
             Intent intent = new Intent();
+            intent.putExtra("subcategoryId", clicked.getId());
             intent.putExtra("subcategoryTitle", clicked.getName());
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
