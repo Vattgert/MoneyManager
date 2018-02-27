@@ -38,7 +38,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_place_key" />
 
-        <activity android:name=".plannedpayment.PlannedPaymentActivity"></activity>
+        <activity android:name=".plannedpayment.PlannedPaymentActivity" />
+        <activity android:name=".addplannedpayment.AddPlannedPaymentActivity"></activity>
     </application>
 
 </manifest>

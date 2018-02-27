@@ -25,6 +25,9 @@ import android.widget.TimePicker;
 
 import com.example.productmanagment.R;
 import com.example.productmanagment.categories.CategoryActivity;
+import com.example.productmanagment.data.models.Category;
+import com.example.productmanagment.data.models.ExpenseInformation;
+import com.example.productmanagment.data.models.Subcategory;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -237,10 +240,11 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         return calendar;
     }
 
+
     private void getDataAndSave(){
         double cost = 0.0; /*Double.valueOf(costTextView.getText().toString());*/
         String note = noteEditText.getText().toString();
-        String category = categoryEditText.getText().toString();
+        Category category = presenter.getChosenCategory();
         String receiver = receiverEditText.getText().toString();
         String place = ""; /*placeTextView.getText().toString();*/
         String date = dateEditText.getText().toString();
@@ -248,6 +252,7 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         String typeOfPayment = typeOfPaymentSpinner.getSelectedItem().toString();
         String addition = "";
         String marks = "";
-        presenter.saveExpense(cost, note, marks, receiver, date, time, typeOfPayment, place, addition, category);
+        ExpenseInformation information = new ExpenseInformation(note, marks, receiver, date, time, typeOfPayment, place, addition);
+        presenter.saveExpense(cost, category, information);
     }
 }
