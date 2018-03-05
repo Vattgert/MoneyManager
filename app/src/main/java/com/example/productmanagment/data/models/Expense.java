@@ -11,7 +11,9 @@ import io.reactivex.annotations.Nullable;
 public class Expense {
     private int id;
     private double cost;
+    private int plannedPaymentId = -1;
     private Category category;
+    private int accountId = -1;
     private ExpenseInformation expenseInformation;
 
 
@@ -26,6 +28,13 @@ public class Expense {
         this.cost = cost;
         this.category = category;
         this.expenseInformation = expenseInformation;
+    }
+
+    public Expense(double cost, int plannedPaymentId, Category category, ExpenseInformation expenseInformation) {
+        this.cost = cost;
+        this.category = category;
+        this.expenseInformation = expenseInformation;
+        this.plannedPaymentId = plannedPaymentId;
     }
 
     public int getId() { return id; }
@@ -52,5 +61,21 @@ public class Expense {
 
     public void setExpenseInformation(ExpenseInformation expenseInformation) {
         this.expenseInformation = expenseInformation;
+    }
+
+    public int getPlannedPaymentId() {
+        return plannedPaymentId;
+    }
+
+    public void setPlannedPaymentId(int plannedPaymentId) {
+        this.plannedPaymentId = plannedPaymentId;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }

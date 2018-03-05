@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
 
 import java.util.ArrayList;
@@ -37,6 +38,11 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<Expense>> getExpenses() {
         return localExpenseDataSource.getExpenses();
+    }
+
+    @Override
+    public Flowable<List<PlannedPayment>> getPlannedPayments() {
+        return localExpenseDataSource.getPlannedPayments();
     }
 
     @Override

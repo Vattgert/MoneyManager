@@ -3,6 +3,7 @@ package com.example.productmanagment.data.source.expenses;
 import android.support.annotation.NonNull;
 
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.PlannedPayment;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface ExpensesDataSource {
     void deleteExpense(@NonNull String expenseId);
     Flowable<Expense> getExpenseById(@NonNull String expenseId);
     void updateExpense(@NonNull String expenseId, Expense expense);
+
+    Flowable<List<PlannedPayment>> getPlannedPayments();
 }

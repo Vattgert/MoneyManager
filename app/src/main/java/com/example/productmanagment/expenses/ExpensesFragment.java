@@ -185,6 +185,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 ExpenseInformation information = expense.getExpenseInformation();
                 categoryNameTextView.setText(expense.getCategory().getName());
                 noteTextView.setText(information.getNote());
+                receiverTextView.setText(information.getReceiver());
                 placeTextView.setText(information.getPlace());
                 payTypeTextView.setText(information.getTypeOfPayment());
                 expenseTextView.setText(String.valueOf(expense.getCost()));

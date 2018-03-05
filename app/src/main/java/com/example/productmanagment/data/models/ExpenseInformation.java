@@ -5,6 +5,7 @@ package com.example.productmanagment.data.models;
  */
 
 public class ExpenseInformation {
+    private int id;
     private String marks;
     private String note;
     private String receiver;
@@ -14,8 +15,9 @@ public class ExpenseInformation {
     private String place;
     private String addition;
 
-    public ExpenseInformation(String note, String marks, String receiver, String date, String time,
+    public ExpenseInformation(int id, String note, String marks, String receiver, String date, String time,
                               String typeOfPayment, String place, String addition) {
+        this.id = id;
         this.marks = marks;
         this.note = note;
         this.receiver = receiver;
@@ -24,6 +26,39 @@ public class ExpenseInformation {
         this.typeOfPayment = typeOfPayment;
         this.place = place;
         this.addition = addition;
+    }
+
+    public ExpenseInformation(String note, String marks, String receiver, String date, String time,
+                              String typeOfPayment, String place, String addition) {
+        this.id = id;
+        this.marks = marks;
+        this.note = note;
+        this.receiver = receiver;
+        this.date = date;
+        this.time = time;
+        this.typeOfPayment = typeOfPayment;
+        this.place = place;
+        this.addition = addition;
+    }
+
+    public ExpenseInformation(String note, String marks, String receiver, String date, String time,
+                              String typeOfPayment, String place, String addition, int plannedPaymentId) {
+        this.marks = marks;
+        this.note = note;
+        this.receiver = receiver;
+        this.date = date;
+        this.time = time;
+        this.typeOfPayment = typeOfPayment;
+        this.place = place;
+        this.addition = addition;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getMarks() {

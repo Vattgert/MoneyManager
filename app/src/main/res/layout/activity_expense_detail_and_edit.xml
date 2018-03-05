@@ -8,5 +8,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/detailExpenseContent" />
+        android:id="@+id/detailExpenseContent"
+        android:background="@android:color/white"/>
 </android.support.constraint.ConstraintLayout>

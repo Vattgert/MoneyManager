@@ -12,5 +12,11 @@
         <item>Мобильный платеж</item>
         <item>Интернет оплата</item>
     </string-array>
+    <string-array name="planned_payment_timing">
+        <item>Никогда</item>
+        <item>За день до</item>
+        <item>За 3 дня до</item>
+        <item>За неделю до</item>
+    </string-array>
     <string name="title_activity_place_choose">Map</string>
 </resources>
