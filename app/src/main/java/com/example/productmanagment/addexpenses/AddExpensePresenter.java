@@ -68,7 +68,7 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
 
     @Override
     public void result(int requestCode, int resultCode, Intent data) {
-        if( Activity.RESULT_OK == resultCode){
+        if( resultCode == Activity.RESULT_OK){
             switch (requestCode){
                 case CategoryActivity.GET_CATEGORY_REQUEST:
                     view.setChosenCategory(data.getStringExtra("subcategoryTitle"));
@@ -80,6 +80,9 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
                     view.setChosenPlace(String.format("%s", place.getAddress()));
                     break;
             }
+
+        }
+        else{
 
         }
     }

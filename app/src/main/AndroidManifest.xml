@@ -17,8 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".categories.CategoryActivity" />
-        <activity android:name=".expenses.ExpensesActivity">
-        </activity>
+        <activity android:name=".expenses.ExpensesActivity"></activity>
         <activity android:name=".addexpenses.AddExpenseActivity" />
         <activity android:name=".expensedetailandedit.ExpenseDetailAndEditActivity" />
         <!--
@@ -33,15 +32,17 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_place_key" />
 
-        <activity android:name=".plannedpayment.PlannedPaymentActivity">
-
-        </activity>
+        <activity android:name=".plannedpayment.PlannedPaymentActivity"></activity>
         <activity android:name=".addplannedpayment.AddPlannedPaymentActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
