@@ -1,8 +1,10 @@
 package com.example.productmanagment.data.source.expenses;
 
+import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.example.productmanagment.data.models.Category;
+import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
@@ -43,6 +45,26 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<PlannedPayment>> getPlannedPayments() {
         return localExpenseDataSource.getPlannedPayments();
+    }
+
+    @Override
+    public Flowable<List<Debt>> getDebts() {
+        return localExpenseDataSource.getDebts();
+    }
+
+    @Override
+    public Flowable<List<Expense>> getDebtPayments(int debtId) {
+        return localExpenseDataSource.getDebtPayments(debtId);
+    }
+
+    @Override
+    public void saveDebtPayment(@NonNull Expense expense) {
+        localExpenseDataSource.saveDebtPayment(expense);
+    }
+
+    @Override
+    public void saveDebt(@NonNull Debt debt) {
+        localExpenseDataSource.saveDebt(debt);
     }
 
     @Override

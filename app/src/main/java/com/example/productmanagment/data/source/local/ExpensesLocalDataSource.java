@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.productmanagment.data.models.Category;
+import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.PlannedPayment;
@@ -19,6 +20,8 @@ import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +42,8 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     private Function<Cursor, Expense> expenseMapperFunction;
     private Function<Cursor, PlannedPayment> plannedPaymentMapperFunction;
+    private Function<Cursor, Debt> debtMapperFunction;
+    private Function<Cursor, Debt.DebtPart> debtPartMapperFunction;
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
@@ -46,6 +51,8 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         databaseHelper = sqlBrite.wrapDatabaseHelper(helper, schedulerProvider.io());
         expenseMapperFunction = this::getExpense;
         plannedPaymentMapperFunction = this::getPlannedPayment;
+        debtMapperFunction = this::getDebt;
+        debtPartMapperFunction = this::getDebtPart;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -82,6 +89,26 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         int categoryId = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_CATEGORY_ID));
         Subcategory subcategory = getCategory(c);
         return new PlannedPayment(cost, subcategory, null, title, startDate, endDate, frequency, timing);
+    }
+
+    private Debt getDebt(@NonNull Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_ID));
+        String sum = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_SUM));
+        String borrowDate = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_BORROW_DATE));
+        String repayDate = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_REPAY_DATE));
+        String remain = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_REMAIN));
+        String borrower = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER));
+        String description = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION));
+        int debtType = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_TYPE));
+        return new Debt(id, sum, remain, description, borrowDate, repayDate, borrower, debtType, 0);
+    }
+
+    private Debt.DebtPart getDebtPart(@NonNull Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_ID));
+        int idDebt = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_DEBT));
+        int sum = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_PART_SUM));
+        String date = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_PART_DATE));
+        return new Debt.DebtPart(id, idDebt, sum, date);
     }
 
     private ExpenseInformation getExpenseInformation(Cursor c){
@@ -129,7 +156,15 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         ContentValues expenseValues = new ContentValues();
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST, expense.getCost());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY, expense.getCategory().getId());
-        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_EXPENSE_INFORMATION, expense.getExpenseInformation().getId());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NOTE, expense.getExpenseInformation().getNote());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_MARKS, expense.getExpenseInformation().getMarks());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_RECEIVER, expense.getExpenseInformation().getReceiver());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_TYPE_OF_PAYMENT, expense.getExpenseInformation().getTypeOfPayment());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_DATE, expense.getExpenseInformation().getDate());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_TIME, expense.getExpenseInformation().getTime());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_PLACE, expense.getExpenseInformation().getPlace());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDITION, expense.getExpenseInformation().getAddition());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_DEBT, expense.getDebtId());
 
         databaseHelper.insert(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, expenseValues, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -183,6 +218,32 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                 CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID};
     }
 
+    private String[] getPlannedPaymentProjection(){
+        return new String[]{ ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_ID,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_COST,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_TITLE,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_START_DATE,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_END_DATE,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_FREQUENCY,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_TIMING,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_DAY,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_CATEGORY_ID,
+                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_ACCOUNT};
+    }
+
+    private String[] getDebtProjection(){
+        return new String[]{
+                ExpensePersistenceContract.DebtEntry.COLUMN_ID,
+                ExpensePersistenceContract.DebtEntry.COLUMN_SUM,
+                ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION,
+                ExpensePersistenceContract.DebtEntry.COLUMN_BORROW_DATE,
+                ExpensePersistenceContract.DebtEntry.COLUMN_REPAY_DATE,
+                ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER,
+                ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_TYPE,
+                ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_REMAIN
+        };
+    }
+
     private ArrayList<String> getExpenseTableList(){
         return new ArrayList<>(Arrays.asList(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME
                 ,CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME));
@@ -229,18 +290,41 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                 .toFlowable(BackpressureStrategy.BUFFER);
     }
 
-    private String[] getPlannedPaymentProjection(){
-        return new String[]{ ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_ID,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_COST,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_TITLE,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_START_DATE,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_END_DATE,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_FREQUENCY,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_TIMING,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_DAY,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_CATEGORY_ID,
-                ExpensePersistenceContract.PlannedPaymentEntry.COLUMN_ACCOUNT};
+    @Override
+    public Flowable<List<Debt>> getDebts() {
+        String sql = String.format("SELECT %s FROM %s",
+                TextUtils.join(",", getDebtProjection()),
+                ExpensePersistenceContract.DebtEntry.TABLE_NAME);
+        return databaseHelper.createQuery(ExpensePersistenceContract.DebtEntry.TABLE_NAME, sql)
+                .mapToList(debtMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
     }
 
+    @Override
+    public Flowable<List<Expense>> getDebtPayments(int debtId){
+        String sql = String.format("SELECT %s FROM expense WHERE %s LIKE ?",
+                TextUtils.join(",", getExpenseProjection()),
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_DEBT);
+        return databaseHelper.createQuery
+                (ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, sql, String.valueOf(debtId))
+                .mapToList(expenseMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
 
+    @Override
+    public void saveDebtPayment(@NonNull Expense expense) {
+        saveExpense(expense);
+    }
+
+    @Override
+    public void saveDebt(@NonNull Debt debt) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_SUM, debt.getSum());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_TYPE, debt.getDebtType());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION, debt.getDescription());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROW_DATE, debt.getBorrowDate());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_REPAY_DATE, debt.getRepayDate());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER, debt.getBorrower());
+        databaseHelper.insert(ExpensePersistenceContract.DebtEntry.TABLE_NAME, contentValues);
+    }
 }

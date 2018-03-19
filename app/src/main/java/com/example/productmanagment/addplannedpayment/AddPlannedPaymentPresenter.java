@@ -4,6 +4,8 @@ import android.content.Intent;
 
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.PlannedPayment;
+import com.example.productmanagment.data.source.expenses.ExpensesRepository;
+import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 /**
  * Created by Ivan on 26.02.2018.
@@ -11,9 +13,13 @@ import com.example.productmanagment.data.models.PlannedPayment;
 
 public class AddPlannedPaymentPresenter implements AddPlannedPaymentContract.Presenter {
     AddPlannedPaymentContract.View view;
+    ExpensesRepository repository;
+    BaseSchedulerProvider provider;
 
-    public AddPlannedPaymentPresenter(AddPlannedPaymentContract.View view) {
+    public AddPlannedPaymentPresenter(ExpensesRepository repository, BaseSchedulerProvider provider, AddPlannedPaymentContract.View view) {
         this.view = view;
+        this.repository = repository;
+        this.provider = provider;
         this.view.setPresenter(this);
     }
 
@@ -40,6 +46,11 @@ public class AddPlannedPaymentPresenter implements AddPlannedPaymentContract.Pre
     @Override
     public void chooseFrequency() {
         view.showFrequencyDialog();
+    }
+
+    @Override
+    public void getFrequency() {
+        view.populateRepeats();
     }
 
     @Override

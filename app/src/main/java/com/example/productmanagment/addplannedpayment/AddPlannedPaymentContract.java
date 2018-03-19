@@ -16,6 +16,7 @@ public interface AddPlannedPaymentContract {
         Category getChosenCategory();
         void choosePlace();
         void chooseFrequency();
+        void getFrequency();
         void result(int requestCode, int resultCode, Intent data);
         void savePlannedPayment(PlannedPayment plannedPayment);
         void createExpensesForPayment();
@@ -27,5 +28,6 @@ public interface AddPlannedPaymentContract {
         void showPlannedPayment();
         void showFrequencyDialog();
         void showChoosePlacePicker();
+        void populateRepeats();
     }
 }

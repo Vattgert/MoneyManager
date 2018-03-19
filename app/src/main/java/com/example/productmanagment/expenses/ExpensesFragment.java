@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.productmanagment.R;
@@ -132,7 +133,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     };
 
     //TODO: Не отображать текстовые поля если нет информации
-    private static class ExpensesAdapter extends RecyclerView.Adapter<ExpensesFragment.ExpensesAdapter.ViewHolder>{
+    public static class ExpensesAdapter extends RecyclerView.Adapter<ExpensesFragment.ExpensesAdapter.ViewHolder>{
         private List<Expense> expenseList;
         ExpensesFragment.ExpensesItemListener itemListener;
 
@@ -177,7 +178,9 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 expenseTextView = view.findViewById(R.id.expenseTextView);
                 receiverTextView = view.findViewById(R.id.receiverTextView);
                 dateTextView = view.findViewById(R.id.dateTextView);
-                view.setOnClickListener(__ -> itemListener.onExpenseClick(expense));
+
+                if(itemListener != null)
+                    view.setOnClickListener(__ -> itemListener.onExpenseClick(expense));
             }
 
             public void bind(Expense expense){

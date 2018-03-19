@@ -25,6 +25,24 @@
         <item>Повторять ежемесячно</item>
         <item>Повторять ежегодно</item>
     </string-array>
+
+    <string name="borrowed">%1$s - Я</string>
+    <string name="lent">Я - %1$s</string>
+    <string name="debt_remain">Осталось: %1$s</string>
+    <string name="debt_pay_date">Дата оплаты: %1$s</string>
+    <string name="debt_pay_confirm_message">Ви впевнені, що хочете закрити цей борг?</string>
+    <string name="debt_pay_full">Так</string>
+    <string name="debt_pay_part">Частково</string>
+    <string name="debt_pay_cancel">Ні</string>
+    <string name="debt_enter_sum_ok">ОК</string>
+    <string name="debt_enter_sum_reject">Відміна</string>
+    <string name="debt_repay">Оплачено</string>
+    <string name="debt_is_payed_message">Цей борг уже виплачений</string>
+    <string-array name="debt_type">
+        <item>Я взяв у борг</item>
+        <item>Я дав у борг</item>
+    </string-array>
+
     <string name="title_activity_place_choose">Map</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -99,4 +117,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_add_debts">AddDebtsActivity</string>
 </resources>

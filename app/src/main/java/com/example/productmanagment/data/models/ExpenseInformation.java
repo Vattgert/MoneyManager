@@ -6,6 +6,7 @@ package com.example.productmanagment.data.models;
 
 public class ExpenseInformation {
     private int id;
+    private int expenseType;
     private String marks;
     private String note;
     private String receiver;
@@ -14,6 +15,9 @@ public class ExpenseInformation {
     private String typeOfPayment;
     private String place;
     private String addition;
+
+    public ExpenseInformation() {
+    }
 
     public ExpenseInformation(int id, String note, String marks, String receiver, String date, String time,
                               String typeOfPayment, String place, String addition) {

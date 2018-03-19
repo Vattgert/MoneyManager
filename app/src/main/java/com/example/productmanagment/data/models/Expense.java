@@ -12,10 +12,13 @@ public class Expense {
     private int id;
     private double cost;
     private int plannedPaymentId = -1;
+    private int debtId = -1;
     private Category category;
     private int accountId = -1;
     private ExpenseInformation expenseInformation;
 
+    public Expense() {
+    }
 
     public Expense(int id, double cost, Category category, ExpenseInformation expenseInformation) {
         this.id = id;
@@ -69,6 +72,14 @@ public class Expense {
 
     public void setPlannedPaymentId(int plannedPaymentId) {
         this.plannedPaymentId = plannedPaymentId;
+    }
+
+    public int getDebtId() {
+        return debtId;
+    }
+
+    public void setDebtId(int debtId) {
+        this.debtId = debtId;
     }
 
     public int getAccountId() {

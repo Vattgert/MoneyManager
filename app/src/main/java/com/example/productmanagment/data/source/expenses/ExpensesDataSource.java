@@ -2,6 +2,7 @@ package com.example.productmanagment.data.source.expenses;
 
 import android.support.annotation.NonNull;
 
+import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.PlannedPayment;
 
@@ -21,4 +22,8 @@ public interface ExpensesDataSource {
     void updateExpense(@NonNull String expenseId, Expense expense);
 
     Flowable<List<PlannedPayment>> getPlannedPayments();
+    Flowable<List<Debt>> getDebts();
+    Flowable<List<Expense>> getDebtPayments(int debtId);
+    void saveDebtPayment(@NonNull Expense expense);
+    void saveDebt(@NonNull Debt debt);
 }
