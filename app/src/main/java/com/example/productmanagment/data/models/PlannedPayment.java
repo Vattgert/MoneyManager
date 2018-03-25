@@ -17,8 +17,8 @@ public class PlannedPayment extends Expense {
 
     //TODO: Добавить счет в конструктор здесь и в расходах
 
-    public PlannedPayment(int id, double cost, Category category, @Nullable ExpenseInformation expenseInformation) {
-        super(id, cost, category, expenseInformation);
+    public PlannedPayment(int id, double cost, int expenseType, Category category, @Nullable ExpenseInformation expenseInformation) {
+
     }
 
     public PlannedPayment(double cost, Category category, ExpenseInformation information, String title, String startDate, String endDate,

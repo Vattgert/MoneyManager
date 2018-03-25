@@ -76,7 +76,8 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Expense getExpense(@NonNull Cursor c) {
         int itemId = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_ID));
         double cost = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST));
-        return new Expense(itemId, cost, getCategory(c), getExpenseInformation(c));
+        int expenseType = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_EXPENSE_TYPE));
+        return new Expense(itemId, cost, getCategory(c), expenseType, getExpenseInformation(c));
     }
 
     private PlannedPayment getPlannedPayment(@NonNull Cursor c){
@@ -103,14 +104,6 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         String description = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION));
         int debtType = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_TYPE));
         return new Debt(id, sum, remain, description, borrowDate, repayDate, borrower, debtType, 0);
-    }
-
-    private Debt.DebtPart getDebtPart(@NonNull Cursor c){
-        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_ID));
-        int idDebt = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_DEBT));
-        int sum = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_PART_SUM));
-        String date = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtPart.COLUMN_PART_DATE));
-        return new Debt.DebtPart(id, idDebt, sum, date);
     }
 
     private ExpenseInformation getExpenseInformation(Cursor c){
@@ -206,9 +199,11 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     private String[] getExpenseProjection(){
-        return new String[]{ ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_ID,
+        return new String[]{
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_ID,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY,
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_EXPENSE_TYPE,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NOTE,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_MARKS,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_RECEIVER,
@@ -309,6 +304,14 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
+    public Flowable<Debt> getDebtById(@NonNull int debtId) {
+        String sql = String.format("SELECT * FROM debt WHERE id_debt LIKE ?");
+        return databaseHelper.createQuery(ExpensePersistenceContract.DebtEntry.TABLE_NAME, sql, String.valueOf(debtId))
+                .mapToOne(cursor -> debtMapperFunction.apply(cursor))
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
     public void saveDebt(@NonNull Debt debt) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_SUM, debt.getSum());
@@ -321,12 +324,36 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
+    public void editDebt(@NonNull Debt debt) {
+        ContentValues values = new ContentValues();
+        values.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER, debt.getBorrower());
+        values.put(ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION, debt.getDescription());
+        databaseHelper.update(ExpensePersistenceContract.DebtEntry.TABLE_NAME, values, String.format("id_debt = %s", debt.getId()));
+    }
+
+    @Override
+    public void deleteDebt(int debtId) {
+        String selection = ExpensePersistenceContract.DebtEntry.COLUMN_ID + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(debtId) };
+        databaseHelper.delete(ExpensePersistenceContract.DebtEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    @Override
     public Flowable<List<Expense>> getDebtPayments(int debtId){
-        String sql = String.format("SELECT %s FROM expense WHERE %s LIKE ?",
+        String[] sInnerJoin = {CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID };
+        String[] fInnerJoin = {ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY};
+        String sql = String.format("SELECT %s,%s FROM expense INNER JOIN %s ON %s = %s WHERE %s LIKE ?",
                 TextUtils.join(",", getExpenseProjection()),
+                TextUtils.join(",", getCategoryProjection()),
+                CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                TextUtils.join(".", fInnerJoin),
+                TextUtils.join(".", sInnerJoin),
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_DEBT);
+        Log.wtf("string_sql", sql);
         return databaseHelper.createQuery
-                (ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, sql, String.valueOf(debtId))
+                (getExpenseTableList(), sql, String.valueOf(debtId))
                 .mapToList(expenseMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
     }

@@ -124,11 +124,16 @@ public class DebtsPresenter implements DebtsContract.Presenter {
         debtClose.setDebtId(debt.getId());
         debtClose.setCost(Double.valueOf(debt.getRemain()));
         debtClose.setCategory(new Subcategory(82, null));
+        debtClose.setExpenseType(1);
         ExpenseInformation information = new ExpenseInformation();
-        if(debt.getDebtType() == 1)
+        if(debt.getDebtType() == 1) {
             information.setNote(resources.getString(R.string.borrowed, debt.getBorrower()));
-        else
+            debtClose.setExpenseType(1);
+        }
+        else {
             information.setNote(resources.getString(R.string.lent, debt.getBorrower()));
+            debtClose.setExpenseType(2);
+        }
         information.setDate(getCurrentDate());
         information.setReceiver(debt.getBorrower());
         debtClose.setExpenseInformation(information);

@@ -16,11 +16,11 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class DebtPaymentsPresenter implements DebtPaymentsContract.Presenter {
-    int debtId;
-    DebtPaymentsContract.View view;
-    ExpensesRepository repository;
-    CompositeDisposable compositeDisposable;
-    BaseSchedulerProvider provider;
+    private int debtId;
+    private DebtPaymentsContract.View view;
+    private  ExpensesRepository repository;
+    private CompositeDisposable compositeDisposable;
+    private BaseSchedulerProvider provider;
 
     public DebtPaymentsPresenter(int debtId, DebtPaymentsContract.View view, ExpensesRepository repository, BaseSchedulerProvider provider) {
         this.view = view;

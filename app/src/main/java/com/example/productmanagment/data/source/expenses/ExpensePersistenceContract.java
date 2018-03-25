@@ -11,6 +11,7 @@ public class ExpensePersistenceContract {
         public static final String TABLE_NAME = "expense";
         public static final String COLUMN_NAME_ID = "id_expense";
         public static final String COLUMN_NAME_COST = "cost";
+        public static final String COLUMN_NAME_EXPENSE_TYPE = "expense_type";
         public static final String COLUMN_NOTE = "note";
         public static final String COLUMN_NAME_MARKS = "marks";
         public static final String COLUMN_NAME_CATEGORY = "category";

@@ -1,9 +1,18 @@
 <resources>
-    <string name="app_name">ProductManagment</string>
+    <string name="app_name">Money Manager</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <!--Текст для віджетів -->
+    <string name="debt_type_text_view">Вид боргу</string>
+    <string name="debt_sum_text_view">Сума</string>
+    <string name="debt_receiver_text_view">Отримувач</string>
+    <string name="debt_description_text_view">Опис</string>
+    <string name="debt_borrow_date_text_view">Дата взяття</string>
+    <string name="debt_repay_date_text_view">Дата повернення</string>
+    <string name="debt_account_text_view">Рахунок</string>
 
     <string-array name="typeOfPayment">
         <item>Наличные</item>
@@ -26,10 +35,15 @@
         <item>Повторять ежегодно</item>
     </string-array>
 
-    <string name="borrowed">%1$s - Я</string>
-    <string name="lent">Я - %1$s</string>
-    <string name="debt_remain">Осталось: %1$s</string>
-    <string name="debt_pay_date">Дата оплаты: %1$s</string>
+    <!-- Борги -->
+    <string name="debts">Борги</string>
+    <string name="debt_payments">Оплати боргу</string>
+    <string name="debt_creating">Додати борг</string>
+    <string name="debt_edit">Редагування боргу</string>
+    <string name="borrowed">%1$s → Я</string>
+    <string name="lent">Я → %1$s</string>
+    <string name="debt_remain">Залишилось: %1$s</string>
+    <string name="debt_pay_date">Дата оплати: %1$s</string>
     <string name="debt_pay_confirm_message">Ви впевнені, що хочете закрити цей борг?</string>
     <string name="debt_pay_full">Так</string>
     <string name="debt_pay_part">Частково</string>

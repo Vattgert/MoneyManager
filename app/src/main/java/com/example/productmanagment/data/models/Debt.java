@@ -18,6 +18,10 @@ public class Debt {
     private final int DEBT_TYPE_BORROWED = 1;
     private final int DEBT_TYPE_LENT= 2;
 
+    public Debt(){
+
+    }
+
     public Debt(String sum, String description, String borrowDate, String repayDate, String borrower, int debtType, int accountId) {
         this.sum = sum;
         this.description = description;
@@ -53,6 +57,10 @@ public class Debt {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSum() {

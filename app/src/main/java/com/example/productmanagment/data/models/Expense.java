@@ -9,8 +9,10 @@ import io.reactivex.annotations.Nullable;
  */
 
 public class Expense {
+    //Expense type 1 = expense, 2 = income
     private int id;
     private double cost;
+    private int expenseType = -1;
     private int plannedPaymentId = -1;
     private int debtId = -1;
     private Category category;
@@ -20,7 +22,7 @@ public class Expense {
     public Expense() {
     }
 
-    public Expense(int id, double cost, Category category, ExpenseInformation expenseInformation) {
+    public Expense(int id, double cost, Category category, int expenseType, ExpenseInformation expenseInformation) {
         this.id = id;
         this.cost = cost;
         this.category = category;
@@ -56,6 +58,14 @@ public class Expense {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public int getExpenseType() {
+        return expenseType;
+    }
+
+    public void setExpenseType(int expenseType) {
+        this.expenseType = expenseType;
     }
 
     public ExpenseInformation getExpenseInformation() {

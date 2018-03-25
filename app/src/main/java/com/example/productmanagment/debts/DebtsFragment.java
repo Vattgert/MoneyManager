@@ -28,6 +28,8 @@ import android.widget.Toast;
 import com.example.productmanagment.R;
 import com.example.productmanagment.adddebts.AddDebtActivity;
 import com.example.productmanagment.data.models.Debt;
+import com.example.productmanagment.debtpayments.DebtPaymentsActivity;
+import com.example.productmanagment.debtsdetailandedit.DebtDetailAndEditActivity;
 import com.example.productmanagment.utils.schedulers.interfaces.OnFragmentInteractionListener;
 
 import java.util.ArrayList;
@@ -43,7 +45,6 @@ public class DebtsFragment extends Fragment implements DebtsContract.View{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     DebtsContract.Presenter presenter;
     DebtsAdapter adapter;
-    OnFragmentInteractionListener listener;
 
     public DebtsFragment() {
     }
@@ -59,17 +60,6 @@ public class DebtsFragment extends Fragment implements DebtsContract.View{
         super.onActivityCreated(savedInstanceState);
         FloatingActionButton button = getActivity().findViewById(R.id.addDebtButton);
         button.setOnClickListener(view -> presenter.addNewDebt());
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -125,12 +115,16 @@ public class DebtsFragment extends Fragment implements DebtsContract.View{
 
     @Override
     public void showDebtDetailAndEdit(int debtId) {
-
+        Intent intent = new Intent(getActivity(), DebtDetailAndEditActivity.class);
+        intent.putExtra("debt_id", debtId);
+        startActivity(intent);
     }
 
     @Override
     public void showDebtPayments(int debtId) {
-        listener.onFragmentInteraction(debtId);
+        Intent intent = new Intent(getActivity(), DebtPaymentsActivity.class);
+        intent.putExtra("debt_id", debtId);
+        startActivity(intent);
     }
 
     @Override

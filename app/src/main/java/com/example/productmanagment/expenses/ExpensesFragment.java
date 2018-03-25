@@ -2,6 +2,7 @@ package com.example.productmanagment.expenses;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -191,6 +192,10 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 receiverTextView.setText(information.getReceiver());
                 placeTextView.setText(information.getPlace());
                 payTypeTextView.setText(information.getTypeOfPayment());
+                if(expense.getExpenseType() == 1)
+                    expenseTextView.setTextColor(Color.RED);
+                else if(expense.getExpenseType() == 2)
+                    expenseTextView.setTextColor(Color.GREEN);
                 expenseTextView.setText(String.valueOf(expense.getCost()));
                 dateTextView.setText(information.getDate());
             }

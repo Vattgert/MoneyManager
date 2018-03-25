@@ -54,6 +54,11 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
+    public Flowable<Debt> getDebtById(@NonNull int debtId) {
+        return localExpenseDataSource.getDebtById(debtId);
+    }
+
+    @Override
     public Flowable<List<Expense>> getDebtPayments(int debtId) {
         return localExpenseDataSource.getDebtPayments(debtId);
     }
@@ -71,6 +76,16 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public void saveDebt(@NonNull Debt debt) {
         localExpenseDataSource.saveDebt(debt);
+    }
+
+    @Override
+    public void editDebt(@NonNull Debt debt) {
+        localExpenseDataSource.editDebt(debt);
+    }
+
+    @Override
+    public void deleteDebt(int debtId) {
+        localExpenseDataSource.deleteDebt(debtId);
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.example.productmanagment.debtpayments.DebtPaymentsFragment;
 import com.example.productmanagment.debtpayments.DebtPaymentsPresenter;
 import com.example.productmanagment.utils.schedulers.interfaces.OnFragmentInteractionListener;
 
-public class DebtsActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+public class DebtsActivity extends AppCompatActivity {
     DebtsPresenter presenter;
     DebtPaymentsPresenter debtPaymentsPresenter;
 
@@ -24,17 +24,5 @@ public class DebtsActivity extends AppCompatActivity implements OnFragmentIntera
         ft.add(R.id.debtsContent, debtsFragment).commit();
 
         presenter = new DebtsPresenter(Injection.provideExpensesRepository(getApplicationContext()), debtsFragment, Injection.provideSchedulerProvider(), getResources());
-    }
-
-    private void addFragmentToBackStack(Fragment fragment){
-        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.debtsContent, fragment).addToBackStack(null).commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(int id) {
-        DebtPaymentsFragment fragment = DebtPaymentsFragment.newInstance();
-        addFragmentToBackStack(fragment);
-        debtPaymentsPresenter = new DebtPaymentsPresenter(id, fragment, Injection.provideExpensesRepository(getApplicationContext()), Injection.provideSchedulerProvider());
     }
 }

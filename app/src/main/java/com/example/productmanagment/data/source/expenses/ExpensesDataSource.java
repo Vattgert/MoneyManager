@@ -25,7 +25,10 @@ public interface ExpensesDataSource {
     Flowable<List<PlannedPayment>> getPlannedPayments();
 
     Flowable<List<Debt>> getDebts();
+    Flowable<Debt> getDebtById(@NonNull int debtId);
     void saveDebt(@NonNull Debt debt);
+    void editDebt(@NonNull Debt debt);
+    void deleteDebt(int debtId);
 
     Flowable<List<Expense>> getDebtPayments(int debtId);
     void saveDebtPayment(@NonNull Expense expense);
