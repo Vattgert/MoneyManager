@@ -57,4 +57,17 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_PART_SUM = "debt_part_sum";
         public static final String COLUMN_PART_DATE= "debt_part_date";
     }
+
+    public class PurchaseListEntry{
+        public static final String TABLE_NAME = "purchase_list";
+        public static final String COLUMN_ID = "id_purchase_list";
+        public static final String COLUMN_TITLE = "title";
+    }
+
+    public class PurchaseEntry{
+        public static final String TABLE_NAME = "purchase";
+        public static final String COLUMN_ID = "id_purchase";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_PURCHASE_LIST = "purchase_list_id";
+    }
 }

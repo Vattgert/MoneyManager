@@ -70,7 +70,7 @@ public class DebtPaymentsFragment extends Fragment implements DebtPaymentsContra
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
-        //recyclerView.setClickable(false);
+        recyclerView.setClickable(false);
         return view;
     }
 

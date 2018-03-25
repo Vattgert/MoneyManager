@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.PlannedPayment;
+import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
 
 import java.util.ArrayList;
@@ -55,6 +56,11 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<Expense>> getDebtPayments(int debtId) {
         return localExpenseDataSource.getDebtPayments(debtId);
+    }
+
+    @Override
+    public Flowable<List<PurchaseList>> getPurchaseLists() {
+        return localExpenseDataSource.getPurchaseLists();
     }
 
     @Override

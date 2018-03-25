@@ -39,13 +39,15 @@
             android:label="@string/title_activity_settings" />
         <activity android:name=".diagrams.DiagramActivity" />
         <activity android:name=".debts.DebtsActivity">
+
+        </activity>
+        <activity android:name=".adddebts.AddDebtActivity" />
+        <activity android:name=".purchaseslist.PurchaseListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".adddebts.AddDebtActivity"></activity>
     </application>
 
 </manifest>

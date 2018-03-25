@@ -13,6 +13,8 @@ import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.PlannedPayment;
+import com.example.productmanagment.data.models.Purchase;
+import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.source.categories.CategoryPersistenceContract;
 import com.example.productmanagment.data.source.expenses.ExpensePersistenceContract;
@@ -43,7 +45,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, Expense> expenseMapperFunction;
     private Function<Cursor, PlannedPayment> plannedPaymentMapperFunction;
     private Function<Cursor, Debt> debtMapperFunction;
-    private Function<Cursor, Debt.DebtPart> debtPartMapperFunction;
+    private Function<Cursor, PurchaseList> purchaseListMapperFunction;
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
@@ -52,7 +54,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         expenseMapperFunction = this::getExpense;
         plannedPaymentMapperFunction = this::getPlannedPayment;
         debtMapperFunction = this::getDebt;
-        debtPartMapperFunction = this::getDebtPart;
+        purchaseListMapperFunction = this::getPurchaseLists;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -129,6 +131,12 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         String title = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
         int categoryId = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID));
         return new Subcategory(subcategoryId, title, categoryId);
+    }
+
+    private PurchaseList getPurchaseLists(Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.PurchaseListEntry.COLUMN_ID));
+        String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.PurchaseListEntry.COLUMN_TITLE));
+        return new PurchaseList(id, title);
     }
 
     @Override
@@ -301,6 +309,18 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
+    public void saveDebt(@NonNull Debt debt) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_SUM, debt.getSum());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_TYPE, debt.getDebtType());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION, debt.getDescription());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROW_DATE, debt.getBorrowDate());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_REPAY_DATE, debt.getRepayDate());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER, debt.getBorrower());
+        databaseHelper.insert(ExpensePersistenceContract.DebtEntry.TABLE_NAME, contentValues);
+    }
+
+    @Override
     public Flowable<List<Expense>> getDebtPayments(int debtId){
         String sql = String.format("SELECT %s FROM expense WHERE %s LIKE ?",
                 TextUtils.join(",", getExpenseProjection()),
@@ -312,19 +332,15 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
-    public void saveDebtPayment(@NonNull Expense expense) {
-        saveExpense(expense);
+    public Flowable<List<PurchaseList>> getPurchaseLists() {
+        String sql = "SELECT FROM purchaseList";
+        return databaseHelper.createQuery(ExpensePersistenceContract.PurchaseListEntry.TABLE_NAME, sql)
+                .mapToList(purchaseListMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
     }
 
     @Override
-    public void saveDebt(@NonNull Debt debt) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_SUM, debt.getSum());
-        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_TYPE, debt.getDebtType());
-        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION, debt.getDescription());
-        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROW_DATE, debt.getBorrowDate());
-        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_REPAY_DATE, debt.getRepayDate());
-        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER, debt.getBorrower());
-        databaseHelper.insert(ExpensePersistenceContract.DebtEntry.TABLE_NAME, contentValues);
+    public void saveDebtPayment(@NonNull Expense expense) {
+        saveExpense(expense);
     }
 }
