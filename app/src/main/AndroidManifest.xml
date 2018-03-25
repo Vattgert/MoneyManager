@@ -38,17 +38,26 @@
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".diagrams.DiagramActivity" />
-        <activity android:name=".debts.DebtsActivity" android:label="@string/debts">
+        <activity
+            android:name=".debts.DebtsActivity"
+            android:label="@string/debts">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".adddebts.AddDebtActivity" android:label="@string/debt_creating"/>
+        <activity
+            android:name=".adddebts.AddDebtActivity"
+            android:label="@string/debt_creating" />
         <activity android:name=".purchaseslist.PurchaseListActivity" />
-        <activity android:name=".debtsdetailandedit.DebtDetailAndEditActivity" android:label="@string/debt_edit"/>
-        <activity android:name=".debtpayments.DebtPaymentsActivity" android:label="@string/debt_payments"></activity>
+        <activity
+            android:name=".debtsdetailandedit.DebtDetailAndEditActivity"
+            android:label="@string/debt_edit" />
+        <activity
+            android:name=".debtpayments.DebtPaymentsActivity"
+            android:label="@string/debt_payments" />
+        <activity android:name=".places.PlacesActivity"></activity>
     </application>
 
 </manifest>
