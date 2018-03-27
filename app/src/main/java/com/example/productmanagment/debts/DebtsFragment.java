@@ -58,8 +58,7 @@ public class DebtsFragment extends Fragment implements DebtsContract.View{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        FloatingActionButton button = getActivity().findViewById(R.id.addDebtButton);
-        button.setOnClickListener(view -> presenter.addNewDebt());
+
     }
 
     @Override
@@ -89,6 +88,9 @@ public class DebtsFragment extends Fragment implements DebtsContract.View{
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        FloatingActionButton button = view.findViewById(R.id.addDebtButton);
+        button.setOnClickListener(__ -> presenter.addNewDebt());
         return view;
     }
 
@@ -183,7 +185,7 @@ public class DebtsFragment extends Fragment implements DebtsContract.View{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_enter_debt_sum, null);
-        builder.setTitle("Часткова оплата боргу")
+        builder.setTitle(getResources().getString(R.string.part_debt_payment))
                 .setView(view)
                 .setPositiveButton(R.string.debt_enter_sum_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

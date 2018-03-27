@@ -24,7 +24,7 @@ public interface ExpensesContract {
     }
 
     interface Presenter extends BasePresenter {
-        void loadExpenses();
+        void loadExpenses(boolean showLoadingUi);
         void openExpenseDetails(@NonNull Expense requestedTask);
         void addNewExpense();
         void result(int requestCode, int resultCode);

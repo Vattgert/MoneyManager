@@ -3,10 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.productmanagment.expenses.ExpensesFragment">
-
-   <android.support.v7.widget.RecyclerView
-       android:id="@+id/expensesRecyclerView"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content" />
-
+   <ProgressBar
+       android:id="@+id/expenseProgressBar"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:indeterminate="true"
+       android:layout_gravity="center"
+       android:visibility="invisible"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/expensesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addExpenseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_input_add"/>
 </FrameLayout>

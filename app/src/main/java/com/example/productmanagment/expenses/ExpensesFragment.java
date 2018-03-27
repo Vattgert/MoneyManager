@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.productmanagment.R;
@@ -44,14 +45,15 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle(R.string.money_list);
         expenseAdapter = new ExpensesAdapter(new ArrayList<Expense>(0), itemListener);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        FloatingActionButton addExpenseButton = getActivity().findViewById(R.id.addExpenseButton);
-        addExpenseButton.setOnClickListener(__ -> presenter.addNewExpense());
+        //TODO: This fragment with FAB
+
     }
 
     @Override
@@ -76,6 +78,9 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(expenseAdapter);
+
+        FloatingActionButton addExpenseButton = view.findViewById(R.id.addExpenseButton);
+        addExpenseButton.setOnClickListener(__ -> presenter.addNewExpense());
         return view;
     }
 
@@ -91,7 +96,13 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
 
     @Override
     public void setLoadingIndicator(boolean active) {
-
+        if(getView() == null)
+            return;
+        ProgressBar progressBar = getView().findViewById(R.id.expenseProgressBar);
+        if(active)
+            progressBar.setVisibility(View.VISIBLE);
+        else
+            progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

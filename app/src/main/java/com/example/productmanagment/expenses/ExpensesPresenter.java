@@ -35,7 +35,7 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     }
     @Override
     public void subscribe() {
-        loadExpenses();
+        loadExpenses(true);
     }
 
     @Override
@@ -44,11 +44,15 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     }
 
     @Override
-    public void loadExpenses() {
+    public void loadExpenses(boolean showLoadingUi) {
+
         Disposable disposable = expensesRepository.getExpenses()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(this::processExpenses, throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+                .subscribe(expenses -> {
+                    processExpenses(expenses);
+                },
+                        throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
 

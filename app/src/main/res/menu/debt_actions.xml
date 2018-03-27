@@ -5,12 +5,12 @@
         android:id="@+id/action_pay_debt"
         android:orderInCategory="100"
         android:icon="@drawable/ic_delete"
-        android:title="Оплатить долг"
+        android:title="@string/pay_debt"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_show_debt_parts"
         android:orderInCategory="100"
         android:icon="@drawable/ic_done"
-        android:title="Показать оплаты долга"
+        android:title="@string/show_debt_payments"
         app:showAsAction="always" />
 </menu>

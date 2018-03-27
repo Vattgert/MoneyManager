@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main"
+            android:icon="@drawable/ic_nav_home"
+            android:title="@string/nav_drawer_main" />
+        <item
+            android:id="@+id/nav_expenses"
+            android:icon="@drawable/ic_nav_list"
+            android:title="Записи" />
+        <item
+            android:id="@+id/nav_diagrams"
+            android:icon="@drawable/ic_nav_diagram"
+            android:title="@string/naw_drawer_diagrams" />
+        <item
+            android:id="@+id/nav_planned_payments"
+            android:icon="@drawable/ic_nav_planned_payment"
+            android:title="@string/naw_drawer_planned_payments" />
+    </group>
+
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_budgets"
+            android:icon="@drawable/ic_nav_budgets"
+            android:title="@string/naw_drawer_budgets" />
+        <item
+            android:id="@+id/nav_debts"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/naw_drawer_debts" />
+        <item
+            android:id="@+id/nav_goals"
+            android:icon="@drawable/ic_nav_goals"
+            android:title="@string/naw_drawer_goals" />
+        <item
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/ic_naw_groups"
+            android:title="@string/naw_drawer_groups" />
+    </group>
+
+</menu>

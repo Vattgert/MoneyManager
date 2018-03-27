@@ -14,7 +14,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        app:cardUseCompatPadding="true">
         <TextView
             android:id="@+id/plannedPaymentNameTextView"
             android:layout_width="wrap_content"
