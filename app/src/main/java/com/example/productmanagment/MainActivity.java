@@ -19,6 +19,9 @@ import android.view.MenuItem;
 import com.example.productmanagment.debts.DebtsContract;
 import com.example.productmanagment.debts.DebtsFragment;
 import com.example.productmanagment.debts.DebtsPresenter;
+import com.example.productmanagment.diagrams.DiagramContract;
+import com.example.productmanagment.diagrams.DiagramFragment;
+import com.example.productmanagment.diagrams.DiagramPresenter;
 import com.example.productmanagment.expenses.ExpensesContract;
 import com.example.productmanagment.expenses.ExpensesFragment;
 import com.example.productmanagment.expenses.ExpensesPresenter;
@@ -116,6 +119,13 @@ public class MainActivity extends AppCompatActivity
                         Injection.provideSchedulerProvider(), (PlannedPaymentContract.View)view
                 );
                 break;
+            case R.id.nav_diagrams:
+                view = DiagramFragment.newInstance(DiagramFragment.EXPENSES_BY_CATEGORY);
+                presenter = new DiagramPresenter(DiagramFragment.EXPENSES_BY_CATEGORY,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        (DiagramContract.View)view,
+                        Injection.provideSchedulerProvider()
+                );
             default:
                 break;
         }
@@ -128,4 +138,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.viewContent, fragment).commit();
     }
+
+    //TODO: Сделать фильтрацию и сортировку даных
+    //TODO: Поменять формат даты на склайтовский
 }

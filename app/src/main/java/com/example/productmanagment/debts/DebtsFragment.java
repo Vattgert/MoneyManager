@@ -64,6 +64,7 @@ public class DebtsFragment extends Fragment implements DebtsContract.View{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Борги");
         adapter = new DebtsAdapter(new ArrayList<>(0), itemListener);
     }
 

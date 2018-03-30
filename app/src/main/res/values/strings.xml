@@ -13,7 +13,8 @@
     <string name="naw_drawer_budgets">Бюджети</string>
     <string name="naw_drawer_debts">Борги</string>
     <string name="naw_drawer_goals">Цілі</string>
-    <string name="naw_drawer_groups">Спільні групи</string>
+    <string name="naw_drawer_groups">Спільні групи</string>'
+    <string name="naw_drawer_accounts">Рахунки</string>
 
     <!--Текст для віджетів -->
     <string name="debt_type_text_view">Вид боргу</string>

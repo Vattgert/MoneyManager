@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.example.productmanagment.BasePresenter;
 import com.example.productmanagment.BaseView;
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public interface ExpensesContract {
 
         void setLoadingIndicator(boolean active);
         void showExpenses(List<Expense> expenses);
+        void showAccounts(List<Account> accounts);
         void showAddExpense();
         void showLoadingExpensesError();
         void showNoExpenses();
@@ -24,7 +26,10 @@ public interface ExpensesContract {
     }
 
     interface Presenter extends BasePresenter {
+        void expenseLoading(String accountId);
         void loadExpenses(boolean showLoadingUi);
+        void loadExpensesByAccount(String accountId);
+        void loadAccounts();
         void openExpenseDetails(@NonNull Expense requestedTask);
         void addNewExpense();
         void result(int requestCode, int resultCode);

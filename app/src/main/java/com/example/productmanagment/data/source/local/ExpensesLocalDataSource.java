@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
@@ -25,13 +26,17 @@ import com.squareup.sqlbrite2.SqlBrite;
 
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 
 /**
@@ -46,6 +51,8 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, PlannedPayment> plannedPaymentMapperFunction;
     private Function<Cursor, Debt> debtMapperFunction;
     private Function<Cursor, PurchaseList> purchaseListMapperFunction;
+    private Function<Cursor, HashMap<String, Integer>> expenseStructureMapperFunction;
+    private Function<Cursor, Account> accountMapperFunction;
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
@@ -55,6 +62,8 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         plannedPaymentMapperFunction = this::getPlannedPayment;
         debtMapperFunction = this::getDebt;
         purchaseListMapperFunction = this::getPurchaseLists;
+        expenseStructureMapperFunction = this::getExpensesStructureData;
+        accountMapperFunction = this::getAccount;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -119,6 +128,12 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                 time, typeOfPayment, place, addition);
     }
 
+    private Account getAccount(@NonNull Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID));
+        String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_TITLE));
+        return new Account(id, title);
+    }
+
     private Subcategory getCategory(Cursor c){
         int subcategoryId = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID));
         String title = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
@@ -130,6 +145,28 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.PurchaseListEntry.COLUMN_ID));
         String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.PurchaseListEntry.COLUMN_TITLE));
         return new PurchaseList(id, title);
+    }
+
+    private HashMap<String, Integer> getExpensesStructureData(Cursor c){
+        HashMap<String, Integer> map = new HashMap<>();
+        while (c.moveToNext()){
+            Integer i = c.getInt(0);
+            String s = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
+            map.put(s, i);
+        }
+        return map;
+    }
+
+    @Override
+    public Flowable<List<Account>> getAccountList() {
+        String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", new String[]{
+                ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID,
+                ExpensePersistenceContract.AccountEntry.COLUMN_NAME_TITLE,
+        }), ExpensePersistenceContract.AccountEntry.TABLE_NAME);
+        Log.wtf("MyLog", sql);
+        return databaseHelper.createQuery(ExpensePersistenceContract.AccountEntry.TABLE_NAME, sql)
+                .mapToList(accountMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
     }
 
     @Override
@@ -151,6 +188,29 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                 .mapToList(expenseMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
     }
+
+    @Override
+    public Flowable<List<Expense>> getExpensesByAccount(String accountId) {
+        String[] fInnerJoin = {CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID };
+        String[] sInnerJoin = {ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY};
+        String sql = String.format("SELECT %s,%s FROM %s INNER JOIN %s ON %s = %s WHERE %s = %s",
+                TextUtils.join(",", getExpenseProjection()),
+                TextUtils.join(",", getCategoryProjection()),
+                ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                TextUtils.join(".", fInnerJoin),
+                TextUtils.join(".", sInnerJoin),
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_ACCOUNT,
+                accountId);
+        Log.wtf("sqlite", sql);
+
+        return databaseHelper.createQuery(getExpenseTableList(), sql)
+                .mapToList(expenseMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
     //TODO: Уменьшить размер функций
     @Override
     public void saveExpense(@NonNull Expense expense) {
@@ -359,6 +419,11 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
+    public void saveDebtPayment(@NonNull Expense expense) {
+        saveExpense(expense);
+    }
+
+    @Override
     public Flowable<List<PurchaseList>> getPurchaseLists() {
         String sql = "SELECT FROM purchaseList";
         return databaseHelper.createQuery(ExpensePersistenceContract.PurchaseListEntry.TABLE_NAME, sql)
@@ -367,7 +432,32 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
-    public void saveDebtPayment(@NonNull Expense expense) {
-        saveExpense(expense);
+    public Flowable<HashMap<String, Integer>> getExpensesStructureData(String type) {
+        String[] sInnerJoin = {CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID};
+        String[] fInnerJoin = {ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY};
+        String sql = String.format("SELECT SUM(%s), %s FROM %s INNER JOIN %s ON %s = %s WHERE %s = %s GROUP BY %s",
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST,
+                TextUtils.join(".", new String[]{CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME, CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE} ),
+                ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                TextUtils.join(".", fInnerJoin),
+                TextUtils.join(".", sInnerJoin),
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_EXPENSE_TYPE,
+                type,
+                TextUtils.join(".", new String[]{CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME, CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE} ));
+        Log.wtf("myLog", sql);
+        return databaseHelper.createQuery(getExpenseTableList(), sql)
+                .mapToOne(expenseStructureMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
     }
+
+    @Override
+    public Flowable<HashMap<String, String>> getExpensesDateData(String fdate, String sdate) {
+        String sql = "SELECT %s, %s FROM %s WHERE %s BETWEEN %s AND %s";
+        return null;
+    }
+
+
 }

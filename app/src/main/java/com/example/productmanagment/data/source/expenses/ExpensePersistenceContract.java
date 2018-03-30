@@ -7,6 +7,15 @@ package com.example.productmanagment.data.source.expenses;
 public class ExpensePersistenceContract {
     public ExpensePersistenceContract() {}
 
+    public class AccountEntry{
+        public static final String TABLE_NAME = "account";
+        public static final String COLUMN_NAME_ID = "id_account";
+        public static final String COLUMN_NAME_AMOUNT = "amount";
+        public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_CURRENCY = "currency";
+        public static final String COLUMN_COLOR = "color";
+    }
+
     public class ExpenseEntry{
         public static final String TABLE_NAME = "expense";
         public static final String COLUMN_NAME_ID = "id_expense";

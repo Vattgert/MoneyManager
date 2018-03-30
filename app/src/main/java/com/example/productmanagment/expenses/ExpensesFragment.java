@@ -8,18 +8,28 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.adapters.AccountSpinnerAdapter;
 import com.example.productmanagment.addexpenses.AddExpenseActivity;
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.expensedetailandedit.ExpenseDetailAndEditActivity;
@@ -33,6 +43,8 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     ExpensesContract.Presenter presenter;
     private ExpensesAdapter expenseAdapter;
+    AccountSpinnerAdapter adapter;
+    Spinner spinner;
 
     public ExpensesFragment() {
     }
@@ -45,8 +57,9 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle(R.string.money_list);
+        getActivity().setTitle("");
         expenseAdapter = new ExpensesAdapter(new ArrayList<Expense>(0), itemListener);
+        adapter = new AccountSpinnerAdapter(getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(0), android.R.layout.simple_spinner_dropdown_item);
     }
 
     @Override
@@ -73,6 +86,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_expenses, container, false);
+        setHasOptionsMenu(true);
         RecyclerView recyclerView = view.findViewById(R.id.expensesRecyclerView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
@@ -83,6 +97,29 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         addExpenseButton.setOnClickListener(__ -> presenter.addNewExpense());
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.account_spinner, menu);
+
+        MenuItem item = menu.findItem(R.id.account_spinner);
+        spinner = (Spinner) MenuItemCompat.getActionView(item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(listener);
+    }
+
+    AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            int accountId = adapter.getItem(i).getId();
+            presenter.expenseLoading(String.valueOf(accountId));
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -108,6 +145,11 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     @Override
     public void showExpenses(List<Expense> expenses) {
         expenseAdapter.setData(expenses);
+    }
+
+    @Override
+    public void showAccounts(List<Account> accounts) {
+        adapter.setData(accounts);
     }
 
     @Override
@@ -197,6 +239,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
 
             public void bind(Expense expense){
                 this.expense = expense;
+                Log.wtf("myLog", expense.getExpenseType() + "");
                 ExpenseInformation information = expense.getExpenseInformation();
                 categoryNameTextView.setText(expense.getCategory().getName());
                 noteTextView.setText(information.getNote());

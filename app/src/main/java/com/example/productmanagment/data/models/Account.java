@@ -16,6 +16,11 @@ public class Account {
     private Currency currency;
     private Color color;
 
+    public Account(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Account(String name, BigDecimal value, Currency currency) {
         this.name = name;
         this.value = value;

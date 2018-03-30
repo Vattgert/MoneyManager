@@ -3,6 +3,7 @@ package com.example.productmanagment.data.source.expenses;
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
@@ -11,6 +12,7 @@ import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -39,8 +41,18 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
+    public Flowable<List<Account>> getAccountList() {
+        return localExpenseDataSource.getAccountList();
+    }
+
+    @Override
     public Flowable<List<Expense>> getExpenses() {
         return localExpenseDataSource.getExpenses();
+    }
+
+    @Override
+    public Flowable<List<Expense>> getExpensesByAccount(String accountId) {
+        return localExpenseDataSource.getExpensesByAccount(accountId);
     }
 
     @Override
@@ -66,6 +78,16 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<PurchaseList>> getPurchaseLists() {
         return localExpenseDataSource.getPurchaseLists();
+    }
+
+    @Override
+    public Flowable<HashMap<String, Integer>> getExpensesStructureData(String type) {
+        return localExpenseDataSource.getExpensesStructureData(type);
+    }
+
+    @Override
+    public Flowable<HashMap<String, String>> getExpensesDateData(String fdate, String sdate) {
+        return null;
     }
 
     @Override

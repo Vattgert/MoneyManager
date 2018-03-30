@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.productmanagment.addexpenses.AddExpenseActivity;
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
@@ -35,7 +36,7 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     }
     @Override
     public void subscribe() {
-        loadExpenses(true);
+        loadAccounts();
     }
 
     @Override
@@ -44,14 +45,40 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     }
 
     @Override
+    public void expenseLoading(String accountId) {
+        if(accountId.equals("0"))
+            loadExpenses(true);
+        else
+            loadExpensesByAccount(accountId);
+    }
+
+    @Override
     public void loadExpenses(boolean showLoadingUi) {
 
         Disposable disposable = expensesRepository.getExpenses()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(expenses -> {
-                    processExpenses(expenses);
-                },
+                .subscribe(this::processExpenses,
+                        throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void loadExpensesByAccount(String accountId) {
+        Disposable disposable = expensesRepository.getExpensesByAccount(accountId)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::processExpenses,
+                        throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void loadAccounts() {
+        Disposable disposable = expensesRepository.getAccountList()
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::processAccounts,
                         throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
@@ -75,5 +102,12 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
 
     private void processExpenses(List<Expense> expenseList){
         view.showExpenses(expenseList);
+    }
+
+    private void processAccounts(List<Account> accounts){
+        for (Account a: accounts) {
+            Log.wtf("MyLog", a.getName());
+        }
+        view.showAccounts(accounts);
     }
 }

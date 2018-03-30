@@ -26,6 +26,7 @@ public class Expense {
         this.id = id;
         this.cost = cost;
         this.category = category;
+        this.expenseType = expenseType;
         this.expenseInformation = expenseInformation;
     }
 
