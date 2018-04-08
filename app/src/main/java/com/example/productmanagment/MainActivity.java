@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.productmanagment.debts.DebtsContract;
 import com.example.productmanagment.debts.DebtsFragment;
@@ -28,6 +29,8 @@ import com.example.productmanagment.expenses.ExpensesPresenter;
 import com.example.productmanagment.plannedpayment.PlannedPaymentContract;
 import com.example.productmanagment.plannedpayment.PlannedPaymentFragment;
 import com.example.productmanagment.plannedpayment.PlannedPaymentPresenter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     Fragment view;
     BasePresenter presenter;
     DrawerLayout drawer;
+    FirebaseAuth auth;
+    TextView userEmailTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+        auth = FirebaseAuth.getInstance();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
@@ -58,6 +66,17 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        userEmailTextView = header.findViewById(R.id.userEmailTextView);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if(currentUser != null){
+            userEmailTextView.setText(currentUser.getEmail());
+        }
     }
 
     @Override

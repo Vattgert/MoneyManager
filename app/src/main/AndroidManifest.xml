@@ -40,8 +40,7 @@
         <activity android:name=".diagrams.DiagramActivity" />
         <activity
             android:name=".debts.DebtsActivity"
-            android:label="@string/debts">
-        </activity>
+            android:label="@string/debts" />
         <activity
             android:name=".adddebts.AddDebtActivity"
             android:label="@string/debt_creating" />
@@ -56,12 +55,15 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".authorization.AuthorizationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".userinfo.UserInfoActivity"></activity>
     </application>
 
 </manifest>

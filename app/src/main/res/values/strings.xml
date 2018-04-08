@@ -155,4 +155,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">380142302464422</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb380142302464422</string>
+    <string name="google_server_id">767226634872-mvoen5vkjvps3qugt7c8kvb6sc1b4rnj.apps.googleusercontent.com</string>
 </resources>
