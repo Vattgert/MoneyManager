@@ -16,14 +16,16 @@ public interface AuthorizationContract {
         void showAuthorizationFailedMessage();
         void showMainActivityIfAuth();
         void showGoogleSignInActivity(Intent intent);
+        void showSignUp();
     }
 
     interface Presenter extends BasePresenter{
         void signInWithEmailAndPassword(String email, String password);
-        void signUpWithEmailAndPassword(String email, String password);
         void signInWithGoggle();
         void signInWithFacebook();
         void signInWithPhone();
+        void openSignUp();
+
         void result(int requestCode, int resultCode, Intent data);
     }
 }

@@ -44,13 +44,6 @@ public class SubcategoryFragment extends Fragment implements SubcategoriesContra
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SubcategoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SubcategoryFragment newInstance(int categoryId) {
         SubcategoryFragment fragment = new SubcategoryFragment();
         Bundle args = new Bundle();

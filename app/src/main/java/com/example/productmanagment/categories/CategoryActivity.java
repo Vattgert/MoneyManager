@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.example.productmanagment.Injection;
 import com.example.productmanagment.R;
+import com.example.productmanagment.authorization.AuthorizationFragment;
 import com.example.productmanagment.subcategories.SubcategoryFragment;
 import com.example.productmanagment.subcategories.SubcategoryPresenter;
 import com.example.productmanagment.utils.schedulers.interfaces.OnFragmentInteractionListener;

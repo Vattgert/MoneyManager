@@ -1,6 +1,7 @@
 package com.example.productmanagment.authorization;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
     AuthorizationContract.Presenter presenter;
     EditText emailEditText, passwordEditText;
     Button signInButton, signUpButton, signInWithGoogle, signInWithFacebook;
+    OnSignUpClickListener listener;
 
     // TODO: Rename and change types and number of parameters
     public static AuthorizationFragment newInstance() {
@@ -42,6 +44,17 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnSignUpClickListener) {
+            listener = (OnSignUpClickListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -52,7 +65,7 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
         signUpButton = view.findViewById(R.id.signUpButton);
         signInWithGoogle = view.findViewById(R.id.signInGoogleButton);
         signInButton.setOnClickListener(__ -> getDataAndSignIn());
-        signUpButton.setOnClickListener(__->getDataAndSignUp());
+        signUpButton.setOnClickListener(__-> presenter.openSignUp());
         signInWithGoogle.setOnClickListener(__ -> presenter.signInWithGoggle());
         return view;
     }
@@ -89,6 +102,11 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
         startActivityForResult(intent, AuthorizationPresenter.SIGN_IN_GOOGLE_REQUEST);
     }
 
+    @Override
+    public void showSignUp() {
+        listener.onSignUpClick();
+    }
+
     private void getDataAndSignIn(){
         String email, password;
         if(emailEditText != null && passwordEditText != null){
@@ -98,12 +116,7 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
         }
     }
 
-    private void getDataAndSignUp(){
-        String email, password;
-        if(emailEditText != null && passwordEditText != null){
-            email = emailEditText.getText().toString();
-            password = passwordEditText.getText().toString();
-            presenter.signUpWithEmailAndPassword(email, password);
-        }
+    public interface OnSignUpClickListener{
+        void onSignUpClick();
     }
 }

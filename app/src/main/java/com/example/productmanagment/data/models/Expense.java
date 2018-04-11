@@ -17,6 +17,7 @@ public class Expense {
     private int debtId = -1;
     private Category category;
     private int accountId = -1;
+    private String user = "";
     private ExpenseInformation expenseInformation;
 
     public Expense() {

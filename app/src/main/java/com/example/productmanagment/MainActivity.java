@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.debts.DebtsContract;
 import com.example.productmanagment.debts.DebtsFragment;
 import com.example.productmanagment.debts.DebtsPresenter;
@@ -26,6 +27,9 @@ import com.example.productmanagment.diagrams.DiagramPresenter;
 import com.example.productmanagment.expenses.ExpensesContract;
 import com.example.productmanagment.expenses.ExpensesFragment;
 import com.example.productmanagment.expenses.ExpensesPresenter;
+import com.example.productmanagment.groups.GroupsContract;
+import com.example.productmanagment.groups.GroupsFragment;
+import com.example.productmanagment.groups.GroupsPresenter;
 import com.example.productmanagment.plannedpayment.PlannedPaymentContract;
 import com.example.productmanagment.plannedpayment.PlannedPaymentFragment;
 import com.example.productmanagment.plannedpayment.PlannedPaymentPresenter;
@@ -145,6 +149,10 @@ public class MainActivity extends AppCompatActivity
                         (DiagramContract.View)view,
                         Injection.provideSchedulerProvider()
                 );
+                break;
+            case R.id.nav_groups:
+                view = GroupsFragment.newInstance();
+                presenter = new GroupsPresenter(new RemoteDataRepository(), (GroupsContract.View)view);
             default:
                 break;
         }

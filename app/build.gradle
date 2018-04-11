@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.github.AnyChart:AnyChart-Android:0.1.7'
     compile 'com.google.firebase:firebase-core:12.0.1'
     compile 'com.google.firebase:firebase-auth:12.0.1'
+    compile 'com.google.firebase:firebase-database:12.0.1'
     compile 'com.google.android.gms:play-services-auth:12.0.1'
     compile('com.facebook.android:facebook-android-sdk:4.27.0')
     testImplementation 'junit:junit:4.12'

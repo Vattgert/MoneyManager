@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 //import com.google.android.gms.auth.api.Auth;
 import com.example.productmanagment.R;
+import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,10 +34,12 @@ public class AuthorizationPresenter implements AuthorizationContract.Presenter {
     private GoogleSignInClient googleSignInClient;
     private AuthorizationContract.View view;
     private Context context;
+    private RemoteDataRepository repository;
 
-    public AuthorizationPresenter(AuthorizationContract.View view, Context context) {
+    public AuthorizationPresenter(AuthorizationContract.View view, Context context, RemoteDataRepository repository) {
         this.view = view;
         this.view.setPresenter(this);
+        this.repository = repository;
         this.context = context;
     }
 
@@ -74,23 +77,6 @@ public class AuthorizationPresenter implements AuthorizationContract.Presenter {
     }
 
     @Override
-    public void signUpWithEmailAndPassword(String email, String password) {
-        if(auth != null){
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        view.showMainActivityIfAuth();
-                    }
-                    else{
-                        Log.wtf("AuthLog", task.getException());
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
     public void signInWithGoggle() {
         Intent intent = googleSignInClient.getSignInIntent();
         view.showGoogleSignInActivity(intent);
@@ -104,6 +90,11 @@ public class AuthorizationPresenter implements AuthorizationContract.Presenter {
     @Override
     public void signInWithPhone() {
 
+    }
+
+    @Override
+    public void openSignUp() {
+        view.showSignUp();
     }
 
     @Override
