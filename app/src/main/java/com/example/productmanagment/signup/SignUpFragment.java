@@ -1,6 +1,7 @@
 package com.example.productmanagment.signup;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.productmanagment.MainActivity;
 import com.example.productmanagment.R;
 
 /**
@@ -52,5 +54,16 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         String password = passwordEditText.getText().toString();
         String login = loginEditText.getText().toString();
         presenter.signUp(email, login, password);
+    }
+
+    @Override
+    public void finish() {
+        getActivity().finish();
+    }
+
+    @Override
+    public void openMainActivity() {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 }

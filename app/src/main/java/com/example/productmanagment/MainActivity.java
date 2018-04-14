@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -35,6 +36,11 @@ import com.example.productmanagment.plannedpayment.PlannedPaymentFragment;
 import com.example.productmanagment.plannedpayment.PlannedPaymentPresenter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,6 +78,24 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
         userEmailTextView = header.findViewById(R.id.userEmailTextView);
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference(".info/connected");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    Log.wtf("MyLog", "connected");
+                } else {
+                    Log.wtf("MyLog", "not connected");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.wtf("MyLog", "listener wasnt called");
+            }
+        });
     }
 
     @Override

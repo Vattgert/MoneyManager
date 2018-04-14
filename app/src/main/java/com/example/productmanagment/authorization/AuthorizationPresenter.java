@@ -46,11 +46,11 @@ public class AuthorizationPresenter implements AuthorizationContract.Presenter {
     @Override
     public void subscribe() {
         auth = FirebaseAuth.getInstance();
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.google_server_id))
                 .requestEmail()
                 .build();
-        googleSignInClient = GoogleSignIn.getClient(context, gso);
+        googleSignInClient = GoogleSignIn.getClient(context, gso);*/
     }
 
     @Override

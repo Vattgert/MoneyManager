@@ -1,8 +1,12 @@
 package com.example.productmanagment.signup;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpPresenter implements SignUpContract.Presenter{
@@ -23,6 +27,9 @@ public class SignUpPresenter implements SignUpContract.Presenter{
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     signUpToDatabase(email, login);
+                    authAfterSignUp(email, password);
+                    view.openMainActivity();
+                    view.finish();
                 }
                 else{
                     Log.wtf("AuthLog", task.getException());
@@ -34,6 +41,18 @@ public class SignUpPresenter implements SignUpContract.Presenter{
     @Override
     public void signUpToDatabase(String email, String login) {
         repository.signUpUserToDatabase(email, login);
+    }
+
+    @Override
+    public void authAfterSignUp(String email, String password) {
+        if(auth != null){
+            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                if(!task.isSuccessful()){
+                    Log.wtf("RemoteDatabaseLog", task.getException());
+                }
+
+            });
+        }
     }
 
     @Override

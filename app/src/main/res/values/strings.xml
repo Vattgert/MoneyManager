@@ -75,6 +75,15 @@
         <item>Я дав у борг</item>
     </string-array>
 
+    <!--Користувачі та групи-->
+    <string name="group_user_count">Кількість учасників: %1$d</string>
+    <string name="group_enter_new_participant">Введіть email нового учасника групи</string>
+    <string name="group_new_participant_dialog">Новий учасник</string>
+    <string name="group_participant_email_ok">ОК</string>
+    <string name="group_participant_email_reject">Відміна</string>
+    <string name="new_group_dialog">Нова група</string>
+    <string name="new_group_enter">Введіть назву нової групи</string>
+
     <string name="title_activity_place_choose">Map</string>
     <string name="title_activity_settings">Settings</string>
 
