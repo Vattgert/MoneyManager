@@ -29,6 +29,7 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_TIME = "time";
         public static final String COLUMN_NAME_TYPE_OF_PAYMENT = "typeOfPayment";
         public static final String COLUMN_NAME_PLACE = "place";
+        public static final String COLUMN_ADDRESS_COORDINATES = "address_coordinates";
         public static final String COLUMN_ADDITION = "addition";
         public static final String COLUMN_ACCOUNT = "account_id";
         public static final String COLUMN_DEBT = "debt_id";

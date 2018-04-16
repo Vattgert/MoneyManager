@@ -46,6 +46,26 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
+    public Flowable<Account> getAccountById(String accountId) {
+        return localExpenseDataSource.getAccountById(accountId);
+    }
+
+    @Override
+    public void saveAccount(@NonNull Account account) {
+        localExpenseDataSource.saveAccount(account);
+    }
+
+    @Override
+    public void deleteAccount(@NonNull String accountId) {
+        localExpenseDataSource.deleteAccount(accountId);
+    }
+
+    @Override
+    public void updateAccount(@NonNull String accountId, Account account) {
+        localExpenseDataSource.updateAccount(accountId, account);
+    }
+
+    @Override
     public Flowable<List<Expense>> getExpenses() {
         return localExpenseDataSource.getExpenses();
     }
@@ -53,6 +73,11 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<Expense>> getExpensesByAccount(String accountId) {
         return localExpenseDataSource.getExpensesByAccount(accountId);
+    }
+
+    @Override
+    public Flowable<List<Expense>> getExpensesByDate(String fdate, String sdate) {
+        return null;
     }
 
     @Override
@@ -86,8 +111,23 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
-    public Flowable<HashMap<String, String>> getExpensesDateData(String fdate, String sdate) {
+    public Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate) {
         return null;
+    }
+
+    @Override
+    public Flowable<List<Account>> getAccounts() {
+        return localExpenseDataSource.getAccounts();
+    }
+
+    @Override
+    public Flowable<List<String>> getExpenseAddresses() {
+        return localExpenseDataSource.getExpenseAddresses();
+    }
+
+    @Override
+    public Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate) {
+        return localExpenseDataSource.getExpenseAddressesByDate(fdate, sdate);
     }
 
     @Override

@@ -30,6 +30,7 @@ import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.Subcategory;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.text.ParseException;
@@ -158,6 +159,11 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
     @Override
     public void setChosenPlace(String place) {
         placeNameTextView.setText(place);
+    }
+
+    @Override
+    public void setAddress(Place place) {
+
     }
 
 

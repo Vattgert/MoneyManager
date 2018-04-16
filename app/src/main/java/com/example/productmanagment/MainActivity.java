@@ -18,6 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.productmanagment.account.AccountContract;
+import com.example.productmanagment.account.AccountFragment;
+import com.example.productmanagment.account.AccountPresenter;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.debts.DebtsContract;
 import com.example.productmanagment.debts.DebtsFragment;
@@ -31,6 +34,9 @@ import com.example.productmanagment.expenses.ExpensesPresenter;
 import com.example.productmanagment.groups.GroupsContract;
 import com.example.productmanagment.groups.GroupsFragment;
 import com.example.productmanagment.groups.GroupsPresenter;
+import com.example.productmanagment.places.PlacesContract;
+import com.example.productmanagment.places.PlacesFragment;
+import com.example.productmanagment.places.PlacesPresenter;
 import com.example.productmanagment.plannedpayment.PlannedPaymentContract;
 import com.example.productmanagment.plannedpayment.PlannedPaymentFragment;
 import com.example.productmanagment.plannedpayment.PlannedPaymentPresenter;
@@ -117,38 +123,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
+            case R.id.nav_accounts:
+                view = AccountFragment.newInstance();
+                presenter = new AccountPresenter(
+                        (AccountContract.View)view,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider()
+                );
+                break;
             case R.id.nav_expenses:
                 view = ExpensesFragment.newInstance();
                 presenter = new ExpensesPresenter(
                         Injection.provideExpensesRepository(getApplicationContext()),
                         (ExpensesContract.View)view, Injection.provideSchedulerProvider()
+                );
+                break;
+            case R.id.nav_budgets:
+                view = PlacesFragment.newInstance();
+                presenter = new PlacesPresenter(
+                        (PlacesContract.View)view,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider()
                 );
                 break;
             case R.id.nav_debts:

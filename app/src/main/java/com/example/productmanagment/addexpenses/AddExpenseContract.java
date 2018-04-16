@@ -6,6 +6,7 @@ import com.example.productmanagment.BasePresenter;
 import com.example.productmanagment.BaseView;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.ExpenseInformation;
+import com.google.android.gms.location.places.Place;
 
 /**
  * Created by Ivan on 30.01.2018.
@@ -25,5 +26,6 @@ public interface AddExpenseContract{
         void showExpenses();
         void showChoosePlacePicker();
         void setChosenPlace(String place);
+        void setAddress(Place place);
     }
 }

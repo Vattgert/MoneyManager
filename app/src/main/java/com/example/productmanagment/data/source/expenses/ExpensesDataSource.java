@@ -20,12 +20,18 @@ import io.reactivex.Flowable;
 public interface ExpensesDataSource {
     //Рахунки
     Flowable<List<Account>> getAccountList();
+    Flowable<Account> getAccountById(String accountId);
+    void saveAccount(@NonNull Account account);
+    void deleteAccount(@NonNull String accountId);
+    void updateAccount(@NonNull String accountId, Account account);
+
     //Витрати
     Flowable<List<Expense>> getExpenses();
     Flowable<List<Expense>> getExpensesByAccount(String accountId);
+    Flowable<List<Expense>> getExpensesByDate(String fdate, String sdate);
+    Flowable<Expense> getExpenseById(@NonNull String expenseId);
     void saveExpense(@NonNull Expense expense);
     void deleteExpense(@NonNull String expenseId);
-    Flowable<Expense> getExpenseById(@NonNull String expenseId);
     void updateExpense(@NonNull String expenseId, Expense expense);
 
     //Заплановані витрати
@@ -45,5 +51,12 @@ public interface ExpensesDataSource {
 
     //Діаграми
     Flowable<HashMap<String, Integer>> getExpensesStructureData(String type);
-    Flowable<HashMap<String, String>> getExpensesDateData(String fdate, String sdate);
+    Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate);
+
+    //Рахунки
+    Flowable<List<Account>> getAccounts();
+
+    //Місця
+    Flowable<List<String>> getExpenseAddresses();
+    Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate);
 }

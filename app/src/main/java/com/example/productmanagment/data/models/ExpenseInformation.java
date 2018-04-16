@@ -15,6 +15,7 @@ public class ExpenseInformation {
     private String typeOfPayment;
     private String place;
     private String addition;
+    private String addressCoordinates;
 
     public ExpenseInformation() {
     }

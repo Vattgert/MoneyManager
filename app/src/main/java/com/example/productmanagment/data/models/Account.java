@@ -10,28 +10,42 @@ import java.util.Currency;
  */
 
 public class Account {
+    //TODO: СДелать из валюты и цвета обьекты
     private int id;
     private String name;
     private BigDecimal value;
-    private Currency currency;
-    private Color color;
+    private String currency;
+    private String color;
+
+    public Account(){
+
+    }
 
     public Account(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Account(String name, BigDecimal value, Currency currency) {
+    public Account(String name, BigDecimal value, String currency) {
         this.name = name;
         this.value = value;
         this.currency = currency;
     }
 
-    public Account(int id, String name, BigDecimal value, Currency currency) {
+    public Account(int id, String name, BigDecimal value, String currency, String color) {
         this.id = id;
         this.name = name;
         this.value = value;
         this.currency = currency;
+        this.color = color;
+    }
+
+    public Account(String name, BigDecimal value, String currency, String color) {
+        this.id = id;
+        this.name = name;
+        this.value = value;
+        this.currency = currency;
+        this.color = color;
     }
 
     public int getId() {
@@ -58,19 +72,19 @@ public class Account {
         this.value = value;
     }
 
-    public Currency getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 }

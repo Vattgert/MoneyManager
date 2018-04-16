@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, PurchaseList> purchaseListMapperFunction;
     private Function<Cursor, HashMap<String, Integer>> expenseStructureMapperFunction;
     private Function<Cursor, Account> accountMapperFunction;
+    private Function<Cursor, Account> fullAccountMapperFunction;
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
@@ -64,6 +66,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         purchaseListMapperFunction = this::getPurchaseLists;
         expenseStructureMapperFunction = this::getExpensesStructureData;
         accountMapperFunction = this::getAccount;
+        fullAccountMapperFunction = this::getFullAccount;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -134,6 +137,15 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         return new Account(id, title);
     }
 
+    private Account getFullAccount(@NonNull Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID));
+        String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_TITLE));
+        double amount = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_AMOUNT));
+        String currency = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_CURRENCY));
+        String color = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_COLOR));
+        return new Account(id, title, new BigDecimal(amount), currency, color);
+    }
+
     private Subcategory getCategory(Cursor c){
         int subcategoryId = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID));
         String title = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
@@ -167,6 +179,43 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         return databaseHelper.createQuery(ExpensePersistenceContract.AccountEntry.TABLE_NAME, sql)
                 .mapToList(accountMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<Account> getAccountById(String accountId) {
+        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+                ExpensePersistenceContract.AccountEntry.TABLE_NAME,
+                ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID);
+        Log.wtf("sqlite", sql);
+        return databaseHelper.createQuery(ExpensePersistenceContract.AccountEntry.TABLE_NAME, sql, accountId)
+                .mapToOne(cursor -> fullAccountMapperFunction.apply(cursor))
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public void saveAccount(@NonNull Account account) {
+        ContentValues expenseValues = new ContentValues();
+        expenseValues.put(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_TITLE, account.getName());
+        expenseValues.put(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_AMOUNT, account.getValue().toString());
+        expenseValues.put(ExpensePersistenceContract.AccountEntry.COLUMN_CURRENCY, account.getCurrency());
+        expenseValues.put(ExpensePersistenceContract.AccountEntry.COLUMN_COLOR, account.getColor());
+        databaseHelper.insert(ExpensePersistenceContract.AccountEntry.TABLE_NAME, expenseValues, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    @Override
+    public void deleteAccount(@NonNull String accountId) {
+        String selection = ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID + " LIKE ?";
+        String[] selectionArgs = {accountId};
+        databaseHelper.delete(ExpensePersistenceContract.AccountEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    @Override
+    public void updateAccount(@NonNull String accountId, Account account) {
+        ContentValues values = new ContentValues();
+        values.put(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_TITLE, account.getName());
+        values.put(ExpensePersistenceContract.AccountEntry.COLUMN_CURRENCY, account.getCurrency());
+        values.put(ExpensePersistenceContract.AccountEntry.COLUMN_COLOR, account.getColor());
+        databaseHelper.update(ExpensePersistenceContract.AccountEntry.TABLE_NAME, values, String.format("%s=%s", ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID, accountId));
     }
 
     @Override
@@ -209,6 +258,11 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         return databaseHelper.createQuery(getExpenseTableList(), sql)
                 .mapToList(expenseMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<Expense>> getExpensesByDate(String fdate, String sdate) {
+        return null;
     }
 
     //TODO: Уменьшить размер функций
@@ -454,9 +508,45 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
-    public Flowable<HashMap<String, String>> getExpensesDateData(String fdate, String sdate) {
-        String sql = "SELECT %s, %s FROM %s WHERE %s BETWEEN %s AND %s";
+    public Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate) {
         return null;
+    }
+
+    @Override
+    public Flowable<List<Account>> getAccounts() {
+        String sql = String.format("SELECT * FROM %s", ExpensePersistenceContract.AccountEntry.TABLE_NAME);
+        return databaseHelper.createQuery(ExpensePersistenceContract.AccountEntry.TABLE_NAME, sql)
+                .mapToList(fullAccountMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<String>> getExpenseAddresses() {
+        String sql = String.format("SELECT %s FROM %s WHERE address_coordinates IS NOT NULL", ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES, ExpensePersistenceContract.ExpenseEntry.TABLE_NAME);
+        return databaseHelper.createQuery(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, sql)
+                .mapToList(new Function<Cursor, String>() {
+                    @Override
+                    public String apply(Cursor cursor) throws Exception {
+                        return cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES));
+                    }
+                })
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate) {
+        String sql = String.format("SELECT %s FROM %s WHERE address_coordinates IS NOT NULL AND date >= '%s' AND date <= '%s'",
+                ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES,
+                ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, fdate, sdate);
+        Log.wtf("MyLog", sql);
+        return databaseHelper.createQuery(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, sql)
+                .mapToList(new Function<Cursor, String>() {
+                    @Override
+                    public String apply(Cursor cursor) throws Exception {
+                        return cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES));
+                    }
+                })
+                .toFlowable(BackpressureStrategy.BUFFER);
     }
 
 

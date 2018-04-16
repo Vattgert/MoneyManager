@@ -11,6 +11,7 @@
        android:layout_gravity="center"
        android:visibility="invisible"/>
     <android.support.v7.widget.RecyclerView
+        android:background="@color/white"
         android:id="@+id/expensesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
