@@ -14,6 +14,7 @@ import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
+import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
@@ -55,6 +56,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, HashMap<String, Integer>> expenseStructureMapperFunction;
     private Function<Cursor, Account> accountMapperFunction;
     private Function<Cursor, Account> fullAccountMapperFunction;
+    private Function<Cursor, Goal> goalMapperFunction;
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
@@ -67,6 +69,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         expenseStructureMapperFunction = this::getExpensesStructureData;
         accountMapperFunction = this::getAccount;
         fullAccountMapperFunction = this::getFullAccount;
+        goalMapperFunction = this::getGoal;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -167,6 +170,19 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
             map.put(s, i);
         }
         return map;
+    }
+
+    private Goal getGoal(Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_ID));
+        String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_TITLE));
+        String note = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_NOTE));
+        double neededSum = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_NEEDED_AMOUNT));
+        double accumulatedSum = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_ACCUMULATED_AMOUNT));
+        String wantedDate = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_WANTED_DATE));
+        String color = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_COLOR));
+        String icon = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_ICON));
+        int state = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS));
+        return new Goal(id, title, neededSum, accumulatedSum, wantedDate, note, color, icon, state);
     }
 
     @Override
@@ -510,6 +526,36 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     @Override
     public Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate) {
         return null;
+    }
+
+    @Override
+    public Flowable<List<Goal>> getGoals(int state) {
+        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+                ExpensePersistenceContract.GoalEntry.TABLE_NAME,
+                ExpensePersistenceContract.GoalEntry.COLUMN_STATUS);
+        return databaseHelper.createQuery(ExpensePersistenceContract.GoalEntry.TABLE_NAME,
+                String.valueOf(state)).mapToList(goalMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public void saveGoal(@NonNull Goal goal) {
+
+    }
+
+    @Override
+    public void editGoal(@NonNull Goal goal) {
+
+    }
+
+    @Override
+    public void deleteGoal(@NonNull int goalId) {
+
+    }
+
+    @Override
+    public void makeGoalAchieved(int goalId) {
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
@@ -113,6 +114,31 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate) {
         return null;
+    }
+
+    @Override
+    public Flowable<List<Goal>> getGoals(int state) {
+        return localExpenseDataSource.getGoals(state);
+    }
+
+    @Override
+    public void saveGoal(@NonNull Goal goal) {
+
+    }
+
+    @Override
+    public void editGoal(@NonNull Goal goal) {
+
+    }
+
+    @Override
+    public void deleteGoal(@NonNull int goalId) {
+
+    }
+
+    @Override
+    public void makeGoalAchieved(int goalId) {
+
     }
 
     @Override

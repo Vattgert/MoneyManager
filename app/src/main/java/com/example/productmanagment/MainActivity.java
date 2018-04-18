@@ -31,6 +31,9 @@ import com.example.productmanagment.diagrams.DiagramPresenter;
 import com.example.productmanagment.expenses.ExpensesContract;
 import com.example.productmanagment.expenses.ExpensesFragment;
 import com.example.productmanagment.expenses.ExpensesPresenter;
+import com.example.productmanagment.goals.GoalsContract;
+import com.example.productmanagment.goals.GoalsFragment;
+import com.example.productmanagment.goals.GoalsPresenter;
 import com.example.productmanagment.groups.GroupsContract;
 import com.example.productmanagment.groups.GroupsFragment;
 import com.example.productmanagment.groups.GroupsPresenter;
@@ -141,6 +144,14 @@ public class MainActivity extends AppCompatActivity
                 presenter = new ExpensesPresenter(
                         Injection.provideExpensesRepository(getApplicationContext()),
                         (ExpensesContract.View)view, Injection.provideSchedulerProvider()
+                );
+                break;
+            case R.id.nav_goals:
+                view = GoalsFragment.newInstance();
+                presenter = new GoalsPresenter(
+                        (GoalsContract.View)view,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider()
                 );
                 break;
             case R.id.nav_budgets:

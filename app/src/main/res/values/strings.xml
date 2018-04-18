@@ -45,6 +45,11 @@
         <item>Повторять ежемесячно</item>
         <item>Повторять ежегодно</item>
     </string-array>
+    <string-array name="goal_state">
+        <item>Активні</item>
+        <item>Призупинені</item>
+        <item>Досягнені</item>
+    </string-array>
 
     <!--Витрати -->
     <string name="money_list">Записи</string>

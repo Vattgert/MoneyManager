@@ -61,12 +61,17 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_DEBT_REMAIN = "debt_remain";
     }
 
-    public class DebtPart{
-        public static final String TABLE_NAME = "debt_part";
-        public static final String COLUMN_ID = "id_debt_part";
-        public static final String COLUMN_DEBT = "id_debt";
-        public static final String COLUMN_PART_SUM = "debt_part_sum";
-        public static final String COLUMN_PART_DATE= "debt_part_date";
+    public class GoalEntry{
+        public static  final String TABLE_NAME = "goal";
+        public static  final String COLUMN_ID = "id_goal";
+        public static  final String COLUMN_TITLE = "title";
+        public static  final String COLUMN_NOTE = "note";
+        public static  final String COLUMN_NEEDED_AMOUNT = "needed_amount";
+        public static  final String COLUMN_ACCUMULATED_AMOUNT = "accumulated_amount";
+        public static  final String COLUMN_WANTED_DATE = "wanted_date";
+        public static  final String COLUMN_STATUS = "status";
+        public static  final String COLUMN_ICON = "icon";
+        public static  final String COLUMN_COLOR = "color";
     }
 
     public class PurchaseListEntry{

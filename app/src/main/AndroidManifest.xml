@@ -70,7 +70,8 @@
         <activity android:name=".userrights.UserRightsActivity" />
         <activity android:name=".SplashActivity" />
         <activity android:name=".addaccount.AddAccountActivity" />
-        <activity android:name=".accountdetailandedit.AccountDetailAndEditActivity"></activity>
+        <activity android:name=".accountdetailandedit.AccountDetailAndEditActivity" />
+        <activity android:name=".addgoal.AddGoalActivity"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.PurchaseList;
 
@@ -20,6 +21,7 @@ import io.reactivex.Flowable;
 public interface ExpensesDataSource {
     //Рахунки
     Flowable<List<Account>> getAccountList();
+    Flowable<List<Account>> getAccounts();
     Flowable<Account> getAccountById(String accountId);
     void saveAccount(@NonNull Account account);
     void deleteAccount(@NonNull String accountId);
@@ -53,8 +55,12 @@ public interface ExpensesDataSource {
     Flowable<HashMap<String, Integer>> getExpensesStructureData(String type);
     Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate);
 
-    //Рахунки
-    Flowable<List<Account>> getAccounts();
+    //Цілі
+    Flowable<List<Goal>> getGoals(int state);
+    void saveGoal(@NonNull Goal goal);
+    void editGoal(@NonNull Goal goal);
+    void deleteGoal(@NonNull int goalId);
+    void makeGoalAchieved(int goalId);
 
     //Місця
     Flowable<List<String>> getExpenseAddresses();

@@ -23,7 +23,6 @@ import io.reactivex.disposables.Disposable;
 public class ExpensesPresenter implements ExpensesContract.Presenter{
     private ExpensesRepository expensesRepository;
     private ExpensesContract.View view;
-    private ArrayList<Expense> list = new ArrayList<>();
     private BaseSchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable;
 

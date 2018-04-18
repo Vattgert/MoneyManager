@@ -1,14 +1,15 @@
-package com.example.productmanagment;
+package com.example.productmanagment.addgoal;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class SplashActivity extends AppCompatActivity {
+import com.example.productmanagment.R;
+
+public class AddGoalActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_add_goal);
     }
-
 }
