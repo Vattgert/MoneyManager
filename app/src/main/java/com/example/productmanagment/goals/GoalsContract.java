@@ -9,7 +9,7 @@ import java.util.List;
 public interface GoalsContract {
     interface Presenter extends BasePresenter{
         void loadGoals(int state);
-        void loadGoalStates();
+        void goalsLoading(int state);
         void openAddGoal();
         void openDetailGoal();
         void openEditGoal();

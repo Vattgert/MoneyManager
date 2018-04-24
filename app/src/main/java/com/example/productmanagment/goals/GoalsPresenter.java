@@ -1,7 +1,12 @@
 package com.example.productmanagment.goals;
 
+import android.util.Log;
+
+import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
+
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -25,18 +30,20 @@ public class GoalsPresenter implements GoalsContract.Presenter {
         Disposable disposable = repository.getGoals(state)
                 .subscribeOn(baseSchedulerProvider.io())
                 .observeOn(baseSchedulerProvider.ui())
-                .subscribe();
+                .subscribe(this::processGoals, throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
 
     @Override
-    public void loadGoalStates() {
-
+    public void goalsLoading(int state) {
+        loadGoals(state);
     }
+
+
 
     @Override
     public void openAddGoal() {
-
+        view.showAddGoal();
     }
 
     @Override
@@ -57,5 +64,9 @@ public class GoalsPresenter implements GoalsContract.Presenter {
     @Override
     public void unsubscribe() {
         compositeDisposable.clear();
+    }
+
+    private void processGoals(List<Goal> goalList){
+        view.showGoals(goalList);
     }
 }

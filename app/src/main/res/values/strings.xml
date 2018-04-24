@@ -53,6 +53,8 @@
 
     <!--Витрати -->
     <string name="money_list">Записи</string>
+    <string name="expense_amount">-%1$s%2$s</string>
+    <string name="income_amount">+%1$s%2$s</string>
 
     <!-- Борги -->
     <string name="debts">Борги</string>
@@ -91,6 +93,13 @@
 
     <string name="title_activity_place_choose">Map</string>
     <string name="title_activity_settings">Settings</string>
+
+    <!-- Цілі -->
+    <string name="goal_needed">Ціль: %1$s</string>
+    <string name="goal_accumulated">Накоплено: %1$s</string>
+
+    <!-- Валюти -->
+    <string name="base_currency_select_item">%1$s - %2$s</string>
 
     <!-- Strings related to Settings -->
 

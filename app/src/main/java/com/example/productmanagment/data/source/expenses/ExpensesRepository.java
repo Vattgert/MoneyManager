@@ -8,11 +8,13 @@ import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
@@ -123,7 +125,7 @@ public class ExpensesRepository implements ExpensesDataSource {
 
     @Override
     public void saveGoal(@NonNull Goal goal) {
-
+        localExpenseDataSource.saveGoal(goal);
     }
 
     @Override
@@ -154,6 +156,36 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate) {
         return localExpenseDataSource.getExpenseAddressesByDate(fdate, sdate);
+    }
+
+    @Override
+    public Flowable<List<MyCurrency>> getCurrencies() {
+        return localExpenseDataSource.getCurrencies();
+    }
+
+    @Override
+    public Flowable<MyCurrency> getCurrencyById(String id) {
+        return localExpenseDataSource.getCurrencyById(id);
+    }
+
+    @Override
+    public Flowable<MyCurrency> getCurrencyByCode(String code) {
+        return localExpenseDataSource.getCurrencyByCode(code);
+    }
+
+    @Override
+    public Flowable<MyCurrency> getBaseCurrency() {
+        return null;
+    }
+
+    @Override
+    public void saveCurrency(MyCurrency currency) {
+        localExpenseDataSource.saveCurrency(currency);
+    }
+
+    @Override
+    public void updateCurrency(MyCurrency currency) {
+        localExpenseDataSource.updateCurrency(currency);
     }
 
     @Override

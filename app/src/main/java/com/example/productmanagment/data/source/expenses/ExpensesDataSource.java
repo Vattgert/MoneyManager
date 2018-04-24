@@ -6,9 +6,11 @@ import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.PurchaseList;
 
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,4 +67,12 @@ public interface ExpensesDataSource {
     //Місця
     Flowable<List<String>> getExpenseAddresses();
     Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate);
+
+    //Валюти
+    Flowable<List<MyCurrency>> getCurrencies();
+    Flowable<MyCurrency> getCurrencyById(String id);
+    Flowable<MyCurrency> getCurrencyByCode(String code);
+    Flowable<MyCurrency> getBaseCurrency();
+    void saveCurrency(MyCurrency currency);
+    void updateCurrency(MyCurrency currency);
 }

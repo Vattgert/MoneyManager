@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.example.productmanagment.account.AccountContract;
 import com.example.productmanagment.account.AccountFragment;
 import com.example.productmanagment.account.AccountPresenter;
+import com.example.productmanagment.currency.CurrencyFragment;
+import com.example.productmanagment.currency.CurrencyPresenter;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.debts.DebtsContract;
 import com.example.productmanagment.debts.DebtsFragment;
@@ -188,6 +190,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_groups:
                 view = GroupsFragment.newInstance();
                 presenter = new GroupsPresenter(new RemoteDataRepository(), (GroupsContract.View)view);
+                break;
+            case R.id.nav_currencies:
+                view = CurrencyFragment.newInstance();
+                presenter = new CurrencyPresenter((CurrencyFragment)view,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider());
+                break;
             default:
                 break;
         }

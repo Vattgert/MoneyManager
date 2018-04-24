@@ -63,6 +63,7 @@ public class DiagramFragment extends Fragment implements DiagramContract.View{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Діаграми");
         if (getArguments() != null) {
             diagramParameter = getArguments().getString(ARG_PARAM);
         }

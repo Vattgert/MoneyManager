@@ -16,6 +16,7 @@ public class AddAccountActivity extends AppCompatActivity {
         AddAccountFragment fragment = AddAccountFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.addAccountContent, fragment).commit();
-        presenter = new AddAccountPresenter(fragment, Injection.provideExpensesRepository(this));
+        presenter = new AddAccountPresenter(fragment, Injection.provideExpensesRepository(this),
+                Injection.provideSchedulerProvider());
     }
 }

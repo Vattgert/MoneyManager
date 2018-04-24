@@ -1,66 +1,149 @@
 package com.example.productmanagment.addgoal;
 
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.data.models.Goal;
+import com.example.productmanagment.utils.schedulers.UIUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddGoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddGoalFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+public class AddGoalFragment extends Fragment implements AddGoalContract.View {
+    AddGoalContract.Presenter presenter;
+    EditText goalTitleEditText, goalNeededAmountEditText, goalAccumulatedAmountEditText,
+            goalNoteEditText, goalWantedDateEditText;
 
     public AddGoalFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddGoalFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddGoalFragment newInstance(String param1, String param2) {
-        AddGoalFragment fragment = new AddGoalFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static AddGoalFragment newInstance() {
+        return new AddGoalFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.subscribe();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unsubscribe();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_goal, container, false);
+        View view =  inflater.inflate(R.layout.fragment_add_goal, container, false);
+        setHasOptionsMenu(true);
+        goalTitleEditText = view.findViewById(R.id.goalTitleAddEditText);
+        goalNeededAmountEditText = view.findViewById(R.id.goalNeededAmountEditText);
+        goalAccumulatedAmountEditText = view.findViewById(R.id.goalAccumulatedAmountEditText);
+        goalNoteEditText = view.findViewById(R.id.noteAddEditText);
+        goalWantedDateEditText = view.findViewById(R.id.wantedDateAddEditText);
+        goalWantedDateEditText.setOnClickListener(__ -> presenter.openDatePick());
+        return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.add_fragment_actions, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add:
+                getDataAndSave();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    @Override
+    public void setAccumulatedAmountDefaultValue() {
+        goalAccumulatedAmountEditText.setText("0.0");
+    }
+
+    @Override
+    public void setNeededAmountDefaultValue() {
+        goalNeededAmountEditText.setText("0.0");
+    }
+
+    @Override
+    public void showDatePick() {
+        UIUtils.getDatePickerDialog(getContext(), onDateSetListener).show();
+    }
+
+    @Override
+    public void showGoalCreatedMessage() {
+        Toast.makeText(getContext(), "Ціль була успішно створена", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showRestrictedGoalMessage() {
+        Toast.makeText(getContext(), "Зібрана сума більша ніж цільова сума", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setPresenter(AddGoalContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    private void getDataAndSave(){
+        String title = goalTitleEditText.getText().toString();
+        double neededAmount = Double.valueOf(goalNeededAmountEditText.getText().toString());
+        double accumulatedAmount = Double.valueOf(goalAccumulatedAmountEditText.getText().toString());
+        String wantedDate = goalWantedDateEditText.getText().toString();
+        int status = 1;
+        String color = "";
+        String icon = "";
+        String note = goalNoteEditText.getText().toString();
+        if(neededAmount > accumulatedAmount){
+            Goal goal = new Goal(title, neededAmount, accumulatedAmount, wantedDate, note, color, icon, status);
+            presenter.createGoal(goal);
+        }
+        else{
+            showRestrictedGoalMessage();
+        }
+    }
+
+    DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
+            Date date = new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth());
+            goalWantedDateEditText.setText(format.format(date));
+        }
+    };
 }

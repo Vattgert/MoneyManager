@@ -68,10 +68,13 @@
         <activity android:name=".addgroup.AddGroupActivity" />
         <activity android:name=".groupeditanddetail.GroupDetailAndEditActivity" />
         <activity android:name=".userrights.UserRightsActivity" />
-        <activity android:name=".SplashActivity" />
+        <activity android:name=".SplashActivity"></activity>
         <activity android:name=".addaccount.AddAccountActivity" />
         <activity android:name=".accountdetailandedit.AccountDetailAndEditActivity" />
-        <activity android:name=".addgoal.AddGoalActivity"></activity>
+        <activity android:name=".addgoal.AddGoalActivity" />
+        <activity android:name=".addcurrency.AddCurrencyActivity" />
+        <activity android:name=".basecurrency.BaseCurrencyActivity"></activity>
+        <activity android:name=".currencydetailandedit.CurrencyDetailAndEditActivity"></activity>
     </application>
 
 </manifest>

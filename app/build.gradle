@@ -5,7 +5,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.example.productmanagment"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -47,6 +47,8 @@ dependencies {
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
     implementation 'com.thebluealliance:spectrum:0.7.1'
     implementation 'com.github.AnyChart:AnyChart-Android:0.1.7'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.google.firebase:firebase-core:12.0.1'
     compile 'com.google.firebase:firebase-auth:12.0.1'
     compile 'com.google.firebase:firebase-database:12.0.1'

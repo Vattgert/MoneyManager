@@ -1,9 +1,12 @@
 package com.example.productmanagment.goals;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,14 +17,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.addgoal.AddGoalActivity;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.debts.DebtsFragment;
+import com.example.productmanagment.utils.schedulers.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +49,19 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new GoalsAdapter(new ArrayList<Goal>(0), listener);
+        getActivity().setTitle("Цілі");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.subscribe();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unsubscribe();
     }
 
     @Override
@@ -50,6 +70,8 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_goals, container, false);
         setHasOptionsMenu(true);
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.addGoalButton);
+        floatingActionButton.setOnClickListener(__ -> presenter.openAddGoal());
         RecyclerView recyclerView = view.findViewById(R.id.goalsRecyclerView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -57,16 +79,29 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
         return view;
     }
 
+    //TODO: Исправить загрузку при переключении
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.account_spinner, menu);
-
+        inflater.inflate(R.menu.goal_state_spinner, menu);
         MenuItem item = menu.findItem(R.id.goal_state_spinner);
         goalStateSpinner = (Spinner) MenuItemCompat.getActionView(item);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.goal_state, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.goal_state, R.layout.spinner_goal_states);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goalStateSpinner.setAdapter(adapter);
+        goalStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int position = i + 1;
+                presenter.goalsLoading(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
+
 
 
     @Override
@@ -81,12 +116,13 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
 
     @Override
     public void showGoals(List<Goal> goalList) {
-
+        adapter.setData(goalList);
     }
 
     @Override
     public void showAddGoal() {
-
+        Intent intent = new Intent(getContext(), AddGoalActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -98,6 +134,8 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
     public void showEditGoal() {
 
     }
+
+
 
     GoalsItemListener listener = new GoalsItemListener() {
         @Override
@@ -160,6 +198,11 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
 
             public void bind(Goal goal){
                 this.goal = goal;
+                goalTitleTextView.setText(goal.getTitle());
+                goalNeededAmountTextView.setText(resources.getString(R.string.goal_needed, String.valueOf(goal.getNeededAmount())));
+                goalAccumulatedAmountTextView.setText(resources.getString(R.string.goal_accumulated, String.valueOf(goal.getAccumulatedAmount())));
+                goalProgressBar.setMax((int)goal.getNeededAmount());
+                goalProgressBar.setProgress((int)goal.getAccumulatedAmount());
             }
         }
     }

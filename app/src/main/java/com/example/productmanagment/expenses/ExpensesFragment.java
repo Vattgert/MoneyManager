@@ -65,6 +65,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle("Записи");
         //TODO: This fragment with FAB
 
     }

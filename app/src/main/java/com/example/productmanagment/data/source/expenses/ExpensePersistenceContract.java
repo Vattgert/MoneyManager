@@ -86,4 +86,15 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_PURCHASE_LIST = "purchase_list_id";
     }
+
+    public class CurrencyEntry{
+        public static final String TABLE_NAME = "currency";
+        public static final String COLUMN_ID = "id_currency";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_CODE = "code";
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_RATE_TO_BASE = "rateToBaseCurrency";
+        public static final String COLUMN_RATE_BASE_TO_THIS = "rateBaseToThis";
+        public static final String COLUMN_IS_BASE = "isBase";
+    }
 }

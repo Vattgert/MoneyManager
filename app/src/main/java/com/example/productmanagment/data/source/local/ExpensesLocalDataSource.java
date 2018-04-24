@@ -15,6 +15,7 @@ import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.Goal;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
@@ -22,6 +23,7 @@ import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.source.categories.CategoryPersistenceContract;
 import com.example.productmanagment.data.source.expenses.ExpensePersistenceContract;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
+import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
@@ -57,6 +59,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, Account> accountMapperFunction;
     private Function<Cursor, Account> fullAccountMapperFunction;
     private Function<Cursor, Goal> goalMapperFunction;
+    private Function<Cursor, MyCurrency> currencyMapperFunction;
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
@@ -70,6 +73,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         accountMapperFunction = this::getAccount;
         fullAccountMapperFunction = this::getFullAccount;
         goalMapperFunction = this::getGoal;
+        currencyMapperFunction = this::getCurrency;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -183,6 +187,17 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         String icon = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_ICON));
         int state = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS));
         return new Goal(id, title, neededSum, accumulatedSum, wantedDate, note, color, icon, state);
+    }
+
+    private MyCurrency getCurrency(Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.CurrencyEntry.COLUMN_ID));
+        String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.CurrencyEntry.COLUMN_TITLE));
+        String code = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.CurrencyEntry.COLUMN_CODE));
+        String symbol = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.CurrencyEntry.COLUMN_SYMBOL));
+        double rateToBase = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.CurrencyEntry.COLUMN_RATE_TO_BASE));
+        double rateBaseToThis = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.CurrencyEntry.COLUMN_RATE_BASE_TO_THIS));
+        int isBase = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.CurrencyEntry.COLUMN_IS_BASE));
+        return new MyCurrency(id, title, code, symbol, rateToBase, rateBaseToThis, isBase);
     }
 
     @Override
@@ -530,17 +545,27 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<List<Goal>> getGoals(int state) {
-        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+        String sql = String.format("SELECT * FROM %s WHERE %s = %d",
                 ExpensePersistenceContract.GoalEntry.TABLE_NAME,
-                ExpensePersistenceContract.GoalEntry.COLUMN_STATUS);
-        return databaseHelper.createQuery(ExpensePersistenceContract.GoalEntry.TABLE_NAME,
-                String.valueOf(state)).mapToList(goalMapperFunction)
+                ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, state);
+        Log.wtf("MyLog", sql);
+        return databaseHelper.createQuery(ExpensePersistenceContract.GoalEntry.TABLE_NAME, sql)
+                .mapToList(goalMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
     }
 
     @Override
     public void saveGoal(@NonNull Goal goal) {
-
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_TITLE, goal.getTitle());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_NEEDED_AMOUNT, goal.getNeededAmount());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_ACCUMULATED_AMOUNT, goal.getAccumulatedAmount());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_WANTED_DATE, goal.getWantedDate());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_NOTE, goal.getNote());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, goal.getState());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_ICON, goal.getIcon());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_COLOR, goal.getColor());
+        databaseHelper.insert(ExpensePersistenceContract.GoalEntry.TABLE_NAME, contentValues);
     }
 
     @Override
@@ -593,6 +618,52 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                     }
                 })
                 .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<MyCurrency>> getCurrencies() {
+
+        String sql = "SELECT * FROM currency";
+        return databaseHelper.createQuery(ExpensePersistenceContract.CurrencyEntry.TABLE_NAME, sql)
+                .mapToList(currencyMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<MyCurrency> getCurrencyById(String id) {
+        return null;
+    }
+
+    @Override
+    public Flowable<MyCurrency> getCurrencyByCode(String code) {
+        return null;
+    }
+
+    @Override
+    public Flowable<MyCurrency> getBaseCurrency() {
+        String sql = String.format("SELECT * FROM %s WHERE %s = %s",
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME,
+                ExpensePersistenceContract.CurrencyEntry.COLUMN_IS_BASE, "1");
+        return databaseHelper.createQuery(ExpensePersistenceContract.CurrencyEntry.TABLE_NAME, sql)
+                .mapToOne(currencyMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public void saveCurrency(MyCurrency currency) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_TITLE, currency.getTitle());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_CODE, currency.getCode());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_SYMBOL, currency.getSymbol());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_RATE_TO_BASE, currency.getRateToBaseCurrency());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_RATE_BASE_TO_THIS, currency.getRateBaseToThis());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_IS_BASE, currency.getIsBase());
+        databaseHelper.insert(ExpensePersistenceContract.CurrencyEntry.TABLE_NAME, contentValues);
+    }
+
+    @Override
+    public void updateCurrency(MyCurrency currency) {
+
     }
 
 
