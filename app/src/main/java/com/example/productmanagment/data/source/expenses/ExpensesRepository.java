@@ -124,6 +124,11 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
+    public Flowable<Goal> getGoalById(@NonNull String goalId) {
+        return localExpenseDataSource.getGoalById(goalId);
+    }
+
+    @Override
     public void saveGoal(@NonNull Goal goal) {
         localExpenseDataSource.saveGoal(goal);
     }
@@ -140,7 +145,12 @@ public class ExpensesRepository implements ExpensesDataSource {
 
     @Override
     public void makeGoalAchieved(int goalId) {
+        localExpenseDataSource.makeGoalAchieved(goalId);
+    }
 
+    @Override
+    public void addAmount(String goalId, double amount) {
+        localExpenseDataSource.addAmount(goalId, amount);
     }
 
     @Override

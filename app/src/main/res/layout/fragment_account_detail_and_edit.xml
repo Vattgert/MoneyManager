@@ -53,8 +53,9 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/accountNameDetailEditText" />
-        <Spinner
-            android:id="@+id/accountCurrencyDetailSpinner"
+        <EditText
+            android:id="@+id/accountCurrencyEditText"
+            android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
@@ -62,7 +63,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/accountCurrencyDetailTextView">
-        </Spinner>
+        </EditText>
         <TextView
             android:id="@+id/accountColorDetailTextView"
             android:layout_width="wrap_content"
@@ -74,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountCurrencyDetailSpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/accountCurrencyEditText" />
         <EditText
             android:id="@+id/accountColorDetailEditText"
             android:layout_width="0dp"

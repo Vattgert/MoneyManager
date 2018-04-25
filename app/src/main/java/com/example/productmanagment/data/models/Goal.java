@@ -8,18 +8,20 @@ public class Goal {
     private String title;
     private double neededAmount;
     private double accumulatedAmount;
+    private String startDate;
     private String wantedDate;
     private String note;
     private String color;
     private String icon;
     private int state;
 
-    public Goal(int id, String title, double neededAmount, double accumulatedAmount,
+    public Goal(int id, String title, double neededAmount, double accumulatedAmount, String startDate,
                 String wantedDate, String note, String color, String icon, int state) {
         this.id = id;
         this.title = title;
         this.neededAmount = neededAmount;
         this.accumulatedAmount = accumulatedAmount;
+        this.startDate = startDate;
         this.wantedDate = wantedDate;
         this.note = note;
         this.color = color;
@@ -27,11 +29,12 @@ public class Goal {
         this.state = state;
     }
 
-    public Goal(String title, double neededAmount, double accumulatedAmount, String wantedDate,
+    public Goal(String title, double neededAmount, double accumulatedAmount, String startDate, String wantedDate,
                 String note, String color, String icon, int state) {
         this.title = title;
         this.neededAmount = neededAmount;
         this.accumulatedAmount = accumulatedAmount;
+        this.startDate = startDate;
         this.wantedDate = wantedDate;
         this.note = note;
         this.color = color;
@@ -77,6 +80,14 @@ public class Goal {
 
     public void setAccumulatedAmount(double accumulatedAmount) {
         this.accumulatedAmount = accumulatedAmount;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public String getWantedDate() {

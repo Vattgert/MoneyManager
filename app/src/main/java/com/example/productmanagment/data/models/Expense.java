@@ -16,19 +16,20 @@ public class Expense {
     private int plannedPaymentId = -1;
     private int debtId = -1;
     private Category category;
-    private int accountId = -1;
+    private Account account;
     private String user = "";
     private ExpenseInformation expenseInformation;
 
     public Expense() {
     }
 
-    public Expense(int id, double cost, Category category, int expenseType, ExpenseInformation expenseInformation) {
+    public Expense(int id, double cost, Category category, int expenseType, ExpenseInformation expenseInformation, Account account) {
         this.id = id;
         this.cost = cost;
         this.category = category;
         this.expenseType = expenseType;
         this.expenseInformation = expenseInformation;
+        this.account = account;
     }
 
     public Expense(double cost, Category category, ExpenseInformation expenseInformation) {
@@ -94,11 +95,11 @@ public class Expense {
         this.debtId = debtId;
     }
 
-    public int getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

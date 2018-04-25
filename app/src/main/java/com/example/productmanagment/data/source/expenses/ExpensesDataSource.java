@@ -59,10 +59,12 @@ public interface ExpensesDataSource {
 
     //Цілі
     Flowable<List<Goal>> getGoals(int state);
+    Flowable<Goal> getGoalById(@NonNull String goalId);
     void saveGoal(@NonNull Goal goal);
     void editGoal(@NonNull Goal goal);
     void deleteGoal(@NonNull int goalId);
     void makeGoalAchieved(int goalId);
+    void addAmount(String goalId, double amount);
 
     //Місця
     Flowable<List<String>> getExpenseAddresses();

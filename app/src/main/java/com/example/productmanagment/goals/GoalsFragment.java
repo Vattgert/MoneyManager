@@ -28,6 +28,7 @@ import com.example.productmanagment.R;
 import com.example.productmanagment.addgoal.AddGoalActivity;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.debts.DebtsFragment;
+import com.example.productmanagment.goalDetail.GoalDetailActivity;
 import com.example.productmanagment.utils.schedulers.UIUtils;
 
 import java.util.ArrayList;
@@ -126,8 +127,10 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
     }
 
     @Override
-    public void showDetailGoal() {
-
+    public void showDetailGoal(String goalId) {
+        Intent intent = new Intent(getContext(), GoalDetailActivity.class);
+        intent.putExtra("goalId", goalId);
+        startActivity(intent);
     }
 
     @Override
@@ -140,7 +143,7 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
     GoalsItemListener listener = new GoalsItemListener() {
         @Override
         public void onGoalClick(Goal clicked) {
-
+            presenter.openDetailGoal(String.valueOf(clicked.getId()));
         }
     };
 

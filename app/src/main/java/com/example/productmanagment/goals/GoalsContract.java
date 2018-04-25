@@ -11,14 +11,14 @@ public interface GoalsContract {
         void loadGoals(int state);
         void goalsLoading(int state);
         void openAddGoal();
-        void openDetailGoal();
+        void openDetailGoal(String goalId);
         void openEditGoal();
     }
 
     interface View extends BaseView<Presenter> {
         void showGoals(List<Goal> goalList);
         void showAddGoal();
-        void showDetailGoal();
+        void showDetailGoal(String goalId);
         void showEditGoal();
     }
 }

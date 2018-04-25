@@ -124,13 +124,15 @@ public class AddGoalFragment extends Fragment implements AddGoalContract.View {
         String title = goalTitleEditText.getText().toString();
         double neededAmount = Double.valueOf(goalNeededAmountEditText.getText().toString());
         double accumulatedAmount = Double.valueOf(goalAccumulatedAmountEditText.getText().toString());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
+        String startDate = format.format(new Date());
         String wantedDate = goalWantedDateEditText.getText().toString();
         int status = 1;
         String color = "";
         String icon = "";
         String note = goalNoteEditText.getText().toString();
         if(neededAmount > accumulatedAmount){
-            Goal goal = new Goal(title, neededAmount, accumulatedAmount, wantedDate, note, color, icon, status);
+            Goal goal = new Goal(title, neededAmount, accumulatedAmount, startDate, wantedDate, note, color, icon, status);
             presenter.createGoal(goal);
         }
         else{

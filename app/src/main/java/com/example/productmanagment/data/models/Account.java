@@ -14,7 +14,7 @@ public class Account {
     private int id;
     private String name;
     private BigDecimal value;
-    private String currency;
+    private MyCurrency currency;
     private String color;
 
     public Account(){
@@ -26,13 +26,13 @@ public class Account {
         this.name = name;
     }
 
-    public Account(String name, BigDecimal value, String currency) {
+    public Account(String name, BigDecimal value, MyCurrency currency) {
         this.name = name;
         this.value = value;
         this.currency = currency;
     }
 
-    public Account(int id, String name, BigDecimal value, String currency, String color) {
+    public Account(int id, String name, BigDecimal value, MyCurrency currency, String color) {
         this.id = id;
         this.name = name;
         this.value = value;
@@ -40,7 +40,7 @@ public class Account {
         this.color = color;
     }
 
-    public Account(String name, BigDecimal value, String currency, String color) {
+    public Account(String name, BigDecimal value, MyCurrency currency, String color) {
         this.id = id;
         this.name = name;
         this.value = value;
@@ -72,11 +72,11 @@ public class Account {
         this.value = value;
     }
 
-    public String getCurrency() {
+    public MyCurrency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(MyCurrency currency) {
         this.currency = currency;
     }
 

@@ -2,6 +2,7 @@ package com.example.productmanagment.expenses;
 
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.expensedetailandedit.ExpenseDetailAndEditActivity;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -223,6 +225,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
             Expense expense;
             TextView categoryNameTextView, noteTextView, placeTextView, payTypeTextView
                     ,expenseTextView, receiverTextView, dateTextView;
+            Resources resources;
 
             public ViewHolder(View view) {
                 super(view);
@@ -233,6 +236,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 expenseTextView = view.findViewById(R.id.expenseTextView);
                 receiverTextView = view.findViewById(R.id.receiverTextView);
                 dateTextView = view.findViewById(R.id.dateTextView);
+                resources = view.getResources();
 
                 if(itemListener != null)
                     view.setOnClickListener(__ -> itemListener.onExpenseClick(expense));
@@ -247,11 +251,16 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 receiverTextView.setText(information.getReceiver());
                 placeTextView.setText(information.getPlace());
                 payTypeTextView.setText(information.getTypeOfPayment());
-                if(expense.getExpenseType() == 1)
+                String cost = "";
+                if(expense.getExpenseType() == 1) {
                     expenseTextView.setTextColor(Color.RED);
-                else if(expense.getExpenseType() == 2)
+                    cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
+                }
+                else if(expense.getExpenseType() == 2) {
                     expenseTextView.setTextColor(Color.GREEN);
-                expenseTextView.setText(String.valueOf(expense.getCost()));
+                    cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
+                }
+                expenseTextView.setText(cost);
                 dateTextView.setText(information.getDate());
             }
         }

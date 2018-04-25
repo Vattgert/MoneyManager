@@ -11,11 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.adapters.MyCurrencySpinnerAdapter;
 import com.example.productmanagment.data.models.Account;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.thebluealliance.spectrum.SpectrumDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +30,7 @@ import com.thebluealliance.spectrum.SpectrumDialog;
  */
 public class AccountDetailAndEditFragment extends Fragment implements AccountDetailAndEditContract.View{
     AccountDetailAndEditContract.Presenter presenter;
-    EditText accountTitleEditText, accountColorEditText;
+    EditText accountTitleEditText, accountColorEditText, accountCurrencyDetailEditText;
 
     public AccountDetailAndEditFragment() {
         // Required empty public constructor
@@ -59,6 +65,7 @@ public class AccountDetailAndEditFragment extends Fragment implements AccountDet
         setHasOptionsMenu(true);
         accountTitleEditText = view.findViewById(R.id.accountNameDetailEditText);
         accountColorEditText = view.findViewById(R.id.accountColorDetailEditText);
+        accountCurrencyDetailEditText = view.findViewById(R.id.accountCurrencyEditText);
         accountColorEditText.setOnClickListener(__->presenter.openColorPick());
         return view;
     }
@@ -90,14 +97,15 @@ public class AccountDetailAndEditFragment extends Fragment implements AccountDet
     }
 
     @Override
-    public void setAccountCurrency(String currency) {
-
+    public void setAccountCurrency(MyCurrency currency) {
+        accountCurrencyDetailEditText.setText(currency.getCode());
     }
 
     @Override
     public void setAccountColor(String color) {
         accountColorEditText.setText(color);
     }
+
 
     @Override
     public void showColorPick() {
@@ -121,11 +129,9 @@ public class AccountDetailAndEditFragment extends Fragment implements AccountDet
 
     private void getDataAndUpdate(){
         String title = accountTitleEditText.getText().toString();
-        String currency = "";
         String color = accountColorEditText.getText().toString();
         Account account = new Account();
         account.setName(title);
-        account.setCurrency(currency);
         account.setColor(color);
         presenter.updateAccount(account);
     }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.adapters.MyCurrencySpinnerAdapter;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.thebluealliance.spectrum.SpectrumDialog;
@@ -136,62 +137,11 @@ public class AddAccountFragment extends Fragment implements AddAccountContract.V
         Account account;
         String accountName = accountNameEditText.getText().toString();
         BigDecimal accountStartValue = BigDecimal.valueOf(Double.valueOf(accountStartValueEditText.getText().toString()));
-        String currency = "";
+        MyCurrency currency = null;
         String color = accountColorEditText.getText().toString();
         account = new Account(accountName, accountStartValue, currency, color);
         presenter.createAccount(account);
     }
 
-    public class MyCurrencySpinnerAdapter extends ArrayAdapter<MyCurrency> {
-        private LayoutInflater mInflater;
-        private Context context;
-        private List<MyCurrency> items;
-        private int resource, itemResource;
 
-        public MyCurrencySpinnerAdapter(@NonNull Context context, int resource, @NonNull List<MyCurrency> objects, int itemResource) {
-            super(context, resource, objects);
-            this.context = context;
-            mInflater = LayoutInflater.from(context);
-            this.items = objects;
-            this.resource = resource;
-            this.itemResource = itemResource;
-        }
-
-        @Override
-        public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            return createItemView(itemResource, position, convertView, parent);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            return createItemView(resource, position, convertView, parent);
-        }
-
-        private View createItemView(int resource, int position, View convertView, ViewGroup parent) {
-            final View view = mInflater.inflate(resource, parent, false);
-
-            MyCurrency currency = getItem(position);
-            TextView currencyTitleTextView = view.findViewById(android.R.id.text1);
-            currencyTitleTextView.setText(currency.getTitle());
-            return view;
-        }
-
-        @Nullable
-        @Override
-        public MyCurrency getItem(int position) {
-            return items.get(position);
-        }
-
-        public void setData(List<MyCurrency> currencies) {
-            this.items.clear();
-            this.items.addAll(currencies);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return items.size();
-        }
-    }
 }

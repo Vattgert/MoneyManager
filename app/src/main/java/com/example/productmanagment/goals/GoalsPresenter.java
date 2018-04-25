@@ -47,8 +47,8 @@ public class GoalsPresenter implements GoalsContract.Presenter {
     }
 
     @Override
-    public void openDetailGoal() {
-
+    public void openDetailGoal(String goalId) {
+        view.showDetailGoal(goalId);
     }
 
     @Override

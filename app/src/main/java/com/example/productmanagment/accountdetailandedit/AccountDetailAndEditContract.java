@@ -3,6 +3,9 @@ package com.example.productmanagment.accountdetailandedit;
 import com.example.productmanagment.BasePresenter;
 import com.example.productmanagment.BaseView;
 import com.example.productmanagment.data.models.Account;
+import com.example.productmanagment.data.models.MyCurrency;
+
+import java.util.List;
 
 public interface AccountDetailAndEditContract {
     interface Presenter extends BasePresenter{
@@ -14,7 +17,7 @@ public interface AccountDetailAndEditContract {
 
     interface View extends BaseView<Presenter>{
         void setAccountTitle(String accountTitle);
-        void setAccountCurrency(String currency);
+        void setAccountCurrency(MyCurrency currency);
         void setAccountColor(String color);
         void showColorPick();
     }

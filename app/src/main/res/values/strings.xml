@@ -53,6 +53,8 @@
 
     <!--Витрати -->
     <string name="money_list">Записи</string>
+    <string name="add_expense">Додати запис</string>
+    <string name="edit_expense">Редагувати запис</string>
     <string name="expense_amount">-%1$s%2$s</string>
     <string name="income_amount">+%1$s%2$s</string>
 
@@ -83,6 +85,7 @@
     </string-array>
 
     <!--Користувачі та групи-->
+    <string name="groups">Групи</string>
     <string name="group_user_count">Кількість учасників: %1$d</string>
     <string name="group_enter_new_participant">Введіть email нового учасника групи</string>
     <string name="group_new_participant_dialog">Новий учасник</string>
@@ -97,6 +100,9 @@
     <!-- Цілі -->
     <string name="goal_needed">Ціль: %1$s</string>
     <string name="goal_accumulated">Накоплено: %1$s</string>
+    <string name="goal_detail_wanted_date">Дата досягнення цілі: %1$s</string>
+    <string name="goal_detail_progress">%1$s/%2$s</string>
+    <string name="goal_dialog_enter_amount_title">Ввести накоплену суму</string>
 
     <!-- Валюти -->
     <string name="base_currency_select_item">%1$s - %2$s</string>

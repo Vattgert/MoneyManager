@@ -11,7 +11,7 @@ public class ExpensePersistenceContract {
         public static final String TABLE_NAME = "account";
         public static final String COLUMN_NAME_ID = "id_account";
         public static final String COLUMN_NAME_AMOUNT = "amount";
-        public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_NAME_TITLE = "account_title";
         public static final String COLUMN_CURRENCY = "currency";
         public static final String COLUMN_COLOR = "color";
     }
@@ -68,6 +68,7 @@ public class ExpensePersistenceContract {
         public static  final String COLUMN_NOTE = "note";
         public static  final String COLUMN_NEEDED_AMOUNT = "needed_amount";
         public static  final String COLUMN_ACCUMULATED_AMOUNT = "accumulated_amount";
+        public static  final String COLUMN_START_DATE = "start_date";
         public static  final String COLUMN_WANTED_DATE = "wanted_date";
         public static  final String COLUMN_STATUS = "status";
         public static  final String COLUMN_ICON = "icon";
@@ -90,7 +91,7 @@ public class ExpensePersistenceContract {
     public class CurrencyEntry{
         public static final String TABLE_NAME = "currency";
         public static final String COLUMN_ID = "id_currency";
-        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_TITLE = "currency_title";
         public static final String COLUMN_CODE = "code";
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_RATE_TO_BASE = "rateToBaseCurrency";

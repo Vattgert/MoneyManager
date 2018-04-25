@@ -6,9 +6,12 @@ import android.widget.Toast;
 
 import com.example.productmanagment.R;
 import com.example.productmanagment.data.models.Account;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.thebluealliance.spectrum.SpectrumDialog;
+
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -31,7 +34,12 @@ public class AccountDetailAndEditPresenter implements AccountDetailAndEditContra
 
     @Override
     public void openAccount(String accountId) {
-
+        Disposable disposable = repository.getAccountById(accountId)
+                .subscribeOn(baseSchedulerProvider.computation())
+                .observeOn(baseSchedulerProvider.ui())
+                .subscribe(this::showAccount, throwable -> {
+                    Log.wtf("tag", throwable.getMessage()); });
+        compositeDisposable.add(disposable);
     }
 
     @Override
@@ -51,12 +59,7 @@ public class AccountDetailAndEditPresenter implements AccountDetailAndEditContra
 
     @Override
     public void subscribe() {
-        Disposable disposable = repository.getAccountById(this.accountId)
-                .subscribeOn(baseSchedulerProvider.computation())
-                .observeOn(baseSchedulerProvider.ui())
-                .subscribe(this::showAccount, throwable -> {
-                    Log.wtf("tag", throwable.getMessage()); });
-        compositeDisposable.add(disposable);
+        openAccount(this.accountId);
     }
 
     @Override

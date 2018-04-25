@@ -60,6 +60,9 @@ public class AccountPresenter implements AccountContract.Presenter {
     }
 
     private void processAccounts(List<Account> accountList){
+        for(Account a : accountList){
+            Log.wtf("AccountsLog", a.getName());
+        }
         view.showAccounts(accountList);
     }
 }
