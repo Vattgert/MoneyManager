@@ -15,6 +15,10 @@ public class Goal {
     private String icon;
     private int state;
 
+    public Goal(){
+
+    }
+
     public Goal(int id, String title, double neededAmount, double accumulatedAmount, String startDate,
                 String wantedDate, String note, String color, String icon, int state) {
         this.id = id;

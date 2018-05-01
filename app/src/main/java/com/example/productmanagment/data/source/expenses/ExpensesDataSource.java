@@ -8,6 +8,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.PlannedPayment;
+import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 
 import java.util.Currency;
@@ -52,7 +53,12 @@ public interface ExpensesDataSource {
 
     //Списки покупок
     Flowable<List<PurchaseList>> getPurchaseLists();
-
+    Flowable<List<Purchase>> getPurchasesByList(String purchaseListId);
+    void deletePurchaseList(int purchaseList);
+    void createPurchaseList(String purchaseListTitle);
+    void createPurchase(Purchase purchase);
+    void deletePurchase(int purchaseId);
+    void renamePurchaseList(int purchaseListId, String name);
     //Діаграми
     Flowable<HashMap<String, Integer>> getExpensesStructureData(String type);
     Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate);
@@ -61,9 +67,11 @@ public interface ExpensesDataSource {
     Flowable<List<Goal>> getGoals(int state);
     Flowable<Goal> getGoalById(@NonNull String goalId);
     void saveGoal(@NonNull Goal goal);
-    void editGoal(@NonNull Goal goal);
-    void deleteGoal(@NonNull int goalId);
+    void editGoal(String goalId, @NonNull Goal goal);
+    void deleteGoal(@NonNull String goalId);
+    void makeGoalPaused(String goalId);
     void makeGoalAchieved(int goalId);
+    void makeGoalActive(String goalId);
     void addAmount(String goalId, double amount);
 
     //Місця
@@ -77,4 +85,5 @@ public interface ExpensesDataSource {
     Flowable<MyCurrency> getBaseCurrency();
     void saveCurrency(MyCurrency currency);
     void updateCurrency(MyCurrency currency);
+
 }

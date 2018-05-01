@@ -1,13 +1,97 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.productmanagment.purchaseslist.PurchaseListFragment">
+    <EditText
+        android:id="@+id/enterPurchaseEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:inputType="text"
+        android:backgroundTint="@android:color/transparent"
+        android:hint="Введіть запис"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:imeOptions="actionDone"/>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/purchasesRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/enterPurchaseEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/selectAllPurchasesButton"
+        style="@style/transparentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Вибрати всі"
+        app:layout_constraintEnd_toStartOf="@+id/deselectAllPurchasesButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/purchasesRecyclerView" />
+
+    <Button
+        android:id="@+id/deselectAllPurchasesButton"
+        style="@style/transparentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="@string/deselect_purchases"
+        app:layout_constraintEnd_toStartOf="@+id/deleteListButton"
+        app:layout_constraintStart_toEndOf="@+id/selectAllPurchasesButton"
+        app:layout_constraintTop_toBottomOf="@+id/purchasesRecyclerView" />
+
+    <Button
+        android:id="@+id/deleteListButton"
+        style="@style/transparentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/delete_purchase_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/deselectAllPurchasesButton"
+        app:layout_constraintTop_toBottomOf="@+id/purchasesRecyclerView" />
+    <com.github.clans.fab.FloatingActionMenu
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_add"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu_colorNormal="@color/colorAccent"
+        app:menu_labels_colorNormal="@color/colorAccent">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/add_purchaseList_fab_menu_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_add"
+            fab:fab_size="mini"
+            fab:fab_label="Додати список покупок"
+            app:fab_colorNormal="@color/colorAccent"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/rename_purchaseList_fab_menu_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_edit_white"
+            fab:fab_size="mini"
+            fab:fab_label="Переіменувати список покупок"
+            app:fab_colorNormal="@color/colorPrimary"/>
+    </com.github.clans.fab.FloatingActionMenu>
+</android.support.constraint.ConstraintLayout>

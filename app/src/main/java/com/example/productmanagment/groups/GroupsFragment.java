@@ -85,9 +85,9 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
     }
 
     @Override
-    public void showEditAndDetailGroup(String groupTitle) {
+    public void showEditAndDetailGroup(int groupId) {
         Intent intent = new Intent(getContext(), GroupDetailAndEditActivity.class);
-        intent.putExtra("group_title", groupTitle);
+        intent.putExtra("group_id", groupId);
         startActivity(intent);
     }
 
@@ -170,6 +170,7 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
             public void bind(Group group){
                 this.group = group;
                 groupTitleTextView.setText(group.getTitle());
+                groupMemberCountTextView.setText(group.getMembersCount() + "");
             }
         }
     }

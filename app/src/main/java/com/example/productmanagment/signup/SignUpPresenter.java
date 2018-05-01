@@ -40,7 +40,7 @@ public class SignUpPresenter implements SignUpContract.Presenter{
 
     @Override
     public void signUpToDatabase(String email, String login) {
-        repository.signUpUserToDatabase(email, login);
+       // repository.signUpUserToDatabase(email, login);
     }
 
     @Override

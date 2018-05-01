@@ -2,19 +2,30 @@ package com.example.productmanagment.goalDetail;
 
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.goalEdit.GoalEditActivity;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator;
 
@@ -60,6 +71,7 @@ public class GoalDetailFragment extends Fragment implements GoalDetailContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_goal_detail, container, false);
+        setHasOptionsMenu(true);
         goalTitleTextView = view.findViewById(R.id.goalTitleDetailTextView);
         goalWantedDateTextView = view.findViewById(R.id.goalWantedDateDetailTextView);
         goalMinPerMonthTextView = view.findViewById(R.id.minSumPerMonthValueTextView);
@@ -71,6 +83,31 @@ public class GoalDetailFragment extends Fragment implements GoalDetailContract.V
         makeReachedButton = view.findViewById(R.id.makeGoalReachedButton);
         makeReachedButton.setOnClickListener(__->presenter.makeGoalReached());
         return view;
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.goal_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_edit:
+                presenter.openGoalEdit();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    @Override
+    public void showGoalEdit(String goalId) {
+        Intent intent = new Intent(getContext(), GoalEditActivity.class);
+        intent.putExtra("goalId", goalId);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     @Override
@@ -159,4 +196,6 @@ public class GoalDetailFragment extends Fragment implements GoalDetailContract.V
                 });
         return builder.create();
     }
+
+
 }

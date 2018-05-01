@@ -17,6 +17,6 @@ public interface GroupsContract {
     interface View extends BaseView<Presenter>{
         void setGroupsData(List<Group> groupsData);
         void showCreateNewGroup();
-        void showEditAndDetailGroup(String groupTitle);
+        void showEditAndDetailGroup(int groupId);
     }
 }

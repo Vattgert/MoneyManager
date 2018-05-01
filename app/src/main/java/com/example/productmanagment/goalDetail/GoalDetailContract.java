@@ -9,6 +9,7 @@ import com.example.productmanagment.data.models.Goal;
 public interface GoalDetailContract {
     interface Presenter extends BasePresenter{
         void openGoal(String goalId);
+        void openGoalEdit();
         void makeGoalReached();
         void openAddAmount();
         void addAmount(double amount);
@@ -16,6 +17,7 @@ public interface GoalDetailContract {
     }
 
     interface View extends BaseView<Presenter> {
+        void showGoalEdit(String goalId);
         void setTitle(String title);
         void setWantedDate(String wantedDate);
         void setNeededAmount(double neededAmount);

@@ -3,6 +3,7 @@ package com.example.productmanagment.purchaseslist;
 import android.util.Log;
 
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
@@ -48,35 +49,89 @@ public class PurchaseListPresenter implements PurchaseListContract.Presenter{
 
     @Override
     public void loadPurchasesById(int purchaseListId) {
+        Disposable disposable = repository.getPurchasesByList(String.valueOf(purchaseListId))
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(this::processPurchases);
+        compositeDisposable.add(disposable);
+    }
 
+    @Override
+    public void loadAccounts() {
+        Disposable disposable = repository.getAccounts()
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(view::showAccountList, throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
     }
 
     @Override
     public void deletePurchase(int purchaseId) {
-
+        repository.deletePurchase(purchaseId);
     }
 
     @Override
     public void selectPurchases() {
+        view.showAllPurchasesSelection();
+    }
 
+    @Override
+    public void createPurchase(Purchase purchase) {
+        repository.createPurchase(purchase);
     }
 
     @Override
     public void removePurchasesSelection() {
-
+        view.showAllPurchasesDeselection();
     }
 
     @Override
-    public void deletePurchasesList() {
-
+    public void deletePurchasesList(int purchaseListId) {
+        repository.deletePurchaseList(purchaseListId);
     }
 
     @Override
-    public void sendPurchasesList() {
+    public void sendPurchasesList(String text) {
+        view.showSendDialog(text);
+    }
 
+    @Override
+    public void openPurchaseRecordDialog() {
+        loadAccounts();
+        view.showAddExpenseRecord();
+    }
+
+    @Override
+    public void openAddPurchaseListDialog() {
+        view.showAddPurchaseList();
+    }
+
+    @Override
+    public void openRenamePurchaseListDialog() {
+        view.showRenamePurchaseList();
+    }
+
+    @Override
+    public void renamePurchaseList(int purchaseId, String rename) {
+        repository.renamePurchaseList(purchaseId, rename);
+    }
+
+    @Override
+    public void createPurchaseList(String name) {
+        repository.createPurchaseList(name);
+    }
+
+    @Override
+    public void createExpenseRecord(Expense expense) {
+        repository.saveExpense(expense);
     }
 
     private void processPurchaseLists(List<PurchaseList> list){
         view.showPurchasesList(list);
+        for(PurchaseList p : list)
+            Log.wtf("PurchaseLog", p.getTitle());
+    }
+
+    private void processPurchases(List<Purchase> list){
+        view.showPurchases(list);
     }
 }

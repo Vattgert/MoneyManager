@@ -39,6 +39,11 @@ public class GoalDetailPresenter implements GoalDetailContract.Presenter {
     }
 
     @Override
+    public void openGoalEdit() {
+        view.showGoalEdit(this.goalId);
+    }
+
+    @Override
     public void makeGoalReached() {
         repository.makeGoalAchieved(Integer.valueOf(goalId));
         view.showGoalReached();

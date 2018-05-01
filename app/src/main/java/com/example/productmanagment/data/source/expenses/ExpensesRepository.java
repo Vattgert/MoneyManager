@@ -10,6 +10,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.PlannedPayment;
+import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
 
@@ -109,6 +110,36 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
+    public Flowable<List<Purchase>> getPurchasesByList(String purchaseListId) {
+        return localExpenseDataSource.getPurchasesByList(purchaseListId);
+    }
+
+    @Override
+    public void deletePurchase(int purchaseId) {
+        localExpenseDataSource.deletePurchase(purchaseId);
+    }
+
+    @Override
+    public void renamePurchaseList(int purchaseListId, String name) {
+        localExpenseDataSource.renamePurchaseList(purchaseListId, name);
+    }
+
+    @Override
+    public void deletePurchaseList(int purchaseList) {
+        localExpenseDataSource.deletePurchaseList(purchaseList);
+    }
+
+    @Override
+    public void createPurchaseList(String purchaseListTitle) {
+        localExpenseDataSource.createPurchaseList(purchaseListTitle);
+    }
+
+    @Override
+    public void createPurchase(Purchase purchase) {
+        localExpenseDataSource.createPurchase(purchase);
+    }
+
+    @Override
     public Flowable<HashMap<String, Integer>> getExpensesStructureData(String type) {
         return localExpenseDataSource.getExpensesStructureData(type);
     }
@@ -134,18 +165,28 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
-    public void editGoal(@NonNull Goal goal) {
-
+    public void editGoal(String goalId, @NonNull Goal goal) {
+        localExpenseDataSource.editGoal(goalId, goal);
     }
 
     @Override
-    public void deleteGoal(@NonNull int goalId) {
+    public void deleteGoal(@NonNull String goalId) {
+        localExpenseDataSource.deleteGoal(goalId);
+    }
 
+    @Override
+    public void makeGoalPaused(String goalId) {
+        localExpenseDataSource.makeGoalPaused(goalId);
     }
 
     @Override
     public void makeGoalAchieved(int goalId) {
         localExpenseDataSource.makeGoalAchieved(goalId);
+    }
+
+    @Override
+    public void makeGoalActive(String goalId) {
+        localExpenseDataSource.makeGoalActive(goalId);
     }
 
     @Override

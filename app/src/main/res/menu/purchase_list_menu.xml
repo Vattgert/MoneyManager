@@ -3,8 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/purchaseListSpinner"
-        android:background="#ff00"
         android:title="ActionBar Spinner"
         app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_share_purchase"
+        android:title="Поділитись покупками"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_add_record"
+        android:title="Додати запис по покупкам"
+        android:icon="@drawable/ic_add_record"
         app:showAsAction="always" />
 </menu>

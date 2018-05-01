@@ -45,6 +45,12 @@ import com.example.productmanagment.places.PlacesPresenter;
 import com.example.productmanagment.plannedpayment.PlannedPaymentContract;
 import com.example.productmanagment.plannedpayment.PlannedPaymentFragment;
 import com.example.productmanagment.plannedpayment.PlannedPaymentPresenter;
+import com.example.productmanagment.purchaseslist.PurchaseListContract;
+import com.example.productmanagment.purchaseslist.PurchaseListFragment;
+import com.example.productmanagment.purchaseslist.PurchaseListPresenter;
+import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesContract;
+import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesFragment;
+import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesPresenter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -189,7 +195,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_groups:
                 view = GroupsFragment.newInstance();
-                presenter = new GroupsPresenter(new RemoteDataRepository(), (GroupsContract.View)view);
+                presenter = new GroupsPresenter(new RemoteDataRepository(),
+                        (GroupsContract.View)view,
+                        Injection.provideSchedulerProvider());
                 break;
             case R.id.nav_currencies:
                 view = CurrencyFragment.newInstance();
@@ -197,6 +205,16 @@ public class MainActivity extends AppCompatActivity
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;
+            case R.id.nav_report:
+                view = IncomesAndExpensesFragment.newInstance();
+                presenter = new IncomesAndExpensesPresenter((IncomesAndExpensesContract.View)view,
+                        Injection.provideCategoriesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider());
+            case R.id.nav_purchase_list:
+                view = PurchaseListFragment.newInstance();
+                presenter = new PurchaseListPresenter((PurchaseListContract.View)view,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider());
             default:
                 break;
         }

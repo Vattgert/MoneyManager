@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.productmanagment.Injection;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
@@ -60,11 +61,14 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, Account> fullAccountMapperFunction;
     private Function<Cursor, Goal> goalMapperFunction;
     private Function<Cursor, MyCurrency> currencyMapperFunction;
+    private Function<Cursor, Purchase> purchaseMapperFunction;
+
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
         ExpenseManagerDatabaseHelper helper = new ExpenseManagerDatabaseHelper(context);
         databaseHelper = sqlBrite.wrapDatabaseHelper(helper, schedulerProvider.io());
+
         expenseMapperFunction = this::getExpense;
         plannedPaymentMapperFunction = this::getPlannedPayment;
         debtMapperFunction = this::getDebt;
@@ -74,6 +78,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         fullAccountMapperFunction = this::getFullAccount;
         goalMapperFunction = this::getGoal;
         currencyMapperFunction = this::getCurrency;
+        purchaseMapperFunction = this::getPurchase;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -201,6 +206,13 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         return new MyCurrency(id, title, code, symbol, rateToBase, rateBaseToThis, isBase);
     }
 
+    private Purchase getPurchase(Cursor c){
+        int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.PurchaseEntry.COLUMN_ID));
+        String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.PurchaseEntry.COLUMN_TITLE));
+        int listId = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.PurchaseEntry.COLUMN_PURCHASE_LIST));
+        return new Purchase(id, title, listId);
+    }
+
     private ArrayList<String> getExpenseTableList(){
         return new ArrayList<>(Arrays.asList(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME
                 ,CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
@@ -301,6 +313,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     @Override
     public void saveExpense(@NonNull Expense expense) {
         ContentValues expenseValues = new ContentValues();
+        Log.wtf("PurchaseLog", "expense local data source expense cost " + expense.getCost());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST, expense.getCost());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY, expense.getCategory().getId());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NOTE, expense.getExpenseInformation().getNote());
@@ -312,6 +325,8 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_PLACE, expense.getExpenseInformation().getPlace());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDITION, expense.getExpenseInformation().getAddition());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_DEBT, expense.getDebtId());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_ACCOUNT, expense.getAccount().getId());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_EXPENSE_TYPE, expense.getExpenseType());
         databaseHelper.insert(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, expenseValues, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -546,10 +561,59 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<List<PurchaseList>> getPurchaseLists() {
-        String sql = "SELECT FROM purchaseList";
+        String sql = "SELECT * FROM purchase_list";
         return databaseHelper.createQuery(ExpensePersistenceContract.PurchaseListEntry.TABLE_NAME, sql)
                 .mapToList(purchaseListMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<Purchase>> getPurchasesByList(String purchaseListId) {
+        String sql = String.format("SELECT * FROM %s WHERE %s = %s",
+                ExpensePersistenceContract.PurchaseEntry.TABLE_NAME,
+                ExpensePersistenceContract.PurchaseEntry.COLUMN_PURCHASE_LIST,
+                purchaseListId);
+        return databaseHelper.createQuery(ExpensePersistenceContract.PurchaseEntry.TABLE_NAME, sql)
+                .mapToList(purchaseMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public void deletePurchase(int purchaseId) {
+        String selection = ExpensePersistenceContract.PurchaseEntry.COLUMN_ID + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(purchaseId) };
+        databaseHelper.delete(ExpensePersistenceContract.PurchaseEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    @Override
+    public void renamePurchaseList(int purchaseListId, String name) {
+        ContentValues values = new ContentValues();
+        values.put(ExpensePersistenceContract.PurchaseListEntry.COLUMN_TITLE, name);
+        databaseHelper.update(ExpensePersistenceContract.PurchaseListEntry.TABLE_NAME, values,
+                String.format("%s=%d",ExpensePersistenceContract.PurchaseListEntry.COLUMN_ID, purchaseListId));
+    }
+
+    @Override
+    public void deletePurchaseList(int purchaseList) {
+        String selection = ExpensePersistenceContract.PurchaseListEntry.COLUMN_ID + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(purchaseList) };
+        databaseHelper.delete(ExpensePersistenceContract.PurchaseListEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    @Override
+    public void createPurchaseList(String purchaseListTitle) {
+        ContentValues expenseValues = new ContentValues();
+        expenseValues.put(ExpensePersistenceContract.PurchaseListEntry.COLUMN_TITLE, purchaseListTitle);
+        databaseHelper.insert(ExpensePersistenceContract.PurchaseListEntry.TABLE_NAME,
+                expenseValues, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    @Override
+    public void createPurchase(Purchase purchase) {
+        ContentValues expenseValues = new ContentValues();
+        expenseValues.put(ExpensePersistenceContract.PurchaseEntry.COLUMN_TITLE, purchase.getTitle());
+        expenseValues.put(ExpensePersistenceContract.PurchaseEntry.COLUMN_PURCHASE_LIST, purchase.getPurchaseListId());
+        databaseHelper.insert(ExpensePersistenceContract.PurchaseEntry.TABLE_NAME, expenseValues, SQLiteDatabase.CONFLICT_NONE);
     }
 
     @Override
@@ -605,6 +669,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_NEEDED_AMOUNT, goal.getNeededAmount());
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_ACCUMULATED_AMOUNT, goal.getAccumulatedAmount());
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_WANTED_DATE, goal.getWantedDate());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_START_DATE, goal.getStartDate());
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_NOTE, goal.getNote());
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, goal.getState());
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_ICON, goal.getIcon());
@@ -613,19 +678,41 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
-    public void editGoal(@NonNull Goal goal) {
-
+    public void editGoal(String goalId, @NonNull Goal goal) {
+        ContentValues values = new ContentValues();
+        values.put(ExpensePersistenceContract.GoalEntry.COLUMN_TITLE, goal.getTitle());
+        values.put(ExpensePersistenceContract.GoalEntry.COLUMN_NEEDED_AMOUNT, goal.getNeededAmount());
+        values.put(ExpensePersistenceContract.GoalEntry.COLUMN_ACCUMULATED_AMOUNT, goal.getAccumulatedAmount());
+        values.put(ExpensePersistenceContract.GoalEntry.COLUMN_WANTED_DATE, goal.getWantedDate());
+        values.put(ExpensePersistenceContract.GoalEntry.COLUMN_NOTE, goal.getNote());
+        databaseHelper.update(ExpensePersistenceContract.GoalEntry.TABLE_NAME, values, String.format("id_goal=%s", goalId));
     }
 
     @Override
-    public void deleteGoal(@NonNull int goalId) {
+    public void deleteGoal(@NonNull String goalId) {
+        String selection = ExpensePersistenceContract.GoalEntry.COLUMN_ID + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(goalId) };
+        databaseHelper.delete(ExpensePersistenceContract.GoalEntry.TABLE_NAME, selection, selectionArgs);
+    }
 
+    @Override
+    public void makeGoalPaused(String goalId) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, 2);
+        databaseHelper.update(ExpensePersistenceContract.GoalEntry.TABLE_NAME, contentValues, String.format("id_goal=%s", goalId));
     }
 
     @Override
     public void makeGoalAchieved(int goalId) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, 3);
+        databaseHelper.update(ExpensePersistenceContract.GoalEntry.TABLE_NAME, contentValues, String.format("id_goal=%s", goalId));
+    }
+
+    @Override
+    public void makeGoalActive(String goalId) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, 1);
         databaseHelper.update(ExpensePersistenceContract.GoalEntry.TABLE_NAME, contentValues, String.format("id_goal=%s", goalId));
     }
 

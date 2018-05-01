@@ -107,6 +107,18 @@
     <!-- Валюти -->
     <string name="base_currency_select_item">%1$s - %2$s</string>
 
+    <!--Покупки-->
+    <string name="deselect_purchases">Зняти\nвиділення</string>
+    <string name="delete_purchase_list">Видалити\nсписок</string>
+    <string name="share_title_list">Потрібно купити:\n</string>
+    <string name="share_purchases_item_string">*%1$s\n</string>
+    <string name="purchase_note_title">[%1$s]</string>
+    <string name="purchase_note_title_s">%1$s: </string>
+    <string name="purchase_note_item">%1$s, </string>
+
+    <!--Звіти -->
+    <string name="report_subcategory_text">%1$s - %2$s</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

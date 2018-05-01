@@ -13,7 +13,7 @@ public class CategoryPersistenceContract {
     public abstract class CategoryEntry implements BaseColumns {
         public static final String TABLE_NAME = "category";
         public static final String COLUMN_NAME_ENTRY_ID = "categoryId";
-        public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_NAME_TITLE = "category_title";
         public static final String COLUMN_ICON = "icon";
     }
 
@@ -21,7 +21,7 @@ public class CategoryPersistenceContract {
         public static final String TABLE_NAME = "subcategory";
         public static final String COLUMN_CATEGORY_ID = "category_id";
         public static final String COLUMN_ID = "id_subcategory";
-        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_TITLE = "subcategory_title";
         public static final String COLUMN_IS_FAVOURITE = "isFavourite";
     }
 }

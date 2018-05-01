@@ -48,6 +48,14 @@
             android:id="@+id/nav_currencies"
             android:icon="@drawable/ic_naw_groups"
             android:title="Валюти" />
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_nav_planned_payment"
+            android:title="Звіти" />
+        <item
+            android:id="@+id/nav_purchase_list"
+            android:icon="@drawable/ic_nav_planned_payment"
+            android:title="Списки покупок" />
     </group>
 
 </menu>

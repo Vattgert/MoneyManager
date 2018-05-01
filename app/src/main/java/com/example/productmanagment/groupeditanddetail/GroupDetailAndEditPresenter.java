@@ -2,46 +2,46 @@ package com.example.productmanagment.groupeditanddetail;
 
 import android.util.Log;
 
+import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
+import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class GroupDetailAndEditPresenter implements GroupDetailAndEditContract.Presenter {
-    private String groupTitle;
+    private int groupId;
     private GroupDetailAndEditContract.View view;
     private RemoteDataRepository repository;
+    private BaseSchedulerProvider provider;
     private CompositeDisposable compositeDisposable;
 
-    public GroupDetailAndEditPresenter(String groupTitle, GroupDetailAndEditContract.View view, RemoteDataRepository repository) {
-        this.groupTitle = groupTitle;
+    public GroupDetailAndEditPresenter(int groupId, GroupDetailAndEditContract.View view,
+                                       RemoteDataRepository repository, BaseSchedulerProvider provider) {
+        this.groupId = groupId;
         this.view = view;
         this.repository = repository;
+        this.provider = provider;
         compositeDisposable = new CompositeDisposable();
         this.view.setPresenter(this);
-        Log.wtf("MyLog", groupTitle);
     }
 
     @Override
     public void addUser(String user) {
-        repository.addUserToGroup(groupTitle, user);
-        loadUsersByGroup(this.groupTitle);
+
     }
 
     @Override
     public void openAddUserDialog() {
-        view.showNewParticipantDialog(groupTitle);
+
+        //view.showNewParticipantDialog(groupTitle);
     }
 
     @Override
     public void loadUsersByGroup(String groupTitle) {
-        Disposable disposable = repository.getUsersListByGroup(groupTitle)
-                .flatMap(Flowable::fromIterable)
-                .toList()
-                .subscribe(users -> {view.setUsersData(users); view.setGroupParticipantCount();});
-        compositeDisposable.add(disposable);
+
     }
 
     //TODO: Прикинуть что то с редактированием имени группы
@@ -52,17 +52,31 @@ public class GroupDetailAndEditPresenter implements GroupDetailAndEditContract.P
 
     @Override
     public void addUserToGroup(String group, String user) {
-        repository.addUserToGroup(group, user);
+
     }
 
     @Override
     public void subscribe() {
-        view.setGroupTitleEdit(this.groupTitle);
-        loadUsersByGroup(this.groupTitle);
+        Disposable disposable = repository.getGroupById(String.valueOf(this.groupId))
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(this::processGroup, throwable -> Log.wtf("MyLog", throwable.getMessage()));
+        compositeDisposable.add(disposable);
     }
 
     @Override
     public void unsubscribe() {
         compositeDisposable.clear();
+    }
+
+    private void processGroup(Group group){
+        view.setGroupTitleEdit(group.getTitle());
+        view.setUsersData(group.getGroupUsers());
+        view.setGroupParticipantCount();
+        Log.wtf("GroupLog", group.getGroupId() + "");
+        Log.wtf("GroupLog", group.getTitle());
+        for(User user : group.getGroupUsers()){
+            Log.wtf("GroupLog", user.getEmail());
+        }
     }
 }

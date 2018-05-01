@@ -1,15 +1,28 @@
 package com.example.productmanagment.data.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.gson.annotations.SerializedName;
 
 @IgnoreExtraProperties
 public class User {
+    @SerializedName("id_user")
+    private int userId;
+    @SerializedName("user_login")
     private String login;
+    @SerializedName("user_email")
     private String email;
     private String name;
 
     public User(){
 
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public User(String email, String name) {

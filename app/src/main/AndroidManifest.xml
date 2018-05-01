@@ -46,7 +46,6 @@
         <activity
             android:name=".adddebts.AddDebtActivity"
             android:label="@string/debt_creating" />
-        <activity android:name=".purchaseslist.PurchaseListActivity" />
         <activity
             android:name=".debtsdetailandedit.DebtDetailAndEditActivity"
             android:label="@string/debt_edit" />

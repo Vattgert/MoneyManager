@@ -32,6 +32,13 @@ public class Expense {
         this.account = account;
     }
 
+    public Expense(double cost, Category category, ExpenseInformation expenseInformation, Account account) {
+        this.cost = cost;
+        this.category = category;
+        this.expenseInformation = expenseInformation;
+        this.account = account;
+    }
+
     public Expense(double cost, Category category, ExpenseInformation expenseInformation) {
         this.cost = cost;
         this.category = category;
@@ -102,4 +109,5 @@ public class Expense {
     public void setAccount(Account account) {
         this.account = account;
     }
+
 }

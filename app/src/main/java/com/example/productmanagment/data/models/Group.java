@@ -1,16 +1,29 @@
 package com.example.productmanagment.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Group {
+    @SerializedName("id_group")
+    private int groupId;
+    @SerializedName("group_title")
     private String title;
+    @SerializedName("group_member_count")
     private int membersCount;
     private String groupOwner;
-    private List<Expense> groupExpenses;
-    private List<User> users;
+    private List<User> groupUsers;
 
     public Group(){
 
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public String getTitle() {
@@ -29,14 +42,6 @@ public class Group {
         this.membersCount = membersCount;
     }
 
-    public List<Expense> getGroupExpenses() {
-        return groupExpenses;
-    }
-
-    public void setGroupExpenses(List<Expense> groupExpenses) {
-        this.groupExpenses = groupExpenses;
-    }
-
     public String getGroupOwner() {
         return groupOwner;
     }
@@ -45,11 +50,11 @@ public class Group {
         this.groupOwner = groupOwner;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<User> getGroupUsers() {
+        return groupUsers;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setGroupUsers(List<User> groupUsers) {
+        this.groupUsers = groupUsers;
     }
 }

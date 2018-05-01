@@ -60,13 +60,27 @@ public class CategoriesLocalDataSource implements CategoriesDataSource {
         return new Category(itemId, title, icon);
     }
 
+    String[] categoryProjection = { CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_ENTRY_ID,
+            CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_TITLE,
+            CategoryPersistenceContract.CategoryEntry.COLUMN_ICON};
+
+    String[] subcategoryProjection = { CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID,
+            CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID,
+            CategoryPersistenceContract.SubcategoryEntry.COLUMN_IS_FAVOURITE,
+            CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE};
+
+    String [] subcategoryCategory = {CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                                    CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID};
+    String [] categoryIdInnerJoin = {CategoryPersistenceContract.CategoryEntry.TABLE_NAME,
+            CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_ENTRY_ID};
+
     @NonNull
     private Subcategory getSubcategory(@NonNull Cursor c){
         int itemId = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID));
         String title = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
         int categoryId = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID));
         int isFavourite = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_IS_FAVOURITE));
-        return new Subcategory(itemId, title, categoryId, isFavourite);
+        return new Subcategory(itemId, title, getCategory(c), isFavourite);
     }
 
     @Override
@@ -84,13 +98,14 @@ public class CategoriesLocalDataSource implements CategoriesDataSource {
 
     @Override
     public Flowable<List<Subcategory>> getSubcategories(@NonNull int categoryId){
-        String[] projection = { CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID,
-                CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID,
-                CategoryPersistenceContract.SubcategoryEntry.COLUMN_IS_FAVOURITE,
-                CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE};
-        String sql = String.format("SELECT %s FROM %s WHERE %s = %s",
-                TextUtils.join(",", projection),
+
+        String sql = String.format("SELECT %s,%s FROM %s INNER JOIN %s ON %s = %s WHERE %s = %s",
+                TextUtils.join(",", subcategoryProjection),
+                TextUtils.join(",", categoryProjection),
                 CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                CategoryPersistenceContract.CategoryEntry.TABLE_NAME,
+                TextUtils.join(".", subcategoryCategory),
+                TextUtils.join(".", categoryIdInnerJoin),
                 CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID,
                 String.valueOf(categoryId));
         return databaseHelper.createQuery(CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME, sql)
