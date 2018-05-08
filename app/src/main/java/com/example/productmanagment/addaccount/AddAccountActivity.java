@@ -13,6 +13,7 @@ public class AddAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
 
+        setTitle("Створити рахунок");
         AddAccountFragment fragment = AddAccountFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.addAccountContent, fragment).commit();

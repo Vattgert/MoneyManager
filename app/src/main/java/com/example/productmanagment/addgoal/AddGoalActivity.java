@@ -13,6 +13,8 @@ public class AddGoalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_goal);
 
+        setTitle("Створити ціль");
+
         AddGoalFragment fragment = AddGoalFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.addGoalContent, fragment).commit();

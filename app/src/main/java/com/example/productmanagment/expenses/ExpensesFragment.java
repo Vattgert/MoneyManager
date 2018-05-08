@@ -43,10 +43,10 @@ import java.util.List;
 public class ExpensesFragment extends Fragment implements ExpensesContract.View {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    ExpensesContract.Presenter presenter;
+    private ExpensesContract.Presenter presenter;
     private ExpensesAdapter expenseAdapter;
-    AccountSpinnerAdapter adapter;
-    Spinner spinner;
+    private AccountSpinnerAdapter adapter;
+    private Spinner spinner;
 
     public ExpensesFragment() {
     }
@@ -61,7 +61,9 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         super.onCreate(savedInstanceState);
         getActivity().setTitle("");
         expenseAdapter = new ExpensesAdapter(new ArrayList<Expense>(0), itemListener);
-        adapter = new AccountSpinnerAdapter(getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(0), android.R.layout.simple_spinner_dropdown_item);
+        adapter = new AccountSpinnerAdapter(getContext(),
+        android.R.layout.simple_spinner_item, new ArrayList<>(0),
+        android.R.layout.simple_spinner_dropdown_item);
     }
 
     @Override
@@ -91,8 +93,10 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         View view =  inflater.inflate(R.layout.fragment_expenses, container, false);
         setHasOptionsMenu(true);
         RecyclerView recyclerView = view.findViewById(R.id.expensesRecyclerView);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        RecyclerView.LayoutManager mLayoutManager =
+        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.addItemDecoration
+        (new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(expenseAdapter);
 
@@ -194,19 +198,23 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         private List<Expense> expenseList;
         ExpensesFragment.ExpensesItemListener itemListener;
 
-        public ExpensesAdapter(List<Expense> expenseList, ExpensesFragment.ExpensesItemListener itemListener) {
+        public ExpensesAdapter(List<Expense> expenseList,
+        ExpensesFragment.ExpensesItemListener itemListener) {
             this.expenseList = expenseList;
             this.itemListener = itemListener;
         }
 
         @Override
-        public ExpensesFragment.ExpensesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense, parent, false);
+        public ExpensesFragment.ExpensesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                            int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense,
+                                                                        parent, false);
             return new ExpensesFragment.ExpensesAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ExpensesFragment.ExpensesAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(ExpensesFragment.ExpensesAdapter.ViewHolder holder,
+                                                                        int position) {
             Expense expense = expenseList.get(position);
             holder.bind(expense);
         }

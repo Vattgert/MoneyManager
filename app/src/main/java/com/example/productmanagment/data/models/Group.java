@@ -7,11 +7,16 @@ import java.util.List;
 public class Group {
     @SerializedName("id_group")
     private int groupId;
+
     @SerializedName("group_title")
     private String title;
+
     @SerializedName("group_member_count")
     private int membersCount;
+
+    @SerializedName("id_group_creator")
     private String groupOwner;
+
     private List<User> groupUsers;
 
     public Group(){

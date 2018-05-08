@@ -3,6 +3,7 @@ package com.example.productmanagment.groups;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -91,6 +92,11 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
         startActivity(intent);
     }
 
+    @Override
+    public void showCreateGroupMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
     GroupsItemListener listener = new GroupsItemListener() {
         @Override
         public void onGroupClick(Group clicked) {
@@ -112,7 +118,7 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
                     Group newGroup = new Group();
                     EditText groupTitleEditText = view.findViewById(R.id.groupNewParticipantEmailEditText);
                     String title = groupTitleEditText.getText().toString();
-                    String owner = "Vattgert";
+                    String owner = "1";
                     newGroup.setTitle(title);
                     newGroup.setGroupOwner(owner);
                     presenter.createNewGroup(newGroup);
@@ -157,11 +163,13 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
         public class ViewHolder extends RecyclerView.ViewHolder{
             Group group;
             TextView groupTitleTextView, groupMemberCountTextView;
+            Resources resources;
 
             public ViewHolder(View view) {
                 super(view);
                 groupTitleTextView = view.findViewById(R.id.groupTitleTextView);
                 groupMemberCountTextView = view.findViewById(R.id.groupMemberCountTextView);
+                resources = view.getResources();
 
                 if(itemListener != null)
                     view.setOnClickListener(__ -> itemListener.onGroupClick(group));
@@ -170,7 +178,7 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
             public void bind(Group group){
                 this.group = group;
                 groupTitleTextView.setText(group.getTitle());
-                groupMemberCountTextView.setText(group.getMembersCount() + "");
+                groupMemberCountTextView.setText(resources.getString(R.string.group_user_count, group.getMembersCount()));
             }
         }
     }

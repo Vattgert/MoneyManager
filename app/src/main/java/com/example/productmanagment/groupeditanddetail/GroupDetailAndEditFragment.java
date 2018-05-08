@@ -2,6 +2,7 @@ package com.example.productmanagment.groupeditanddetail;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.productmanagment.R;
 import com.example.productmanagment.data.models.User;
+import com.example.productmanagment.userrights.UserRightsActivity;
 import com.github.ivbaranov.mli.MaterialLetterIcon;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
     ImageButton editTitleImageButton;
 
     public GroupDetailAndEditFragment() {
-        // Required empty public constructor
+
     }
 
     public static GroupDetailAndEditFragment newInstance() {
@@ -49,7 +51,7 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new GroupParticipantAdapter(new ArrayList<User>(0), null, getContext());
+        adapter = new GroupParticipantAdapter(new ArrayList<User>(0), itemListener, getContext());
     }
 
     @Override
@@ -64,6 +66,7 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_detail_and_edit, container, false);
         groupTitleEditText = view.findViewById(R.id.groupTitleEditText);
+        groupTitleEditText.setOnClickListener(__ -> presenter.openRenameGroupDialog());
         groupParticipantCountTextView = view.findViewById(R.id.groupUserCountTextView);
 
         addGroupParticipantButton = view.findViewById(R.id.addGroupParticipantButton);
@@ -97,15 +100,15 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
         this.presenter = presenter;
     }
 
-    private void showEnterNewGroupParticipantDialog(String group){
+    private void showEnterNewGroupParticipantDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_enter_new_group_participant, null);
         builder.setTitle(getResources().getString(R.string.group_new_participant_dialog))
                 .setView(view)
                 .setPositiveButton(R.string.group_participant_email_ok, (dialog, id) -> {
-                    EditText sumEditText = view.findViewById(R.id.groupNewParticipantEmailEditText);
-                    String email = sumEditText.getText().toString();
+                    EditText emailEditText = view.findViewById(R.id.groupNewParticipantEmailEditText);
+                    String email = emailEditText.getText().toString();
                     presenter.addUser(email);
                 })
                 .setNegativeButton(R.string.group_participant_email_reject, (dialog, id) -> {
@@ -115,8 +118,28 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
     }
 
     @Override
-    public void showNewParticipantDialog(String group) {
-        showEnterNewGroupParticipantDialog(group);
+    public void showNewParticipantDialog() {
+        showEnterNewGroupParticipantDialog();
+    }
+
+    @Override
+    public void showNewGroupNameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_enter_new_group_participant, null);
+        builder.setTitle("Нове ім'я групи")
+                .setView(view)
+                .setPositiveButton(R.string.group_participant_email_ok, (dialog, id) -> {
+                    EditText newGroupNameEditText = view.findViewById(R.id.groupNewParticipantEmailEditText);
+                    TextView newGroupNameTextView = view.findViewById(R.id.newParticipantTextView);
+                    newGroupNameTextView.setText("Вкажіть нове ім'я групи");
+                    String newName = newGroupNameEditText.getText().toString();
+                    presenter.editGroupTitle(newName);
+                })
+                .setNegativeButton(R.string.group_participant_email_reject, (dialog, id) -> {
+
+                });
+        builder.create().show();
     }
 
     @Override
@@ -135,9 +158,24 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
     }
 
     @Override
-    public void showNoSuchUserMessage() {
-        Toast.makeText(getContext(), "Такого користувача немає", Toast.LENGTH_LONG).show();
+    public void showUserAddMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void showUserRights(String userId, String groupId) {
+        Intent intent = new Intent(getContext(), UserRightsActivity.class);
+        intent.putExtra("group_id", groupId);
+        intent.putExtra("user_id", userId);
+        startActivity(intent);
+    }
+
+    ParticipantItemListener itemListener = new ParticipantItemListener() {
+        @Override
+        public void onParticipantClick(User clicked) {
+            presenter.openUserRights(String.valueOf(clicked.getUserId()));
+        }
+    };
 
     public static class GroupParticipantAdapter extends RecyclerView.Adapter<GroupParticipantAdapter.ViewHolder>{
         private List<User> userList;

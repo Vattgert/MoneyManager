@@ -10,6 +10,10 @@ import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
+import com.example.productmanagment.data.models.Subcategory;
+import com.example.productmanagment.data.models.UserRight;
+import com.example.productmanagment.data.models.report.CategoryReport;
+import com.example.productmanagment.data.models.report.SubcategoryReport;
 
 import java.util.Currency;
 import java.util.HashMap;
@@ -59,6 +63,7 @@ public interface ExpensesDataSource {
     void createPurchase(Purchase purchase);
     void deletePurchase(int purchaseId);
     void renamePurchaseList(int purchaseListId, String name);
+
     //Діаграми
     Flowable<HashMap<String, Integer>> getExpensesStructureData(String type);
     Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate);
@@ -86,4 +91,11 @@ public interface ExpensesDataSource {
     void saveCurrency(MyCurrency currency);
     void updateCurrency(MyCurrency currency);
 
+    Flowable<List<UserRight>> getUserRightsList();
+
+    //Звіти
+    Flowable<List<CategoryReport>> getCategoryReport();
+    Flowable<List<SubcategoryReport>> getSubcategoryReport(String categoryId);
+    Flowable<List<CategoryReport>> getCategoryReportByDate(String fdate, String sdate);
+    Flowable<List<SubcategoryReport>> getSubcategoryReportByDate(String categoryId, String fdate, String sdate);
 }

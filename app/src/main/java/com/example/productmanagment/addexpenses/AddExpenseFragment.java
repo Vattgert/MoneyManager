@@ -22,10 +22,14 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.adapters.SimpleAccountSpinnerAdapter;
 import com.example.productmanagment.categories.CategoryActivity;
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
+import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.Subcategory;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -37,10 +41,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+
+import belka.us.androidtoggleswitch.widgets.BaseToggleSwitch;
+import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,12 +60,14 @@ import java.util.Locale;
  */
 public class AddExpenseFragment extends Fragment implements AddExpenseContract.View {
     private AddExpenseContract.Presenter presenter;
-    private EditText costTextView, noteEditText, categoryEditText, receiverEditText, dateEditText, timeEditText,
+    private EditText costEditText, noteEditText, categoryEditText, receiverEditText, dateEditText, timeEditText,
                      placeTextView, additionTextView;
     private ImageButton choosePlaceButton, makeAdditionButton;
-    private Spinner typeOfPaymentSpinner;
-
+    private Spinner typeOfPaymentSpinner, accountSpinner;
+    private ToggleSwitch expenseTypeToggleSwitch;
     private TextView placeNameTextView;
+
+    private SimpleAccountSpinnerAdapter accountSpinnerAdapter;
 
     public AddExpenseFragment() {
         // Required empty public constructor
@@ -76,9 +87,19 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        accountSpinnerAdapter = new SimpleAccountSpinnerAdapter(getContext(),
+                android.R.layout.simple_spinner_item, new ArrayList<>(0),
+                android.R.layout.simple_spinner_dropdown_item);
     }
 
     //TODO: Доделать чипсы (метки)
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.subscribe();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,13 +108,18 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         View view = inflater.inflate(R.layout.fragment_add_expense, container, false);
         setHasOptionsMenu(true);
 
-        //costTextView = view.findViewById(R.id.)
+        costEditText = view.findViewById(R.id.costAddEditText);
         noteEditText = view.findViewById(R.id.noteAddEditText);
         dateEditText = view.findViewById(R.id.dateAddEditText);
         timeEditText = view.findViewById(R.id.timeAddEditText);
         receiverEditText = view.findViewById(R.id.receiverAddEditText);
         categoryEditText = view.findViewById(R.id.categoryAddEditText);
+
         typeOfPaymentSpinner = view.findViewById(R.id.typeOfPaymentSpinner);
+        accountSpinner = view.findViewById(R.id.addAccountSpinner);
+        accountSpinner.setAdapter(accountSpinnerAdapter);
+
+        expenseTypeToggleSwitch = view.findViewById(R.id.expenseTypeToggle);
 
         choosePlaceButton = view.findViewById(R.id.choosePlaceButton);
 
@@ -166,6 +192,11 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
     }
 
+    @Override
+    public void showAccounts(List<Account> accountList) {
+        accountSpinnerAdapter.setData(accountList);
+    }
+
 
     private DatePickerDialog getDatePickerDialog(){
         Calendar calendar = GregorianCalendar.getInstance();
@@ -182,7 +213,7 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
     DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            SimpleDateFormat format = new SimpleDateFormat("dd MMM y", new Locale("ru"));
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
             Date date = new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth());
             dateEditText.setText(format.format(date));
         }
@@ -248,17 +279,26 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
 
     private void getDataAndSave(){
-        double cost = 0.0; /*Double.valueOf(costTextView.getText().toString());*/
+        double cost = Double.valueOf(costEditText.getText().toString());
         String note = noteEditText.getText().toString();
         Category category = presenter.getChosenCategory();
+        Account account = (Account) accountSpinner.getSelectedItem();
+        int expenseType = expenseTypeToggleSwitch.getCheckedTogglePosition() + 1;
         String receiver = receiverEditText.getText().toString();
         String place = ""; /*placeTextView.getText().toString();*/
         String date = dateEditText.getText().toString();
         String time = timeEditText.getText().toString();
+        if(date.equals("")){
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
+            date = format.format(new Date());
+        }
         String typeOfPayment = typeOfPaymentSpinner.getSelectedItem().toString();
         String addition = "";
         String marks = "";
         ExpenseInformation information = new ExpenseInformation(note, marks, receiver, date, time, typeOfPayment, place, addition);
-        presenter.saveExpense(cost, category, information);
+        Expense expense = new Expense(cost, category, information, account);
+        expense.setExpenseType(expenseType);
+        if(cost > 0 && category != null && account != null)
+            presenter.saveExpense(expense);
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
+import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.List;
@@ -48,7 +49,10 @@ public class GroupsPresenter implements GroupsContract.Presenter {
 
     @Override
     public void createNewGroup(Group group) {
-
+        repository.addGroup(group)
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(this::processAddGroupResult);
     }
 
     @Override
@@ -64,5 +68,13 @@ public class GroupsPresenter implements GroupsContract.Presenter {
     private void processGroups(GroupsResponse groupsResponse){
         List<Group> groups = groupsResponse.groupList;
         view.setGroupsData(groups);
+    }
+
+    private void processAddGroupResult(SuccessResponse response){
+        loadGroupsByOwner("1");
+        if(response.response.equals("success"))
+            view.showCreateGroupMessage(response.data);
+        else
+            view.showCreateGroupMessage(response.errorData);
     }
 }

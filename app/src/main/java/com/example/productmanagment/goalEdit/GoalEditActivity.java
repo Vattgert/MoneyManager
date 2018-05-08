@@ -13,6 +13,7 @@ public class GoalEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_edit);
 
+        setTitle("Редагування цілі");
         String goalId = getIntent().getExtras().getString("goalId");
 
         GoalEditFragment goalEditFragment = GoalEditFragment.newInstance();

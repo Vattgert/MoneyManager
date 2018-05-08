@@ -10,16 +10,19 @@ public interface GroupDetailAndEditContract {
     interface Presenter extends BasePresenter{
         void addUser(String user);
         void openAddUserDialog();
+        void openRenameGroupDialog();
         void loadUsersByGroup(String groupTitle);
         void editGroupTitle(String groupTitle);
-        void addUserToGroup(String group, String user);
+        void openUserRights(String userId);
     }
 
     interface View extends BaseView<Presenter>{
-        void showNewParticipantDialog(String group);
+        void showNewParticipantDialog();
+        void showNewGroupNameDialog();
         void setGroupTitleEdit(String groupTitle);
         void setGroupParticipantCount();
         void setUsersData(List<User> usersData);
-        void showNoSuchUserMessage();
+        void showUserAddMessage(String message);
+        void showUserRights(String userId, String groupId);
     }
 }

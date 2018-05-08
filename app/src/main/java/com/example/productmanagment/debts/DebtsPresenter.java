@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
@@ -125,6 +126,9 @@ public class DebtsPresenter implements DebtsContract.Presenter {
         debtClose.setCost(Double.valueOf(debt.getRemain()));
         debtClose.setCategory(new Subcategory(82, null));
         debtClose.setExpenseType(1);
+        Account account = new Account();
+        account.setId(debt.getAccountId());
+        debtClose.setAccount(account);
         ExpenseInformation information = new ExpenseInformation();
         if(debt.getDebtType() == 1) {
             information.setNote(resources.getString(R.string.borrowed, debt.getBorrower()));

@@ -208,13 +208,15 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_report:
                 view = IncomesAndExpensesFragment.newInstance();
                 presenter = new IncomesAndExpensesPresenter((IncomesAndExpensesContract.View)view,
-                        Injection.provideCategoriesRepository(getApplicationContext()),
+                        Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
+                break;
             case R.id.nav_purchase_list:
                 view = PurchaseListFragment.newInstance();
                 presenter = new PurchaseListPresenter((PurchaseListContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
+                break;
             default:
                 break;
         }

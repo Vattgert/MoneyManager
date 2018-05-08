@@ -18,5 +18,6 @@ public interface GroupsContract {
         void setGroupsData(List<Group> groupsData);
         void showCreateNewGroup();
         void showEditAndDetailGroup(int groupId);
+        void showCreateGroupMessage(String message);
     }
 }

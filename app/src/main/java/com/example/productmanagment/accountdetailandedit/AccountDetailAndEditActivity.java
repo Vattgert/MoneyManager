@@ -13,6 +13,7 @@ public class AccountDetailAndEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_detail_and_edit);
+        setTitle("Деталі рахунку");
 
         String accountId = getIntent().getExtras().getString("account_id");
 

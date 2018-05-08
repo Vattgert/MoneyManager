@@ -26,7 +26,8 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     private BaseSchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable;
 
-    public ExpensesPresenter(ExpensesRepository expensesRepository, ExpensesContract.View view, BaseSchedulerProvider schedulerProvider){
+    public ExpensesPresenter(ExpensesRepository expensesRepository, ExpensesContract.View view,
+                                BaseSchedulerProvider schedulerProvider){
         this.view = view;
         this.expensesRepository = expensesRepository;
         this.schedulerProvider = schedulerProvider;
@@ -94,7 +95,8 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
 
     @Override
     public void result(int requestCode, int resultCode) {
-        if (AddExpenseActivity.REQUEST_ADD_EXPENSE == requestCode && Activity.RESULT_OK == resultCode) {
+        if (AddExpenseActivity.REQUEST_ADD_EXPENSE == requestCode
+                && Activity.RESULT_OK == resultCode) {
             view.showExpenseSuccessfullySavedMessage();
         }
     }

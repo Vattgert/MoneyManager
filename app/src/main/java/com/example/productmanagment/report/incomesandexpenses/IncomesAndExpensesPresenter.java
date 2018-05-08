@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Subcategory;
+import com.example.productmanagment.data.models.report.CategoryReport;
 import com.example.productmanagment.data.source.categories.CategoriesRepository;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
@@ -16,12 +17,12 @@ import io.reactivex.disposables.Disposable;
 
 public class IncomesAndExpensesPresenter implements IncomesAndExpensesContract.Presenter {
     IncomesAndExpensesContract.View view;
-    CategoriesRepository repository;
+    ExpensesRepository repository;
     BaseSchedulerProvider provider;
     CompositeDisposable compositeDisposable;
 
     public IncomesAndExpensesPresenter(IncomesAndExpensesContract.View view,
-                                       CategoriesRepository repository,
+                                       ExpensesRepository repository,
                                        BaseSchedulerProvider provider) {
         this.view = view;
         this.repository = repository;
@@ -32,10 +33,10 @@ public class IncomesAndExpensesPresenter implements IncomesAndExpensesContract.P
 
     @Override
     public void loadCategories() {
-        Disposable disposable = repository.getCategories()
+        Disposable disposable = repository.getCategoryReport()
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
-                .subscribe(this::processListHeaders);
+                .subscribe(this::processListHeaders, throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
 
@@ -60,10 +61,14 @@ public class IncomesAndExpensesPresenter implements IncomesAndExpensesContract.P
         compositeDisposable.clear();
     }
 
-    private void processListHeaders(List<Category> categoryList){
+    private void processListHeaders(List<CategoryReport> categoryList){
         view.setHeadersListData(categoryList);
-        for (Category c :  categoryList) {
-            Disposable disposable = repository.getSubcategories(c.getId())
+        for(CategoryReport report : categoryList){
+            Log.wtf("ReportLog", report.getCategory().getName() + " " +report.getAmount() + "\n");
+        }
+        for (CategoryReport c :  categoryList) {
+            Category category = c.getCategory();
+            Disposable disposable = repository.getSubcategoryReport(String.valueOf(category.getId()))
                     .subscribeOn(provider.io())
                     .observeOn(provider.ui())
                     .subscribe(subcategories -> {

@@ -118,6 +118,8 @@
 
     <!--Звіти -->
     <string name="report_subcategory_text">%1$s - %2$s</string>
+    <string name="report_item_expense_amount">-%1$s</string>
+    <string name="report_item_income_amount">+%1$s</string>
 
     <!-- Strings related to Settings -->
 

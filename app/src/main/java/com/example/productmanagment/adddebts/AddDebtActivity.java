@@ -16,10 +16,11 @@ public class AddDebtActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_debt);
 
+        setTitle("Створити борг");
         fragment = AddDebtFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.addDebtContent, fragment).commit();
-        presenter = new AddDebtPresenter(fragment, Injection.provideExpensesRepository(this), getApplicationContext());
+        presenter = new AddDebtPresenter(fragment, Injection.provideExpensesRepository(this), getApplicationContext(), Injection.provideSchedulerProvider());
 
     }
 }

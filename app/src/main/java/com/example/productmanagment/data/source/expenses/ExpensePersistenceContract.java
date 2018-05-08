@@ -98,4 +98,11 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_RATE_BASE_TO_THIS = "rateBaseToThis";
         public static final String COLUMN_IS_BASE = "isBase";
     }
+
+    public class UserRightEntry{
+        public static final String TABLE_NAME = "user_rights";
+        public static final String COLUMN_ID = "id_user_right";
+        public static final String COLUMN_TITLE = "user_right_title";
+        public static final String COLUMN_DESCRIPTION = "user_right_description";
+    }
 }

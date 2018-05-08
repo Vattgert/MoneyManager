@@ -2,6 +2,10 @@ package com.example.productmanagment.data.source.remote;
 
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
+import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
+import com.example.productmanagment.data.source.remote.responses.UsersResponse;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.List;
@@ -36,5 +40,35 @@ public class RemoteDataSource implements RemoteData{
     @Override
     public Single<Group> getGroupById(String groupId) {
         return moneyManagerApi.getGroupById(groupId);
+    }
+
+    @Override
+    public Single<UsersResponse> getUsersByGroup(String groupId) {
+        return moneyManagerApi.getUsersByGroup(groupId);
+    }
+
+    @Override
+    public Single<SuccessResponse> addGroup(Group group) {
+        return moneyManagerApi.addGroup(group.getTitle(), group.getGroupOwner());
+    }
+
+    @Override
+    public Single<SuccessResponse> addUserToGroup(String userEmail, String groupId) {
+        return moneyManagerApi.addUserToGroup(userEmail, groupId);
+    }
+
+    @Override
+    public Single<SuccessResponse> renameGroup(String groupTitle, String groupId) {
+        return moneyManagerApi.renameGroup(groupTitle, groupId);
+    }
+
+    @Override
+    public Single<SuccessResponse> getUserRights(String groupId, String userId) {
+        return moneyManagerApi.getUsersRights(groupId, userId);
+    }
+
+    @Override
+    public Single<SuccessResponse> setUserRights(String groupId, String userId, String userRights) {
+        return moneyManagerApi.setUserRights(groupId, userId, userRights);
     }
 }

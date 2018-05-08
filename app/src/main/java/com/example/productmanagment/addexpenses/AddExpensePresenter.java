@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.productmanagment.categories.CategoryActivity;
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
@@ -14,6 +15,8 @@ import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -26,17 +29,20 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
     private AddExpenseContract.View view;
     private Context context;
     private Category chosenCategory;
+    private BaseSchedulerProvider provider;
 
-    public AddExpensePresenter(ExpensesRepository expensesRepository, AddExpenseContract.View view, Context context) {
+    public AddExpensePresenter(ExpensesRepository expensesRepository, AddExpenseContract.View view,
+                               Context context, BaseSchedulerProvider provider) {
         this.expensesRepository = expensesRepository;
         this.view = view;
         this.view.setPresenter(this);
         this.context = context;
+        this.provider = provider;
     }
 
     @Override
     public void subscribe() {
-
+        loadAccounts();
     }
 
     @Override
@@ -87,13 +93,26 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
     }
 
     @Override
-    public void saveExpense(double cost, Category category, ExpenseInformation information) {
-        createExpense(cost, category, information);
+    public void saveExpense(Expense expense) {
+        expensesRepository.saveExpense(expense);
+        view.showExpenses();
+    }
+
+    @Override
+    public void loadAccounts() {
+        expensesRepository.getAccounts()
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(this::processAccounts);
     }
 
     private void createExpense(double cost, Category category, ExpenseInformation information) {
          Expense expense  = new Expense(cost, category, information);
          expensesRepository.saveExpense(expense);
          view.showExpenses();
+    }
+
+    private void processAccounts(List<Account> accountList){
+        view.showAccounts(accountList);
     }
 }

@@ -13,6 +13,8 @@ public class GoalDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_detail);
 
+        setTitle("Перегляд цілі");
+
         String goalId = getIntent().getExtras().getString("goalId");
 
         GoalDetailFragment fragment = GoalDetailFragment.newInstance();

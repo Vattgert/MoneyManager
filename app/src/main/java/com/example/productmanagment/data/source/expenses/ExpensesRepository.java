@@ -1,10 +1,8 @@
 package com.example.productmanagment.data.source.expenses;
 
-import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.example.productmanagment.data.models.Account;
-import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
@@ -12,10 +10,10 @@ import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
-import com.example.productmanagment.data.source.expenses.ExpensesDataSource;
+import com.example.productmanagment.data.models.UserRight;
+import com.example.productmanagment.data.models.report.CategoryReport;
+import com.example.productmanagment.data.models.report.SubcategoryReport;
 
-import java.util.ArrayList;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
@@ -237,6 +235,31 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public void updateCurrency(MyCurrency currency) {
         localExpenseDataSource.updateCurrency(currency);
+    }
+
+    @Override
+    public Flowable<List<UserRight>> getUserRightsList() {
+        return localExpenseDataSource.getUserRightsList();
+    }
+
+    @Override
+    public Flowable<List<CategoryReport>> getCategoryReport() {
+        return localExpenseDataSource.getCategoryReport();
+    }
+
+    @Override
+    public Flowable<List<SubcategoryReport>> getSubcategoryReport(String categoryId) {
+        return localExpenseDataSource.getSubcategoryReport(categoryId);
+    }
+
+    @Override
+    public Flowable<List<CategoryReport>> getCategoryReportByDate(String fdate, String sdate) {
+        return localExpenseDataSource.getCategoryReportByDate(fdate, sdate);
+    }
+
+    @Override
+    public Flowable<List<SubcategoryReport>> getSubcategoryReportByDate(String categoryId, String fdate, String sdate) {
+        return getSubcategoryReportByDate(categoryId, fdate, sdate);
     }
 
     @Override

@@ -13,6 +13,7 @@ public class AddCurrencyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_currency);
 
+        setTitle("Додати валюту");
         AddCurrencyFragment fragment = AddCurrencyFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.addCurrencyContent, fragment).commit();

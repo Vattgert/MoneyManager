@@ -17,13 +17,21 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.adapters.SimpleAccountSpinnerAdapter;
 import com.example.productmanagment.categories.CategoryActivity;
+import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Debt;
+import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.ExpenseInformation;
+import com.example.productmanagment.data.models.Subcategory;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -36,6 +44,8 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
     EditText debtReceiverEditText, debtSumEditText, debtDescriptionEditText,
             borrowDateEditText, repayDateEditText;
     Spinner debtTypeSpinner, debtAccountSpinner;
+
+    private SimpleAccountSpinnerAdapter accountSpinnerAdapter;
 
     public AddDebtFragment() {
         // Required empty public constructor
@@ -50,6 +60,15 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        accountSpinnerAdapter = new SimpleAccountSpinnerAdapter(getContext(),
+                android.R.layout.simple_spinner_item, new ArrayList<>(0),
+                android.R.layout.simple_spinner_dropdown_item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.subscribe();
     }
 
     @Override
@@ -64,6 +83,9 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
         debtDescriptionEditText = view.findViewById(R.id.debtDescriptionAddEditText);
         borrowDateEditText = view.findViewById(R.id.borrowDateAddEditText);
         repayDateEditText = view.findViewById(R.id.repayDateAddEditText);
+
+        debtAccountSpinner = view.findViewById(R.id.accountAddSpinner);
+        debtAccountSpinner.setAdapter(accountSpinnerAdapter);
 
         borrowDateEditText.setOnClickListener(editTextClick);
         repayDateEditText.setOnClickListener(editTextClick);
@@ -104,6 +126,11 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
         getActivity().finish();
     }
 
+    @Override
+    public void showAccounts(List<Account> accountList) {
+        accountSpinnerAdapter.setData(accountList);
+    }
+
     View.OnClickListener editTextClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -130,17 +157,36 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
         String repayDate = repayDateEditText.getText().toString();
         int accountId = 0;
         Debt debt = new Debt(sum, description, borrowDate, repayDate, receiver, debtType, accountId);
+        Expense debtExpense = new Expense();
+        debtExpense.setDebtId(debt.getId());
+        debtExpense.setCost(Double.valueOf(debt.getSum()));
+        debtExpense.setCategory(new Subcategory(82, null));
+        Account account = (Account) debtAccountSpinner.getSelectedItem();
+        ExpenseInformation information = new ExpenseInformation();
+        if(debt.getDebtType() == 1) {
+            debtExpense.setExpenseType(2);
+            information.setNote(getContext().getResources().getString(R.string.borrowed, debt.getBorrower()));
+        }
+        else {
+            debtExpense.setExpenseType(1);
+            information.setNote(getContext().getResources().getString(R.string.lent, debt.getBorrower()));
+        }
+        information.setDate(getCurrentDate());
+        information.setReceiver(debt.getBorrower());
+        debtExpense.setExpenseInformation(information);
+        debtExpense.setAccount(account);
+        presenter.saveDebtExpense(debtExpense);
         presenter.saveDebt(debt);
     }
 
     DatePickerDialog.OnDateSetListener borrowDatePickerListener = (datePicker, i, i1, i2) -> {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.y", new Locale("ru"));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
         Date date = new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth());
         borrowDateEditText.setText(format.format(date));
     };
 
     DatePickerDialog.OnDateSetListener repayDatePickerListener = (datePicker, i, i1, i2) -> {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.y", new Locale("ru"));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
         Date date = new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth());
         repayDateEditText.setText(format.format(date));
     };
@@ -151,5 +197,11 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         return new DatePickerDialog(getActivity(), listener, year, month, day);
+    }
+
+    private String getCurrentDate(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }
