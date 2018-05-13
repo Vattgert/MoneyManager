@@ -48,7 +48,6 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
             loadAccounts();
         else
             loadRemoteAccounts(String.valueOf(this.groupId));
-
     }
 
     @Override
@@ -119,8 +118,8 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     }
 
     @Override
-    public void openExpenseDetails(@NonNull Expense requestedTask) {
-
+    public void openExpenseDetails(@NonNull Expense expense) {
+        view.showExpenseDetail(expense.getId(), this.groupId);
     }
 
     @Override

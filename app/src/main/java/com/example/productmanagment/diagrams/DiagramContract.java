@@ -16,8 +16,6 @@ public interface DiagramContract {
     }
 
     interface Presenter extends BasePresenter{
-        void setDiagramType(String param);
-        void loadExpenseStructureData(Pie chart, String type);
-        void loadExpenseByCategoryData(Cartesian chart);
+        void showDiagram(int type);
     }
 }

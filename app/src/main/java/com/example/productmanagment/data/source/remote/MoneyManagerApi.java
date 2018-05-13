@@ -5,6 +5,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
@@ -103,6 +104,9 @@ public interface MoneyManagerApi {
     @GET("expenses/getExpensesByAccount.php")
     Single<ExpensesResponse> getExpensesByAccount(@Query("accountId") String accountId);
 
+    @GET("expenses/getExpenseById.php")
+    Single<Expense> getExpenseById(@Query("expenseId") String expenseId);
+
     @GET("expenses/getExpensesByGroup.php")
     Single<ExpensesResponse> getExpensesByGroup(@Query("groupId") String groupId);
 
@@ -111,4 +115,11 @@ public interface MoneyManagerApi {
 
     @POST("expenses/updateExpense.php")
     Single<SuccessResponse> updateExpense(@Body Expense expense);
+
+    /* Діаграми */
+    @GET("diagramdata/expensesByCategoryDiagram.php")
+    Single<DiagramResponse> getExpensesByCategoryDiagram(@Query("groupId") String groupId);
+
+    @GET("diagramdata/expensesByUserDiagram.php")
+    Single<DiagramResponse> getExpensesByUserDiagram(@Query("groupId") String groupId);
 }

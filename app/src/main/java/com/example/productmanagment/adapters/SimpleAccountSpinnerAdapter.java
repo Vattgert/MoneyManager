@@ -65,4 +65,12 @@ public class SimpleAccountSpinnerAdapter extends ArrayAdapter<Account> {
     public int getCount() {
         return items.size();
     }
+
+    public int getAccountPositionById(int accountId){
+        for (Account account : items){
+            if(accountId == account.getId())
+                return items.indexOf(account);
+        }
+        return - 1;
+    }
 }

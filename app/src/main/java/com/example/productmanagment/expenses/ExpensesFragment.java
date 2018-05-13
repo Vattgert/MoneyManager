@@ -176,8 +176,22 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     }
 
     @Override
+    public void showExpenseDetail(int expenseId, int groupId) {
+        Intent intent = new Intent(getContext(), ExpenseDetailAndEditActivity.class);
+        intent.putExtra("expenseId", expenseId);
+        intent.putExtra("groupId", groupId);
+        startActivity(intent);
+    }
+
+    @Override
     public void showExpenseSuccessfullySavedMessage() {
         showMessage("Новый расход успешно добавлен");
+    }
+
+    @Override
+    public int getSelectedAccountId() {
+        Account account = (Account)spinner.getSelectedItem();
+        return account.getId();
     }
 
     private void showMessage(String message) {
@@ -187,9 +201,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     ExpensesItemListener itemListener = new ExpensesItemListener() {
         @Override
         public void onExpenseClick(Expense clicked) {
-            Intent intent = new Intent(getContext(), ExpenseDetailAndEditActivity.class);
-            intent.putExtra("expenseId", clicked.getId());
-            startActivity(intent);
+            presenter.openExpenseDetails(clicked);
         }
     };
 

@@ -21,7 +21,9 @@ public interface ExpensesContract {
         void showAddExpense(int groupId);
         void showLoadingExpensesError();
         void showNoExpenses();
+        void showExpenseDetail(int expenseId, int groupId);
         void showExpenseSuccessfullySavedMessage();
+        int getSelectedAccountId();
     }
 
     interface Presenter extends BasePresenter {

@@ -3,6 +3,7 @@ package com.example.productmanagment.groups;
 import android.util.Log;
 
 import com.example.productmanagment.data.models.Group;
+import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
@@ -21,6 +22,7 @@ public class GroupsPresenter implements GroupsContract.Presenter {
     private BaseSchedulerProvider provider;
     private UserSession userSession;
     CompositeDisposable compositeDisposable;
+    private User user;
 
     public GroupsPresenter(RemoteDataRepository repository, GroupsContract.View view,
                            BaseSchedulerProvider provider, UserSession userSession) {
@@ -29,12 +31,13 @@ public class GroupsPresenter implements GroupsContract.Presenter {
         this.provider = provider;
         compositeDisposable = new CompositeDisposable();
         this.userSession = userSession;
+        this.user = userSession.getUserDetails();
         this.view.setPresenter(this);
     }
 
     @Override
     public void subscribe() {
-        loadGroupsByOwner("1");
+        loadGroupsByOwner(String.valueOf(user.getUserId()));
     }
 
     @Override
@@ -55,7 +58,7 @@ public class GroupsPresenter implements GroupsContract.Presenter {
     public void createNewGroup(String title) {
         Group group = new Group();
         group.setTitle(title);
-        group.setGroupOwner(String.valueOf(userSession.getUserDetails().getUserId()));
+        group.setGroupOwner(String.valueOf(user.getUserId()));
         repository.addGroup(group)
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
@@ -78,7 +81,7 @@ public class GroupsPresenter implements GroupsContract.Presenter {
     }
 
     private void processAddGroupResult(SuccessResponse response){
-        loadGroupsByOwner("1");
+        loadGroupsByOwner(String.valueOf(user.getUserId()));
         if(response.response.equals("success"))
             view.showCreateGroupMessage(response.data);
         else

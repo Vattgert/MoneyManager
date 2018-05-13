@@ -374,7 +374,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         values.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_TYPE_OF_PAYMENT, expense.getTypeOfPayment());
         values.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_PLACE, expense.getPlace());
         values.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDITION, expense.getAddition());
-        databaseHelper.update(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, values, String.format("id=%s", expenseId));
+        databaseHelper.update(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, values, String.format(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_ID + "=%s", expenseId));
     }
 
     @Override

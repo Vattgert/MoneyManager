@@ -230,8 +230,8 @@ public class MainActivity extends AppCompatActivity
                 );
                 break;
             case R.id.nav_diagrams:
-                view = DiagramFragment.newInstance(DiagramFragment.EXPENSES_BY_CATEGORY);
-                presenter = new DiagramPresenter(DiagramFragment.EXPENSES_BY_CATEGORY,
+                view = DiagramFragment.newInstance();
+                presenter = new DiagramPresenter(group.getGroupId(),
                         Injection.provideExpensesRepository(getApplicationContext()),
                         (DiagramContract.View)view,
                         Injection.provideSchedulerProvider()

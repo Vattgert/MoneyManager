@@ -5,6 +5,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
@@ -35,7 +36,12 @@ public interface RemoteData {
 
     //Витрати та доходи
     Single<ExpensesResponse> getExpensesByAccount(String accountId);
+    Single<Expense> getExpenseById(String expenseId);
     Single<SuccessResponse> addExpense(Expense expense);
     Single<SuccessResponse> updateExpense(Expense expense);
     Single<SuccessResponse> deleteExpense(String idExpense);
+
+    //Діаграми
+    Single<DiagramResponse> getExpensesByCategoryDiagram(String groupId);
+    Single<DiagramResponse> getExpensesByUserDiagram(String groupId);
 }

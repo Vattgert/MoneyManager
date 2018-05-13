@@ -3,214 +3,265 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     tools:context="com.example.productmanagment.expensedetailandedit.ExpenseDetailAndEditFragment">
-
-    <android.support.constraint.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-        <TextView
-            android:id="@+id/categoryDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="5dp"
-            android:text="Категория"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"/>
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="0dp">
 
-        <EditText
-            android:id="@+id/categoryDetailEditText"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:cursorVisible="false"
-            android:ems="10"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/categoryDetailTextView"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp">
 
-        <TextView
-            android:id="@+id/costDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="Стоимость"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginTop="80dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textStyle="bold"/>
+            <belka.us.androidtoggleswitch.widgets.ToggleSwitch
+                android:id="@+id/expenseTypeToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                custom:textToggleLeft="Витрата"
+                custom:textToggleRight="Дохід"
+                custom:toggleWidth="0dp" />
 
-        <EditText
-            android:id="@+id/costDetailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:text="Cost"
-            app:layout_constraintStart_toStartOf="@id/costDetailTextView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            <TextView
+                android:id="@+id/categoryDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="16dp"
+                android:text="Категория"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/expenseTypeToggle" />
 
-        <TextView
-            android:id="@+id/noteDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="160dp"
-            android:text="Заметка"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"/>
-        <EditText
-            android:id="@+id/noteDetailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="180dp"
-            android:ems="10"
-            android:hint="Описание"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/noteDetailTextView"
-            app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/categoryDetailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:cursorVisible="false"
+                android:ems="10"
+                android:focusable="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/categoryDetailTextView"
+                app:layout_constraintTop_toBottomOf="@+id/categoryDetailTextView" />
 
-        <TextView
-            android:id="@+id/receiverDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="240dp"
-            android:text="Получатель"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/costDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:text="Стоимость"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categoryDetailEditText" />
 
-        <EditText
-            android:id="@+id/receiverDetailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="260dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/costDetailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/costDetailTextView"
+                app:layout_constraintTop_toBottomOf="@+id/costDetailTextView" />
 
-        <TextView
-            android:id="@+id/dateDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="320dp"
-            android:text="Дата"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/noteDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:text="Заметка"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/costDetailEditText" />
 
-        <TextView
-            android:id="@+id/timeDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="320dp"
-            android:text="Время"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.609"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"/>
+            <EditText
+                android:id="@+id/noteDetailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:ems="10"
+                android:hint="Описание"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@id/noteDetailTextView"
+                app:layout_constraintTop_toBottomOf="@+id/noteDetailTextView" />
 
-        <EditText
-            android:id="@+id/dateDetailEditText"
-            android:layout_width="164dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="340dp"
-            android:ems="10"
-            android:inputType="date"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            android:focusable="false"
-            android:cursorVisible="false"/>
+            <TextView
+                android:id="@+id/receiverDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:text="Получатель"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/noteDetailEditText" />
 
-        <EditText
-            android:id="@+id/timeDetailEditText"
-            android:layout_width="164dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:ems="10"
-            android:inputType="time"
-            android:singleLine="false"
-            app:layout_constraintBaseline_toBaselineOf="@+id/dateDetailEditText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.952"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            android:focusable="false"
-            android:cursorVisible="false"/>
+            <EditText
+                android:id="@+id/receiverDetailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/receiverDetailTextView" />
 
-        <TextView
-            android:id="@+id/typeOfPaymentDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="400dp"
-            android:text="Вид оплаты"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/dateDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:text="Дата"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/receiverDetailEditText" />
 
-        <Spinner
-            android:id="@+id/typeOfPaymentDetailSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="430dp"
-            android:entries="@array/typeOfPayment"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/timeDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:text="Время"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.609"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/receiverDetailEditText" />
 
-        <TextView
-            android:id="@+id/placeDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="470dp"
-            android:text="Место"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"/>
-    </android.support.constraint.ConstraintLayout>
+            <EditText
+                android:id="@+id/dateDetailEditText"
+                android:layout_width="164dp"
+                android:layout_height="wrap_content"
+                android:cursorVisible="false"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="date"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateDetailTextView" />
 
+            <EditText
+                android:id="@+id/timeDetailEditText"
+                android:layout_width="164dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:cursorVisible="false"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="time"
+                android:singleLine="false"
+                app:layout_constraintBaseline_toBaselineOf="@+id/dateDetailEditText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.952"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/accountDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Рахунок"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateDetailEditText" />
+
+            <Spinner
+                android:id="@+id/accountDetailSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/accountDetailTextView" />
+
+            <TextView
+                android:id="@+id/typeOfPaymentDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Вид оплаты"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/accountDetailSpinner" />
+
+            <Spinner
+                android:id="@+id/typeOfPaymentDetailSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:entries="@array/typeOfPayment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/typeOfPaymentDetailTextView" />
+
+            <TextView
+                android:id="@+id/placeDetailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="16dp"
+                android:text="Место"
+                android:textColor="@color/colorPrimaryText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/typeOfPaymentDetailSpinner" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </FrameLayout>

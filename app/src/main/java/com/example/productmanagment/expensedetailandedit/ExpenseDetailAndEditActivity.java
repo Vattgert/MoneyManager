@@ -17,6 +17,7 @@ public class ExpenseDetailAndEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_expense_detail_and_edit);
 
         expenseId = String.valueOf(getIntent().getExtras().getInt("expenseId"));
+        int groupId = getIntent().getExtras().getInt("groupId");
 
         Log.wtf("Tag", expenseId);
         setTitle("Деталі запису");
@@ -24,6 +25,6 @@ public class ExpenseDetailAndEditActivity extends AppCompatActivity {
         ExpenseDetailAndEditFragment fragment = ExpenseDetailAndEditFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.detailExpenseContent, fragment).commit();
-        presenter = new ExpenseDetailAndEditPresenter(expenseId, fragment, Injection.provideExpensesRepository(this), Injection.provideSchedulerProvider());
+        presenter = new ExpenseDetailAndEditPresenter(groupId, expenseId, fragment, Injection.provideExpensesRepository(this), Injection.provideSchedulerProvider());
     }
 }

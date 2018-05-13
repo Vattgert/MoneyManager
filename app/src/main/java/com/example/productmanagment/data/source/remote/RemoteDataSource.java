@@ -5,6 +5,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
@@ -124,17 +125,32 @@ public class RemoteDataSource implements RemoteData{
     }
 
     @Override
+    public Single<Expense> getExpenseById(String expenseId) {
+        return moneyManagerApi.getExpenseById(expenseId);
+    }
+
+    @Override
     public Single<SuccessResponse> addExpense(Expense expense) {
         return moneyManagerApi.addExpense(expense);
     }
 
     @Override
     public Single<SuccessResponse> updateExpense(Expense expense) {
-        return null;
+        return moneyManagerApi.updateExpense(expense);
     }
 
     @Override
     public Single<SuccessResponse> deleteExpense(String idExpense) {
         return null;
+    }
+
+    @Override
+    public Single<DiagramResponse> getExpensesByCategoryDiagram(String groupId) {
+        return moneyManagerApi.getExpensesByCategoryDiagram(groupId);
+    }
+
+    @Override
+    public Single<DiagramResponse> getExpensesByUserDiagram(String groupId) {
+        return moneyManagerApi.getExpensesByUserDiagram(groupId);
     }
 }
