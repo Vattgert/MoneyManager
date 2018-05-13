@@ -1,5 +1,7 @@
 package com.example.productmanagment.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -7,8 +9,11 @@ import java.util.ArrayList;
  */
 
 public class Category {
+    @SerializedName("id_category")
     private int id;
+    @SerializedName("category_title")
     private String name;
+    @SerializedName("icon")
     private String icon;
 
     public Category(){

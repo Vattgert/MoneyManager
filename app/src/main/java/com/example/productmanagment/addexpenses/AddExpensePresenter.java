@@ -12,6 +12,9 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
+import com.example.productmanagment.data.source.remote.RemoteDataRepository;
+import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
+import com.example.productmanagment.data.source.users.UserSession;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -25,24 +28,36 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class AddExpensePresenter implements AddExpenseContract.Presenter {
+    private int groupId;
     private ExpensesRepository expensesRepository;
+    private RemoteDataRepository remoteDataRepository;
     private AddExpenseContract.View view;
     private Context context;
     private Category chosenCategory;
     private BaseSchedulerProvider provider;
+    UserSession userSession;
 
-    public AddExpensePresenter(ExpensesRepository expensesRepository, AddExpenseContract.View view,
+    public AddExpensePresenter(int groupId, ExpensesRepository expensesRepository, AddExpenseContract.View view,
                                Context context, BaseSchedulerProvider provider) {
+        this.groupId = groupId;
         this.expensesRepository = expensesRepository;
         this.view = view;
         this.view.setPresenter(this);
         this.context = context;
         this.provider = provider;
+        this.remoteDataRepository = new RemoteDataRepository();
+        this.userSession = new UserSession(context);
     }
 
     @Override
     public void subscribe() {
-        loadAccounts();
+        if (groupId == -1)
+            loadAccounts();
+        else
+            remoteDataRepository.getAccountsByGroup(String.valueOf(groupId))
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(accountResponse -> this.processAccounts(accountResponse.accounts));
     }
 
     @Override
@@ -88,14 +103,22 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
                     view.setAddress(place);
                     break;
             }
-
         }
     }
 
     @Override
     public void saveExpense(Expense expense) {
-        expensesRepository.saveExpense(expense);
-        view.showExpenses();
+        expense.setUser(userSession.getUserDetails());
+        if(groupId == -1) {
+            expensesRepository.saveExpense(expense);
+            view.showExpenses();
+        }
+        else
+            remoteDataRepository.addExpense(expense)
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(this::processSuccessResponse);
+
     }
 
     @Override
@@ -106,13 +129,15 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
                 .subscribe(this::processAccounts);
     }
 
-    private void createExpense(double cost, Category category, ExpenseInformation information) {
-         Expense expense  = new Expense(cost, category, information);
-         expensesRepository.saveExpense(expense);
-         view.showExpenses();
-    }
-
     private void processAccounts(List<Account> accountList){
         view.showAccounts(accountList);
+    }
+
+    private void processSuccessResponse(SuccessResponse response){
+        if(response.response.equals("success"))
+            view.showMessage(response.data);
+        else
+            view.showMessage(response.errorData);
+        view.showExpenses();
     }
 }

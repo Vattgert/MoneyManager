@@ -1,6 +1,11 @@
 package com.example.productmanagment.data.source.remote;
 
+import com.example.productmanagment.data.models.Account;
+import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
+import com.example.productmanagment.data.models.User;
+import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
@@ -8,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -33,8 +39,23 @@ public class RemoteDataSource implements RemoteData{
 
 
     @Override
+    public Single<SuccessResponse> signUpUser(User user) {
+        return moneyManagerApi.signUpUser(user.getEmail(), user.getLogin(), user.getPassword());
+    }
+
+    @Override
+    public Single<User> signInUser(String email, String password) {
+        return moneyManagerApi.signInUser(email, password);
+    }
+
+    @Override
     public Single<GroupsResponse> getGroupsByCreator(String groupCreator) {
         return moneyManagerApi.getGroupsByCreator(groupCreator);
+    }
+
+    @Override
+    public Single<GroupsResponse> getGroups(String userId) {
+        return moneyManagerApi.getGroups(userId);
     }
 
     @Override
@@ -70,5 +91,50 @@ public class RemoteDataSource implements RemoteData{
     @Override
     public Single<SuccessResponse> setUserRights(String groupId, String userId, String userRights) {
         return moneyManagerApi.setUserRights(groupId, userId, userRights);
+    }
+
+    @Override
+    public Single<AccountResponse> getAccountsByGroup(String groupId) {
+        return moneyManagerApi.getAccountsByGroup(groupId);
+    }
+
+    @Override
+    public Single<Account> getAccountById(String accountId) {
+        return moneyManagerApi.getAccountById(accountId);
+    }
+
+    @Override
+    public Single<SuccessResponse> addAccount(String groupId, Account account) {
+        return moneyManagerApi.addAccount(groupId, account.getName(), account.getValue().doubleValue(), account.getColor());
+    }
+
+    @Override
+    public Single<SuccessResponse> updateAccount(Account account) {
+        return moneyManagerApi.updateAccount(account);
+    }
+
+    @Override
+    public Single<SuccessResponse> deleteAccount(String accountId) {
+        return moneyManagerApi.deleteAccount(accountId);
+    }
+
+    @Override
+    public Single<ExpensesResponse> getExpensesByAccount(String accountId) {
+        return moneyManagerApi.getExpensesByAccount(accountId);
+    }
+
+    @Override
+    public Single<SuccessResponse> addExpense(Expense expense) {
+        return moneyManagerApi.addExpense(expense);
+    }
+
+    @Override
+    public Single<SuccessResponse> updateExpense(Expense expense) {
+        return null;
+    }
+
+    @Override
+    public Single<SuccessResponse> deleteExpense(String idExpense) {
+        return null;
     }
 }

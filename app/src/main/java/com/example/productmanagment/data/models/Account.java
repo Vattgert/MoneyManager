@@ -2,6 +2,8 @@ package com.example.productmanagment.data.models;
 
 import android.graphics.Color;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
 import java.util.Currency;
 
@@ -11,10 +13,13 @@ import java.util.Currency;
 
 public class Account {
     //TODO: СДелать из валюты и цвета обьекты
+    @SerializedName("id_account")
     private int id;
+    @SerializedName("account_title")
     private String name;
     private BigDecimal value;
     private MyCurrency currency;
+    @SerializedName("color")
     private String color;
 
     public Account(){

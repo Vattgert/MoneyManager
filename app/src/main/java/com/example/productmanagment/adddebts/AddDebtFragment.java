@@ -162,18 +162,16 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
         debtExpense.setCost(Double.valueOf(debt.getSum()));
         debtExpense.setCategory(new Subcategory(82, null));
         Account account = (Account) debtAccountSpinner.getSelectedItem();
-        ExpenseInformation information = new ExpenseInformation();
         if(debt.getDebtType() == 1) {
-            debtExpense.setExpenseType(2);
-            information.setNote(getContext().getResources().getString(R.string.borrowed, debt.getBorrower()));
+            debtExpense.setExpenseType("Дохід");
+            debtExpense.setNote(getContext().getResources().getString(R.string.borrowed, debt.getBorrower()));
         }
         else {
-            debtExpense.setExpenseType(1);
-            information.setNote(getContext().getResources().getString(R.string.lent, debt.getBorrower()));
+            debtExpense.setExpenseType("Витрата");
+            debtExpense.setNote(getContext().getResources().getString(R.string.lent, debt.getBorrower()));
         }
-        information.setDate(getCurrentDate());
-        information.setReceiver(debt.getBorrower());
-        debtExpense.setExpenseInformation(information);
+        debtExpense.setDate(getCurrentDate());
+        debtExpense.setReceiver(debt.getBorrower());
         debtExpense.setAccount(account);
         presenter.saveDebtExpense(debtExpense);
         presenter.saveDebt(debt);

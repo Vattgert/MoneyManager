@@ -33,5 +33,6 @@ public interface AddExpenseContract{
         void setChosenPlace(String place);
         void setAddress(Place place);
         void showAccounts(List<Account> accountList);
+        void showMessage(String message);
     }
 }

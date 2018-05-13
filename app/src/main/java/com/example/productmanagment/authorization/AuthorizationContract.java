@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public interface AuthorizationContract {
     interface View extends BaseView<Presenter> {
+        void showMessage(String message);
         void setAuthUserUi(String email);
         void showAuthorizationFailedMessage();
         void showMainActivityIfAuth();
@@ -21,11 +22,6 @@ public interface AuthorizationContract {
 
     interface Presenter extends BasePresenter{
         void signInWithEmailAndPassword(String email, String password);
-        void signInWithGoggle();
-        void signInWithFacebook();
-        void signInWithPhone();
         void openSignUp();
-
-        void result(int requestCode, int resultCode, Intent data);
     }
 }

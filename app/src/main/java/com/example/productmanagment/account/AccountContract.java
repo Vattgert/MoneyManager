@@ -13,13 +13,14 @@ import java.util.List;
 public interface AccountContract {
     interface Presenter extends BasePresenter{
         void loadAccount();
+        void loadAccountsByGroup(String groupId);
         void openAddAccount();
         void openAccountDetailAndEdit(Account account);
     }
 
     interface View extends BaseView<Presenter> {
         void showAccounts(List<Account> accountList);
-        void showAddAccount();
-        void showAccountDetailAndEdit(String accountId);
+        void showAddAccount(int groupId);
+        void showAccountDetailAndEdit(String accountId, int groupId);
     }
 }

@@ -18,7 +18,5 @@ public class ExpensesActivity extends AppCompatActivity {
         ExpensesFragment expensesFragment = ExpensesFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.expenseContent, expensesFragment).commit();
-
-        presenter = new ExpensesPresenter(Injection.provideExpensesRepository(getApplicationContext()), expensesFragment, Injection.provideSchedulerProvider());
     }
 }

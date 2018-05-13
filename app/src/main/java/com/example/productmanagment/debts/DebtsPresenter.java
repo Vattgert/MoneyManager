@@ -125,22 +125,19 @@ public class DebtsPresenter implements DebtsContract.Presenter {
         debtClose.setDebtId(debt.getId());
         debtClose.setCost(Double.valueOf(debt.getRemain()));
         debtClose.setCategory(new Subcategory(82, null));
-        debtClose.setExpenseType(1);
         Account account = new Account();
         account.setId(debt.getAccountId());
         debtClose.setAccount(account);
-        ExpenseInformation information = new ExpenseInformation();
         if(debt.getDebtType() == 1) {
-            information.setNote(resources.getString(R.string.borrowed, debt.getBorrower()));
-            debtClose.setExpenseType(1);
+            debtClose.setNote(resources.getString(R.string.borrowed, debt.getBorrower()));
+            debtClose.setExpenseType("Витрата");
         }
         else {
-            information.setNote(resources.getString(R.string.lent, debt.getBorrower()));
-            debtClose.setExpenseType(2);
+            debtClose.setNote(resources.getString(R.string.lent, debt.getBorrower()));
+            debtClose.setExpenseType("Дохід");
         }
-        information.setDate(getCurrentDate());
-        information.setReceiver(debt.getBorrower());
-        debtClose.setExpenseInformation(information);
+        debtClose.setDate(getCurrentDate());
+        debtClose.setReceiver(debt.getBorrower());
         return debtClose;
     }
 

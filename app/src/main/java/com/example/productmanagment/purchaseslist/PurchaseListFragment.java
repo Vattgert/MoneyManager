@@ -226,22 +226,18 @@ public class PurchaseListFragment extends Fragment implements PurchaseListContra
                 .setView(view)
                 .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        ExpenseInformation expenseInformation = new ExpenseInformation();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
                         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
                         Date current = new Date();
                         String date = dateFormat.format(current);
                         String time = dateFormat.format(Calendar.getInstance().getTime());
-                        expenseInformation.setNote(purchasesAdapter.getPurchasesRecordNote());
-                        expenseInformation.setDate(date);
-                        expenseInformation.setTime(time);
+                        String note = purchasesAdapter.getPurchasesRecordNote();
                         double amount = Double.valueOf(recordEditText.getText().toString());
                         Account account = (Account) accountSpinner.getSelectedItem();
-                        Expense expense = new Expense(amount, new Category(83), expenseInformation, account);
-                        expense.setExpenseType(1);
-                        Log.wtf("PurchaseLog", "record expense " + expense.getCost());
-                        Log.wtf("PurchaseLog", "record account " + expense.getAccount().getName());
-                        Log.wtf("PurchaseLog", "record type expense " + expense.getExpenseType());
+                        Expense expense = new Expense(amount, "Витрата", note, "", date,
+                                time, "1", "", "",
+                                "", new Category(83), account, null);
+                        expense.setExpenseType("Витрата");
                         presenter.createExpenseRecord(expense);
                     }
                 })

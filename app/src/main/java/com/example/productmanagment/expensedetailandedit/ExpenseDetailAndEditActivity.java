@@ -19,6 +19,7 @@ public class ExpenseDetailAndEditActivity extends AppCompatActivity {
         expenseId = String.valueOf(getIntent().getExtras().getInt("expenseId"));
 
         Log.wtf("Tag", expenseId);
+        setTitle("Деталі запису");
 
         ExpenseDetailAndEditFragment fragment = ExpenseDetailAndEditFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

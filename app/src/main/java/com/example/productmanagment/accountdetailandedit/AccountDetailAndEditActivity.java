@@ -16,6 +16,7 @@ public class AccountDetailAndEditActivity extends AppCompatActivity {
         setTitle("Деталі рахунку");
 
         String accountId = getIntent().getExtras().getString("account_id");
+        int groupId = getIntent().getExtras().getInt("group_id");
 
         AccountDetailAndEditFragment accountDetailAndEditFragment = AccountDetailAndEditFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -23,7 +24,7 @@ public class AccountDetailAndEditActivity extends AppCompatActivity {
 
         Log.wtf("MyLog", "account id = " + accountId);
 
-        presenter = new AccountDetailAndEditPresenter(accountId, accountDetailAndEditFragment,
+        presenter = new AccountDetailAndEditPresenter(accountId, groupId, accountDetailAndEditFragment,
                 Injection.provideExpensesRepository(getApplicationContext()),
                 Injection.provideSchedulerProvider());
     }

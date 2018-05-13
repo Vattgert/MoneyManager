@@ -10,8 +10,11 @@ import java.util.List;
 public interface AccountDetailAndEditContract {
     interface Presenter extends BasePresenter{
         void openAccount(String accountId);
+        void openRemoteAccount(String accountId);
         void updateAccount(Account account);
+        void updateRemoteAccount(Account account);
         void deleteAccount();
+        void deleteRemoteAccount();
         void openColorPick();
     }
 
@@ -20,5 +23,7 @@ public interface AccountDetailAndEditContract {
         void setAccountCurrency(MyCurrency currency);
         void setAccountColor(String color);
         void showColorPick();
+        void showMessage(String message);
+        void closeView();
     }
 }

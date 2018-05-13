@@ -61,8 +61,7 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
 
 
     @Override
-    public void editExpense(double cost, Category category, ExpenseInformation information) {
-        Expense expense = new Expense(cost, category, information);
+    public void editExpense(Expense expense) {
         repository.updateExpense(expenseId, expense);
         view.finish();
     }
@@ -76,10 +75,10 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
     private void showExpense(@NonNull Expense expense){
         Log.wtf("sqlite", "lol");
         view.showCost(expense.getCost());
-        view.showNote(expense.getExpenseInformation().getNote());
-        view.showReceiver(expense.getExpenseInformation().getReceiver());
-        view.showDate(expense.getExpenseInformation().getDate());
-        view.showTime(expense.getExpenseInformation().getTime());
+        view.showNote(expense.getNote());
+        view.showReceiver(expense.getReceiver());
+        view.showDate(expense.getDate());
+        view.showTime(expense.getTime());
         view.showCategory(expense.getCategory().getName());
     }
 }

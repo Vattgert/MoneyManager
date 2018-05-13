@@ -10,6 +10,7 @@ import java.util.List;
 public interface AddAccountContract {
     interface Presenter extends BasePresenter{
         void createAccount(Account account);
+        void createRemoteAccount(String groupId, Account account);
         void openColorPickDialog();
         void uploadCurrencies();
     }
@@ -19,6 +20,7 @@ public interface AddAccountContract {
         void setColorValue(String color);
         void showColorPickDialog();
         void setCurrenciesToSpinner(List<MyCurrency> currencies);
-
+        void showMessage(String message);
+        void closeView();
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface GroupsContract {
     interface Presenter extends BasePresenter{
         void loadGroupsByOwner(String groupOwner);
-        void createNewGroup(Group group);
+        void createNewGroup(String group);
         void openEditAndDetailGroup(Group group);
         void openCreateNewGroup();
     }

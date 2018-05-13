@@ -52,8 +52,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     }
 
     public static ExpensesFragment newInstance() {
-        ExpensesFragment fragment = new ExpensesFragment();
-        return fragment;
+        return new ExpensesFragment();
     }
 
     @Override
@@ -160,9 +159,10 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     }
 
     @Override
-    public void showAddExpense() {
+    public void showAddExpense(int groupId) {
         Intent intent = new Intent(getContext(), AddExpenseActivity.class);
-        startActivityForResult(intent, AddExpenseActivity.REQUEST_ADD_EXPENSE);
+        intent.putExtra("group_id", groupId);
+        startActivity(intent);
     }
 
     @Override
@@ -232,7 +232,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         public class ViewHolder extends RecyclerView.ViewHolder{
             Expense expense;
             TextView categoryNameTextView, noteTextView, placeTextView, payTypeTextView
-                    ,expenseTextView, receiverTextView, dateTextView;
+                    ,expenseTextView, receiverTextView, dateTextView, userEmailTextView;
             Resources resources;
 
             public ViewHolder(View view) {
@@ -244,6 +244,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 expenseTextView = view.findViewById(R.id.expenseTextView);
                 receiverTextView = view.findViewById(R.id.receiverTextView);
                 dateTextView = view.findViewById(R.id.dateTextView);
+                userEmailTextView = view.findViewById(R.id.userEmailTextView);
                 resources = view.getResources();
 
                 if(itemListener != null)
@@ -253,23 +254,33 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
             public void bind(Expense expense){
                 this.expense = expense;
                 Log.wtf("myLog", expense.getExpenseType() + "");
-                ExpenseInformation information = expense.getExpenseInformation();
                 categoryNameTextView.setText(expense.getCategory().getName());
-                noteTextView.setText(information.getNote());
-                receiverTextView.setText(information.getReceiver());
-                placeTextView.setText(information.getPlace());
-                payTypeTextView.setText(information.getTypeOfPayment());
+                if(expense.getNote() == null || expense.getNote().equals(""))
+                    noteTextView.setVisibility(View.GONE);
+                else
+                    noteTextView.setText(expense.getNote());
+                if(expense.getReceiver() == null || expense.getReceiver().equals(""))
+                    receiverTextView.setVisibility(View.GONE);
+                else
+                    receiverTextView.setText(expense.getReceiver());
+                if(expense.getPlace() == null || expense.getPlace().equals(""))
+                    receiverTextView.setVisibility(View.GONE);
+                else
+                    placeTextView.setText(expense.getPlace());
+                payTypeTextView.setText(expense.getTypeOfPayment());
                 String cost = "";
-                if(expense.getExpenseType() == 1) {
+                if(expense.getExpenseType().equals("Витрата")) {
                     expenseTextView.setTextColor(Color.RED);
-                    cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
+                    cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");
                 }
-                else if(expense.getExpenseType() == 2) {
+                else if(expense.getExpenseType().equals("Дохід")) {
                     expenseTextView.setTextColor(Color.GREEN);
                     cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
                 }
                 expenseTextView.setText(cost);
-                dateTextView.setText(information.getDate());
+                dateTextView.setText(expense.getDate());
+                if(expense.getUser() != null)
+                    userEmailTextView.setText(expense.getUser().getEmail());
             }
         }
     }

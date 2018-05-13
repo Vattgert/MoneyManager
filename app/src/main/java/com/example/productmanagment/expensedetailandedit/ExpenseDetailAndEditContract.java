@@ -3,6 +3,7 @@ package com.example.productmanagment.expensedetailandedit;
 import com.example.productmanagment.BasePresenter;
 import com.example.productmanagment.BaseView;
 import com.example.productmanagment.data.models.Category;
+import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 
 /**
@@ -26,7 +27,7 @@ public interface ExpenseDetailAndEditContract {
     }
 
     interface Presenter extends BasePresenter{
-        void editExpense(double cost, Category category, ExpenseInformation information);
+        void editExpense(Expense expense);
         void deleteTask();
     }
 }

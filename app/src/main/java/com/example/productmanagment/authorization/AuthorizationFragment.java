@@ -63,22 +63,25 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
         passwordEditText = view.findViewById(R.id.passwordAuthorizationEditText);
         signInButton = view.findViewById(R.id.signInButton);
         signUpButton = view.findViewById(R.id.signUpButton);
-        signInWithGoogle = view.findViewById(R.id.signInGoogleButton);
         signInButton.setOnClickListener(__ -> getDataAndSignIn());
         signUpButton.setOnClickListener(__-> presenter.openSignUp());
-        signInWithGoogle.setOnClickListener(__ -> presenter.signInWithGoggle());
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        presenter.result(requestCode, resultCode, data);
+
     }
 
     @Override
     public void setPresenter(AuthorizationContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -99,7 +102,7 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
 
     @Override
     public void showGoogleSignInActivity(Intent intent) {
-        startActivityForResult(intent, AuthorizationPresenter.SIGN_IN_GOOGLE_REQUEST);
+
     }
 
     @Override

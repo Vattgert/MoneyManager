@@ -15,11 +15,10 @@ import java.util.List;
 
 public interface ExpensesContract {
     interface View extends BaseView<Presenter>{
-
         void setLoadingIndicator(boolean active);
         void showExpenses(List<Expense> expenses);
         void showAccounts(List<Account> accounts);
-        void showAddExpense();
+        void showAddExpense(int groupId);
         void showLoadingExpensesError();
         void showNoExpenses();
         void showExpenseSuccessfullySavedMessage();
@@ -28,8 +27,10 @@ public interface ExpensesContract {
     interface Presenter extends BasePresenter {
         void expenseLoading(String accountId);
         void loadExpenses(boolean showLoadingUi);
+        void loadRemoteExpenses(String accountId);
         void loadExpensesByAccount(String accountId);
         void loadAccounts();
+        void loadRemoteAccounts(String groupId);
         void openExpenseDetails(@NonNull Expense requestedTask);
         void addNewExpense();
         void result(int requestCode, int resultCode);

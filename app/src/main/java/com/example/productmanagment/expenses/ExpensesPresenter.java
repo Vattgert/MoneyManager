@@ -2,12 +2,16 @@ package com.example.productmanagment.expenses;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.productmanagment.addexpenses.AddExpenseActivity;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
+import com.example.productmanagment.data.source.remote.RemoteDataRepository;
+import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.ArrayList;
@@ -21,22 +25,30 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class ExpensesPresenter implements ExpensesContract.Presenter{
+    private int groupId;
     private ExpensesRepository expensesRepository;
+    private RemoteDataRepository remoteDataRepository;
     private ExpensesContract.View view;
     private BaseSchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable;
 
-    public ExpensesPresenter(ExpensesRepository expensesRepository, ExpensesContract.View view,
-                                BaseSchedulerProvider schedulerProvider){
+    public ExpensesPresenter(int groupId, ExpensesRepository expensesRepository, ExpensesContract.View view,
+                             BaseSchedulerProvider schedulerProvider){
         this.view = view;
+        this.groupId = groupId;
         this.expensesRepository = expensesRepository;
+        this.remoteDataRepository = new RemoteDataRepository();
         this.schedulerProvider = schedulerProvider;
         compositeDisposable = new CompositeDisposable();
         this.view.setPresenter(this);
     }
     @Override
     public void subscribe() {
-        loadAccounts();
+        if(groupId == -1)
+            loadAccounts();
+        else
+            loadRemoteAccounts(String.valueOf(this.groupId));
+
     }
 
     @Override
@@ -46,10 +58,15 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
 
     @Override
     public void expenseLoading(String accountId) {
-        if(accountId.equals("0"))
-            loadExpenses(true);
-        else
-            loadExpensesByAccount(accountId);
+        if(groupId == -1) {
+            if (accountId.equals("0"))
+                loadExpenses(true);
+            else
+                loadExpensesByAccount(accountId);
+        }
+        else{
+            loadRemoteExpenses(accountId);
+        }
     }
 
     @Override
@@ -60,6 +77,15 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::processExpenses,
                         throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void loadRemoteExpenses(String accountId) {
+        Disposable disposable = remoteDataRepository.getExpensesByAccount(accountId)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(expensesResponse -> this.processExpenses(expensesResponse.expenses));
         compositeDisposable.add(disposable);
     }
 
@@ -84,13 +110,22 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     }
 
     @Override
+    public void loadRemoteAccounts(String groupId) {
+        Disposable disposable = remoteDataRepository.getAccountsByGroup(groupId)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(accountResponse -> this.processAccounts(accountResponse.accounts));
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
     public void openExpenseDetails(@NonNull Expense requestedTask) {
 
     }
 
     @Override
     public void addNewExpense() {
-        view.showAddExpense();
+        view.showAddExpense(groupId);
     }
 
     @Override

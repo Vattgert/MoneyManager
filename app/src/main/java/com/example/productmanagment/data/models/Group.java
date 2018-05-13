@@ -23,6 +23,11 @@ public class Group {
 
     }
 
+    public Group(int groupId, String title) {
+        this.groupId = groupId;
+        this.title = title;
+    }
+
     public int getGroupId() {
         return groupId;
     }

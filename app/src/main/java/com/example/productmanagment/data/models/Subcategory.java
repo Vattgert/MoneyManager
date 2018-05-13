@@ -1,5 +1,7 @@
 package com.example.productmanagment.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Ivan on 25.01.2018.
  */

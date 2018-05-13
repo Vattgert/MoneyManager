@@ -16,6 +16,7 @@ import android.widget.Spinner;
 
 import com.example.productmanagment.R;
 import com.example.productmanagment.data.models.Category;
+import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.expenses.ExpensesActivity;
 
@@ -32,6 +33,8 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
     dateEditText, timeEditText;
     private Spinner typeOfPaymentSpinner;
     private ArrayAdapter<CharSequence> spinnerAdapter;
+
+    //TODO: Изменить весь модуль
 
     // TODO: Rename and change types of parameters
 
@@ -185,7 +188,6 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
     private void editExpense(){
         double cost = 100.0;
         String note = noteEditText.getText().toString();
-        //TODO: Method in local datasource to get category obj by name
         Category category = null;
         String receiver = receiverEditText.getText().toString();
         String place = ""; /*placeTextView.getText().toString();*/
@@ -196,6 +198,6 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
         String marks = "";
         ExpenseInformation information = new ExpenseInformation(note, marks, receiver, date, time,
                 typeOfPayment, place, addition);
-        presenter.editExpense(cost,  category, information);
+        presenter.editExpense(new Expense());
     }
 }

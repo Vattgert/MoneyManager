@@ -164,7 +164,6 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
     @Override
     public void showExpenses() {
-        getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();
     }
 
@@ -195,6 +194,11 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
     @Override
     public void showAccounts(List<Account> accountList) {
         accountSpinnerAdapter.setData(accountList);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 
 
@@ -283,7 +287,11 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         String note = noteEditText.getText().toString();
         Category category = presenter.getChosenCategory();
         Account account = (Account) accountSpinner.getSelectedItem();
-        int expenseType = expenseTypeToggleSwitch.getCheckedTogglePosition() + 1;
+        String expenseType = "";
+        if(expenseTypeToggleSwitch.getCheckedTogglePosition() == 0)
+            expenseType = "Витрата";
+        else
+            expenseType = "Дохід";
         String receiver = receiverEditText.getText().toString();
         String place = ""; /*placeTextView.getText().toString();*/
         String date = dateEditText.getText().toString();
@@ -294,9 +302,9 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         }
         String typeOfPayment = typeOfPaymentSpinner.getSelectedItem().toString();
         String addition = "";
-        String marks = "";
-        ExpenseInformation information = new ExpenseInformation(note, marks, receiver, date, time, typeOfPayment, place, addition);
-        Expense expense = new Expense(cost, category, information, account);
+        String addressCoordinates = "";
+        Expense expense = new Expense(cost, expenseType, note, receiver, date, time, typeOfPayment,
+                place, addition, addressCoordinates, category, account, null);
         expense.setExpenseType(expenseType);
         if(cost > 0 && category != null && account != null)
             presenter.saveExpense(expense);

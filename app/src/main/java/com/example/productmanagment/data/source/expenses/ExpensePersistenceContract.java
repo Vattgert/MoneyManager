@@ -33,6 +33,7 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_ADDITION = "addition";
         public static final String COLUMN_ACCOUNT = "account_id";
         public static final String COLUMN_DEBT = "debt_id";
+        public static final String COLUMN_PLANNED_PAYMENT = "planned_payment_id";
     }
 
     public class PlannedPaymentEntry{

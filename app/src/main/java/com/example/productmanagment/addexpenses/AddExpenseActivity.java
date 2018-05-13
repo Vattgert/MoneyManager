@@ -22,10 +22,14 @@ public class AddExpenseActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
+        int groupId = getIntent().getExtras().getInt("group_id");
+
+        setTitle("Додати запис");
+
         fragment = AddExpenseFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.addExpenseContent, fragment).commit();
-        presenter = new AddExpensePresenter(Injection.provideExpensesRepository(this), fragment, getApplicationContext(), Injection.provideSchedulerProvider());
+        presenter = new AddExpensePresenter(groupId, Injection.provideExpensesRepository(this), fragment, getApplicationContext(), Injection.provideSchedulerProvider());
 
         //TODO: ДОделать этот модуль
     }

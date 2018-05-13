@@ -6,29 +6,61 @@ import io.reactivex.annotations.Nullable;
  * Created by Ivan on 25.02.2018.
  */
 
-public class PlannedPayment extends Expense {
+public class PlannedPayment {
+    private int id;
+    private double cost;
     private String title;
-    String startDate;
+    private String startDate;
     private String endDate;
     private String paymentFrequency;
     private String notificationFrequency;
     private String notificationTimeFrequency;
     private String day;
+    private Category category;
 
-    //TODO: Добавить счет в конструктор здесь и в расходах
-
-    public PlannedPayment(int id, double cost, int expenseType, Category category, @Nullable ExpenseInformation expenseInformation) {
-
-    }
-
-    public PlannedPayment(double cost, Category category, ExpenseInformation information, String title, String startDate, String endDate,
-                          String frequency, String timing) {
-        super(cost, category, information);
+    public PlannedPayment(int id, double cost, String title, String startDate, String endDate,
+                          String paymentFrequency, String notificationFrequency,
+                          String notificationTimeFrequency, String day, Category category) {
+        this.id = id;
+        this.cost = cost;
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.paymentFrequency = frequency;
-        this.notificationFrequency = timing;
+        this.paymentFrequency = paymentFrequency;
+        this.notificationFrequency = notificationFrequency;
+        this.notificationTimeFrequency = notificationTimeFrequency;
+        this.day = day;
+        this.category = category;
+    }
+
+    public PlannedPayment(double cost, String title, String startDate, String endDate,
+                          String paymentFrequency, String notificationFrequency,
+                          String notificationTimeFrequency, String day, Category category) {
+        this.cost = cost;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.paymentFrequency = paymentFrequency;
+        this.notificationFrequency = notificationFrequency;
+        this.notificationTimeFrequency = notificationTimeFrequency;
+        this.day = day;
+        this.category = category;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 
     public String getTitle() {
@@ -79,4 +111,19 @@ public class PlannedPayment extends Expense {
         this.notificationTimeFrequency = notificationTimeFrequency;
     }
 
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.productmanagment.account;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +26,6 @@ import com.github.ivbaranov.mli.MaterialLetterIcon;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AccountFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AccountFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AccountFragment extends Fragment implements AccountContract.View {
     private AccountContract.Presenter presenter;
     private AccountsAdapter adapter;
@@ -91,15 +85,17 @@ public class AccountFragment extends Fragment implements AccountContract.View {
     }
 
     @Override
-    public void showAddAccount() {
+    public void showAddAccount(int groupId) {
         Intent intent = new Intent(getContext(), AddAccountActivity.class);
+        intent.putExtra("group_id", groupId);
         startActivity(intent);
     }
 
     @Override
-    public void showAccountDetailAndEdit(String accountId) {
+    public void showAccountDetailAndEdit(String accountId, int groupId) {
         Intent intent = new Intent(getContext(), AccountDetailAndEditActivity.class);
         intent.putExtra("account_id", accountId);
+        intent.putExtra("group_id", groupId);
         startActivity(intent);
     }
 
@@ -150,9 +146,11 @@ public class AccountFragment extends Fragment implements AccountContract.View {
             Account account;
             TextView accountTitleTextView;
             MaterialLetterIcon accountColorIcon;
+            Resources resources;
 
             public ViewHolder(View view) {
                 super(view);
+                resources = view.getResources();
                 accountTitleTextView = view.findViewById(R.id.accountTitleTextView);
                 accountColorIcon = view.findViewById(R.id.accountColorIcon);
 
@@ -163,8 +161,15 @@ public class AccountFragment extends Fragment implements AccountContract.View {
             public void bind(Account account){
                 this.account = account;
                 accountTitleTextView.setText(account.getName());
-                if(account.getColor() != null)
-                    accountColorIcon.setShapeColor(Color.parseColor(account.getColor()));
+                try{
+                    int color = Color.parseColor(account.getColor());
+                    accountColorIcon.setShapeColor(color);
+                }
+                catch (IllegalArgumentException | NullPointerException e){
+                    int color = resources.getColor(R.color.colorAccent);
+                    accountColorIcon.setShapeColor(color);
+                }
+
             }
         }
     }

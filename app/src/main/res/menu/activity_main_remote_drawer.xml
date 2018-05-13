@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main"
+            android:checked="true"
+            android:icon="@drawable/ic_nav_home"
+            android:title="@string/nav_drawer_main" />
+        <item
+            android:id="@+id/nav_expenses"
+            android:icon="@drawable/ic_nav_list"
+            android:title="Записи" />
+        <item
+            android:id="@+id/nav_diagrams"
+            android:icon="@drawable/ic_nav_diagram"
+            android:title="@string/naw_drawer_diagrams" />
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_nav_planned_payment"
+            android:title="Звіти" />
+        <item
+            android:id="@+id/nav_accounts"
+            android:icon="@drawable/ic_nav_account"
+            android:title="@string/naw_drawer_accounts"/>
+        <item
+            android:id="@+id/nav_currencies"
+            android:icon="@drawable/ic_naw_groups"
+            android:title="Валюти" />
+    </group>
+</menu>

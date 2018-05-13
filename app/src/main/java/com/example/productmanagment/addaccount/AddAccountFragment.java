@@ -91,7 +91,7 @@ public class AddAccountFragment extends Fragment implements AddAccountContract.V
             default:
                 return super.onOptionsItemSelected(item);
         }
-        getActivity().finish();
+        //getActivity().finish();
         return true;
     }
 
@@ -130,6 +130,16 @@ public class AddAccountFragment extends Fragment implements AddAccountContract.V
     @Override
     public void setCurrenciesToSpinner(List<MyCurrency> currencies) {
         adapter.setData(currencies);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void closeView() {
+        getActivity().finish();
     }
 
     private void getDataAndSave(){

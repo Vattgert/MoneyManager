@@ -26,11 +26,11 @@
     <string name="debt_account_text_view">Рахунок</string>
 
     <string-array name="typeOfPayment">
-        <item>Наличные</item>
-        <item>Дебетовая карта</item>
-        <item>Кредитная карта</item>
-        <item>Мобильный платеж</item>
-        <item>Интернет оплата</item>
+        <item>Готівка</item>
+        <item>Дебетова карта</item>
+        <item>Кредитна карта</item>
+        <item>Мобільний платіж</item>
+        <item>Інтернет оплата</item>
     </string-array>
 
     <string-array name="planned_payment_timing">

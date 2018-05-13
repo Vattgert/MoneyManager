@@ -87,7 +87,6 @@ public class AccountDetailAndEditFragment extends Fragment implements AccountDet
             default:
                 return super.onOptionsItemSelected(item);
         }
-        getActivity().finish();
         return true;
     }
 
@@ -120,6 +119,16 @@ public class AccountDetailAndEditFragment extends Fragment implements AccountDet
                         Toast.makeText(getContext(), "Колір не був обраний", Toast.LENGTH_SHORT).show();
                     }
                 }).build().show(getFragmentManager(), "dialog_demo_1");
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void closeView() {
+        getActivity().finish();
     }
 
     @Override
