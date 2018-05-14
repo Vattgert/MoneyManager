@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.productmanagment.R;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.groupeditanddetail.GroupDetailAndEditActivity;
+import com.github.ivbaranov.mli.MaterialLetterIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,12 +160,14 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
         public class ViewHolder extends RecyclerView.ViewHolder{
             Group group;
             TextView groupTitleTextView, groupMemberCountTextView;
+            MaterialLetterIcon letterIcon;
             Resources resources;
 
             public ViewHolder(View view) {
                 super(view);
                 groupTitleTextView = view.findViewById(R.id.groupTitleTextView);
                 groupMemberCountTextView = view.findViewById(R.id.groupMemberCountTextView);
+                letterIcon = view.findViewById(R.id.groupOwnerIconImageView);
                 resources = view.getResources();
 
                 if(itemListener != null)
@@ -175,6 +178,7 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
                 this.group = group;
                 groupTitleTextView.setText(group.getTitle());
                 groupMemberCountTextView.setText(resources.getString(R.string.group_user_count, group.getMembersCount()));
+                letterIcon.setLetter(group.getTitle().substring(0, 2));
             }
         }
     }

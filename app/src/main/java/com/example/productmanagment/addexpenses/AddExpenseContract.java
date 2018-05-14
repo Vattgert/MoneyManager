@@ -21,6 +21,7 @@ public interface AddExpenseContract{
         void showEmptyExpenseError();
         void showExpenses();
         Category getChosenCategory();
+        Place getChosenPlace();
         void choosePlace();
         void result(int requestCode, int resultCode, Intent data);
         void saveExpense(Expense expense);

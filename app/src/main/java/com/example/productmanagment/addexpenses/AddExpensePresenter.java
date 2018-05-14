@@ -34,6 +34,7 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
     private AddExpenseContract.View view;
     private Context context;
     private Category chosenCategory;
+    private Place chosenPlace;
     private BaseSchedulerProvider provider;
     UserSession userSession;
 
@@ -83,11 +84,17 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
     }
 
     @Override
+    public Place getChosenPlace() {
+        if (chosenPlace != null)
+            return chosenPlace;
+        return null;
+    }
+
+    @Override
     public void choosePlace() {
         view.showChoosePlacePicker();
     }
 
-    //TODO: Возвращать координаты адреса
     @Override
     public void result(int requestCode, int resultCode, Intent data) {
         if( resultCode == Activity.RESULT_OK){
@@ -99,6 +106,7 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
                     break;
                 case AddExpenseActivity.REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(context,data);
+                    this.chosenPlace = place;
                     view.setChosenPlace(String.format("%s", place.getAddress()));
                     view.setAddress(place);
                     break;

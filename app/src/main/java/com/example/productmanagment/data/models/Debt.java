@@ -13,26 +13,23 @@ public class Debt {
     private String repayDate;
     private String borrower;
     private int debtType;
-    private int accountId;
-
-    private final int DEBT_TYPE_BORROWED = 1;
-    private final int DEBT_TYPE_LENT= 2;
+    private Account account;
 
     public Debt(){
 
     }
 
-    public Debt(String sum, String description, String borrowDate, String repayDate, String borrower, int debtType, int accountId) {
+    public Debt(String sum, String description, String borrowDate, String repayDate, String borrower, int debtType, Account account) {
         this.sum = sum;
         this.description = description;
         this.borrowDate = borrowDate;
         this.repayDate = repayDate;
         this.borrower = borrower;
         this.debtType = debtType;
-        this.accountId = accountId;
+        this.account = account;
     }
 
-    public Debt(String sum, String remain, String description, String borrowDate, String repayDate, String borrower, int debtType, int accountId) {
+    public Debt(String sum, String remain, String description, String borrowDate, String repayDate, String borrower, int debtType, Account account) {
         this.sum = sum;
         this.remain = remain;
         this.description = description;
@@ -40,10 +37,10 @@ public class Debt {
         this.repayDate = repayDate;
         this.borrower = borrower;
         this.debtType = debtType;
-        this.accountId = accountId;
+        this.account = account;
     }
 
-    public Debt(int id, String sum, String remain, String description, String borrowDate, String repayDate, String borrower, int debtType, int accountId) {
+    public Debt(int id, String sum, String remain, String description, String borrowDate, String repayDate, String borrower, int debtType, Account account) {
         this.id = id;
         this.sum = sum;
         this.remain = remain;
@@ -52,7 +49,7 @@ public class Debt {
         this.repayDate = repayDate;
         this.borrower = borrower;
         this.debtType = debtType;
-        this.accountId = accountId;
+        this.account = account;
     }
 
     public int getId() {
@@ -91,8 +88,8 @@ public class Debt {
         return remain;
     }
 
-    public int getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
     public void setSum(String cost) {
@@ -123,8 +120,8 @@ public class Debt {
         this.debtType = debtType;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public static class DebtPart{

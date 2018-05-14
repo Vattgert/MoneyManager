@@ -17,7 +17,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/debt_type_text_view"
-                app:layout_constraintStart_toStartOf="@+id/debtTypeSpinner"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
@@ -30,92 +30,87 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/debtTypeAddTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/debtTypeAddTextView" />
 
             <TextView
                 android:id="@+id/debtReceiverTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="66dp"
                 android:labelFor="@id/detailDebtReceiverEditText"
                 android:text="@string/debt_receiver_text_view"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/detailDebtTypeEditText" />
+                app:layout_constraintTop_toBottomOf="@id/detailDebtTypeEditText" />
 
             <EditText
                 android:id="@+id/detailDebtReceiverEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/debtReceiverTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/debtReceiverTextView" />
 
             <TextView
                 android:id="@+id/debtSumAddTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="66dp"
                 android:text="@string/debt_sum_text_view"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/detailDebtReceiverEditText" />
+                app:layout_constraintTop_toBottomOf="@id/detailDebtReceiverEditText" />
 
             <EditText
                 android:id="@+id/detailDebtSumEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:ems="10"
                 android:enabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/debtSumAddTextView"
-                app:layout_constraintTop_toTopOf="@+id/debtSumAddTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/debtSumAddTextView" />
             <TextView
                 android:id="@+id/debtDescriptionAddTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="66dp"
                 android:text="@string/debt_description_text_view"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/detailDebtSumEditText" />
+                app:layout_constraintTop_toBottomOf="@id/detailDebtSumEditText" />
 
             <EditText
                 android:id="@+id/detailDebtDescriptionEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:ems="10"
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/debtDescriptionAddTextView" />
+                app:layout_constraintTop_toBottomOf="@id/debtDescriptionAddTextView" />
             <TextView
                 android:id="@+id/dateDebtEditTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="66dp"
                 android:text="@string/debt_borrow_date_text_view"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/detailDebtDescriptionEditText" />
+                app:layout_constraintTop_toBottomOf="@id/detailDebtDescriptionEditText" />
             <EditText
                 android:id="@+id/detailBorrowDateEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:cursorVisible="false"
                 android:ems="10"
                 android:focusable="false"
@@ -123,22 +118,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/dateDebtEditTextView" />
+                app:layout_constraintTop_toBottomOf="@id/dateDebtEditTextView" />
             <TextView
                 android:id="@+id/repayDateDebtEditTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="66dp"
                 android:text="@string/debt_repay_date_text_view"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/detailBorrowDateEditText" />
+                app:layout_constraintTop_toBottomOf="@id/detailBorrowDateEditText" />
             <EditText
                 android:id="@+id/detailRepayDateEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:cursorVisible="false"
                 android:ems="10"
                 android:focusable="false"
@@ -146,17 +140,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/repayDateDebtEditTextView" />
+                app:layout_constraintTop_toBottomOf="@id/repayDateDebtEditTextView" />
             <TextView
                 android:id="@+id/detailAccountDebtTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="66dp"
                 android:text="@string/debt_account_text_view"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/detailRepayDateEditText" />
+                app:layout_constraintTop_toBottomOf="@id/detailRepayDateEditText" />
 
             <EditText
                 android:id="@+id/detailAccountDebtEditText"
@@ -168,8 +162,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/detailAccountDebtTextView" />
+                app:layout_constraintTop_toBottomOf="@id/detailAccountDebtTextView" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
-
 </android.support.constraint.ConstraintLayout>

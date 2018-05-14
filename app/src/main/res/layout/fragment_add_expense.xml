@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.productmanagment.addexpenses.AddExpenseFragment">
+    tools:context="com.example.productmanagment.addexpenses.AddExpenseFragment"
+    android:background="@color/white">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,19 +57,20 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/costAddTextView" />
+
             <TextView
                 android:id="@+id/noteAddTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:text="Заметка"
+                android:textColor="@color/colorPrimaryText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/costAddEditText"
-                android:textColor="@color/colorPrimaryText"/>
+                app:layout_constraintTop_toBottomOf="@+id/costAddEditText" />
             <EditText
                 android:id="@+id/noteAddEditText"
                 android:layout_width="match_parent"
@@ -81,31 +83,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/noteAddTextView" />
-            <TextView
-                android:id="@+id/marksAddTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
-                android:text="Метки"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/noteAddEditText"
-                android:textColor="@color/colorPrimaryText"/>
-            <EditText
-                android:id="@+id/marksAddEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:ems="10"
-                android:hint="Добавить метку"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/marksAddTextView" />
 
             <TextView
                 android:id="@+id/receiverAddTextView"
@@ -113,13 +90,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:text="Получатель"
+                android:textColor="@color/colorPrimaryText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/marksAddEditText"
-                android:textColor="@color/colorPrimaryText"/>
+                app:layout_constraintTop_toBottomOf="@+id/noteAddEditText" />
 
             <EditText
                 android:id="@+id/receiverAddEditText"
@@ -139,13 +116,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:text="Дата"
+                android:textColor="@color/colorPrimaryText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/receiverAddEditText"
-                android:textColor="@color/colorPrimaryText"/>
+                app:layout_constraintTop_toBottomOf="@+id/receiverAddEditText" />
 
             <TextView
                 android:id="@+id/timeAddTextView"
@@ -219,13 +196,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:text="Вид оплаты"
+                android:textColor="@color/colorPrimaryText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addAccountSpinner"
-                android:textColor="@color/colorPrimaryText"/>
+                app:layout_constraintTop_toBottomOf="@+id/addAccountSpinner" />
 
             <Spinner
                 android:id="@+id/typeOfPaymentSpinner"
@@ -290,10 +267,11 @@
                 android:layout_marginTop="10dp"
                 android:text="Выберите место, которое вы посещали"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/choosePlaceButton"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/placeDescriptionTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/placeDescriptionTextView"
+                android:layout_marginBottom="24dp"/>
 
             <ImageButton
                 android:id="@+id/choosePlaceButton"
@@ -303,6 +281,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
                 android:src="@android:drawable/ic_menu_myplaces"
+                android:background="@color/bpTransparent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/placeDescriptionTextView"

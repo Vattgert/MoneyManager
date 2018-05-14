@@ -14,13 +14,14 @@ public class Goal {
     private String color;
     private String icon;
     private int state;
+    private MyCurrency currency;
 
     public Goal(){
 
     }
 
     public Goal(int id, String title, double neededAmount, double accumulatedAmount, String startDate,
-                String wantedDate, String note, String color, String icon, int state) {
+                String wantedDate, String note, String color, String icon, int state, MyCurrency currency) {
         this.id = id;
         this.title = title;
         this.neededAmount = neededAmount;
@@ -31,10 +32,11 @@ public class Goal {
         this.color = color;
         this.icon = icon;
         this.state = state;
+        this.currency = currency;
     }
 
     public Goal(String title, double neededAmount, double accumulatedAmount, String startDate, String wantedDate,
-                String note, String color, String icon, int state) {
+                String note, String color, String icon, int state, MyCurrency currency) {
         this.title = title;
         this.neededAmount = neededAmount;
         this.accumulatedAmount = accumulatedAmount;
@@ -44,6 +46,7 @@ public class Goal {
         this.color = color;
         this.icon = icon;
         this.state = state;
+        this.currency = currency;
     }
 
     public int getState() {
@@ -124,5 +127,13 @@ public class Goal {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public MyCurrency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(MyCurrency currency) {
+        this.currency = currency;
     }
 }

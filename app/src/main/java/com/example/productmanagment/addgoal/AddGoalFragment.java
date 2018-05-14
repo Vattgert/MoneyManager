@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.productmanagment.R;
 import com.example.productmanagment.data.models.Goal;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.utils.schedulers.UIUtils;
 
 import java.text.SimpleDateFormat;
@@ -131,8 +132,11 @@ public class AddGoalFragment extends Fragment implements AddGoalContract.View {
         String color = "";
         String icon = "";
         String note = goalNoteEditText.getText().toString();
+        MyCurrency currency = new MyCurrency();
+        currency.setId(1);
         if(neededAmount > accumulatedAmount){
-            Goal goal = new Goal(title, neededAmount, accumulatedAmount, startDate, wantedDate, note, color, icon, status);
+            Goal goal = new Goal(title, neededAmount, accumulatedAmount, startDate,
+                    wantedDate, note, color, icon, status, currency);
             presenter.createGoal(goal);
         }
         else{

@@ -11,6 +11,8 @@ public class MyCurrency{
     private double rateBaseToThis;
     private int isBase;
 
+    public MyCurrency(){}
+
     public MyCurrency(String title, String code, String symbol, double rateToBaseCurrency, double rateBaseToThis, int isBase) {
         this.title = title;
         this.code = code;

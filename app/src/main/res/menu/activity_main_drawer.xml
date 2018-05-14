@@ -29,12 +29,8 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_budgets"
-            android:icon="@drawable/ic_nav_budgets"
-            android:title="@string/naw_drawer_budgets" />
-        <item
             android:id="@+id/nav_debts"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_nav_debt"
             android:title="@string/naw_drawer_debts" />
         <item
             android:id="@+id/nav_goals"
@@ -46,15 +42,19 @@
             android:title="@string/naw_drawer_groups" />
         <item
             android:id="@+id/nav_currencies"
-            android:icon="@drawable/ic_naw_groups"
+            android:icon="@drawable/ic_nav_budgets"
             android:title="Валюти" />
         <item
             android:id="@+id/nav_report"
-            android:icon="@drawable/ic_nav_planned_payment"
+            android:icon="@drawable/ic_nav_report"
             android:title="Звіти" />
         <item
+            android:id="@+id/nav_budgets"
+            android:icon="@drawable/ic_nav_place"
+            android:title="Місця" />
+        <item
             android:id="@+id/nav_purchase_list"
-            android:icon="@drawable/ic_nav_planned_payment"
+            android:icon="@drawable/ic_nav_purchase"
             android:title="Списки покупок" />
     </group>
 

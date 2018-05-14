@@ -44,7 +44,7 @@ public class AccountDetailAndEditPresenter implements AccountDetailAndEditContra
                 .subscribeOn(baseSchedulerProvider.computation())
                 .observeOn(baseSchedulerProvider.ui())
                 .subscribe(this::showAccount, throwable -> {
-                    Log.wtf("tag", throwable.getMessage()); });
+                    Log.wtf("MyLog", throwable.getMessage()); });
         compositeDisposable.add(disposable);
     }
 
@@ -112,7 +112,7 @@ public class AccountDetailAndEditPresenter implements AccountDetailAndEditContra
 
     private void showAccount(Account account){
         view.setAccountTitle(account.getName());
-//        view.setAccountCurrency(account.getCurrency());
+        view.setAccountCurrency(account.getCurrency());
         view.setAccountColor(account.getColor());
     }
 

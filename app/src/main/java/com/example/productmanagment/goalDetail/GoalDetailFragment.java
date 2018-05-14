@@ -137,8 +137,9 @@ public class GoalDetailFragment extends Fragment implements GoalDetailContract.V
     }
 
     @Override
-    public void setProgressText(String neededAmount, String accumulatedAmount) {
-        String res = getResources().getString(R.string.goal_detail_progress, accumulatedAmount, neededAmount);
+    public void setProgressText(String neededAmount, String accumulatedAmount, String currency) {
+        String res = getResources().getString(R.string.goal_detail_progress, accumulatedAmount,
+                currency, neededAmount, currency);
         goalProgressTextView.setText(res);
     }
 

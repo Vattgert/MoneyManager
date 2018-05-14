@@ -202,8 +202,10 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
             public void bind(Goal goal){
                 this.goal = goal;
                 goalTitleTextView.setText(goal.getTitle());
-                goalNeededAmountTextView.setText(resources.getString(R.string.goal_needed, String.valueOf(goal.getNeededAmount())));
-                goalAccumulatedAmountTextView.setText(resources.getString(R.string.goal_accumulated, String.valueOf(goal.getAccumulatedAmount())));
+                goalNeededAmountTextView.setText(resources.getString(R.string.goal_needed,
+                        String.valueOf(goal.getNeededAmount()), goal.getCurrency().getSymbol()));
+                goalAccumulatedAmountTextView.setText(resources.getString(R.string.goal_accumulated,
+                        String.valueOf(goal.getAccumulatedAmount()), goal.getCurrency().getSymbol()));
                 goalProgressBar.setMax((int)goal.getNeededAmount());
                 goalProgressBar.setProgress((int)goal.getAccumulatedAmount());
             }

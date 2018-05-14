@@ -60,6 +60,7 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_BORROWER = "borrower";
         public static final String COLUMN_DEBT_TYPE = "debt_type";
         public static final String COLUMN_DEBT_REMAIN = "debt_remain";
+        public static final String COLUMN_ACCOUNT = "account_id";
     }
 
     public class GoalEntry{
@@ -74,6 +75,7 @@ public class ExpensePersistenceContract {
         public static  final String COLUMN_STATUS = "status";
         public static  final String COLUMN_ICON = "icon";
         public static  final String COLUMN_COLOR = "color";
+        public static  final String COLUMN_CURRENCY = "currency_id";
     }
 
     public class PurchaseListEntry{

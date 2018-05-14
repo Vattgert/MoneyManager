@@ -77,6 +77,7 @@ public class PurchaseListFragment extends Fragment implements PurchaseListContra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Покупки");
         adapter = new PurchaseListSpinnerAdapter(getContext(), android.R.layout.simple_spinner_item,
                 new ArrayList<>(0), android.R.layout.simple_spinner_dropdown_item);
         purchasesAdapter = new PurchasesAdapter(new ArrayList<>(0), itemListener,

@@ -9,34 +9,46 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Light">
 
-    <ImageView
+    <com.github.ivbaranov.mli.MaterialLetterIcon
         android:id="@+id/userIconImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:mli_initials="false"
+        app:mli_initials_number="2"
+        app:mli_letter=""
+        app:mli_letter_color="@color/white"
+        app:mli_letter_size="26"
+        app:mli_letters_number="1"
+        app:mli_shape_color="@color/colorAccent"
+        app:mli_shape_type="circle" />
 
     <TextView
         android:id="@+id/userEmailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:paddingTop="4dp"
         android:text="android.studio@android.com"
+        android:textColor="@color/colorIcons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userIconImageView" />
 
     <Spinner
         android:id="@+id/groupChoseSpinner"
+        style="@style/ThemeOverlay.AppCompat.Light"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:paddingTop="4dp"
         app:layout_constraintBottom_toBottomOf="parent"

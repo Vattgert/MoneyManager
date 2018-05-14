@@ -91,8 +91,9 @@ public class GoalDetailPresenter implements GoalDetailContract.Presenter {
         view.setWantedDate(goal.getWantedDate());
         view.setNeededAmount(goal.getNeededAmount());
         view.setAccumulatedAmount(goal.getAccumulatedAmount());
-        view.setProgressText(String.valueOf(goal.getNeededAmount()), String.valueOf(goal.getAccumulatedAmount()));
-        view.setMinAmountPerMonth(this.getMinAmountPerMonth(goal));
+        view.setProgressText(String.valueOf(goal.getNeededAmount()),
+                String.valueOf(goal.getAccumulatedAmount()), goal.getCurrency().getSymbol());
+        view.setMinAmountPerMonth(this.getMinAmountPerMonth(goal).concat(goal.getCurrency().getSymbol()));
         view.setNote(goal.getNote());
         if(goal.getState() == 3)
             view.setGoalButtonsGone();

@@ -3,6 +3,7 @@ package com.example.productmanagment.expenses;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -245,7 +247,9 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
             Expense expense;
             TextView categoryNameTextView, noteTextView, placeTextView, payTypeTextView
                     ,expenseTextView, receiverTextView, dateTextView, userEmailTextView;
+            ImageView categoryImageView;
             Resources resources;
+            String mPackage;
 
             public ViewHolder(View view) {
                 super(view);
@@ -257,7 +261,9 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 receiverTextView = view.findViewById(R.id.receiverTextView);
                 dateTextView = view.findViewById(R.id.dateTextView);
                 userEmailTextView = view.findViewById(R.id.userEmailTextView);
+                categoryImageView = view.findViewById(R.id.categoryImageView);
                 resources = view.getResources();
+                mPackage = view.getContext().getPackageName();
 
                 if(itemListener != null)
                     view.setOnClickListener(__ -> itemListener.onExpenseClick(expense));
@@ -267,32 +273,33 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 this.expense = expense;
                 Log.wtf("myLog", expense.getExpenseType() + "");
                 categoryNameTextView.setText(expense.getCategory().getName());
-                if(expense.getNote() == null || expense.getNote().equals(""))
-                    noteTextView.setVisibility(View.GONE);
-                else
-                    noteTextView.setText(expense.getNote());
-                if(expense.getReceiver() == null || expense.getReceiver().equals(""))
-                    receiverTextView.setVisibility(View.GONE);
-                else
-                    receiverTextView.setText(expense.getReceiver());
-                if(expense.getPlace() == null || expense.getPlace().equals(""))
-                    receiverTextView.setVisibility(View.GONE);
-                else
-                    placeTextView.setText(expense.getPlace());
-                payTypeTextView.setText(expense.getTypeOfPayment());
+                //categoryImageView.setImageBitmap(BitmapFactory.decodeStream(resources.openRawResource(resources.getIdentifier(expense.getCategory().getIcon(), "raw", mPackage))));
+                setDataToViewIfNotNull(noteTextView, expense.getNote());
+                setDataToViewIfNotNull(receiverTextView, expense.getReceiver());
+                setDataToViewIfNotNull(placeTextView, expense.getPlace());
+                setDataToViewIfNotNull(payTypeTextView, expense.getTypeOfPayment());
                 String cost = "";
                 if(expense.getExpenseType().equals("Витрата")) {
                     expenseTextView.setTextColor(Color.RED);
-                    cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");
+                    cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
+                    //cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");
                 }
                 else if(expense.getExpenseType().equals("Дохід")) {
                     expenseTextView.setTextColor(Color.GREEN);
                     cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
+                    //cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");
                 }
                 expenseTextView.setText(cost);
                 dateTextView.setText(expense.getDate());
                 if(expense.getUser() != null)
-                    userEmailTextView.setText(expense.getUser().getEmail());
+                    setDataToViewIfNotNull(userEmailTextView, expense.getUser().getEmail());
+            }
+
+            private void setDataToViewIfNotNull(TextView textView, String data){
+                if(data != null && !data.equals("")){
+                    textView.setVisibility(View.VISIBLE);
+                    textView.setText(data);
+                }
             }
         }
     }

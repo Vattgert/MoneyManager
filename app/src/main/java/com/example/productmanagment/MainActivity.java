@@ -61,6 +61,7 @@ import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpenses
 import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesPresenter;
 import com.example.productmanagment.userinfo.UserInfoActivity;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
+import com.github.ivbaranov.mli.MaterialLetterIcon;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -122,6 +123,8 @@ public class MainActivity extends AppCompatActivity
 
 
         View header = navigationView.getHeaderView(0);
+        MaterialLetterIcon userIcon = header.findViewById(R.id.userIconImageView);
+        userIcon.setLetter(userSession.getUserDetails().getEmail().substring(0,3));
         userEmailTextView = header.findViewById(R.id.userEmailTextView);
         userEmailTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,8 +155,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-
     }
 
     @Override

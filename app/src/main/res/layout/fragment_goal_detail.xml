@@ -38,6 +38,7 @@
         app:dotColor="@color/colorAccent"
         app:dotWidth="16dp"
         app:drawDot="true"
+        app:progressTextSuffix="₴"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/goalWantedDateDetailTextView"

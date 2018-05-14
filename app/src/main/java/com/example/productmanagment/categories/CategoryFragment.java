@@ -2,6 +2,8 @@ package com.example.productmanagment.categories;
 
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -168,16 +171,23 @@ public class CategoryFragment extends Fragment implements CategoriesContract.Vie
         public class ViewHolder extends RecyclerView.ViewHolder{
             Category category;
             TextView nameTextView;
-
+            ImageView categoryIconImageView;
+            Resources resources;
+            String mPackage;
             public ViewHolder(View view) {
                 super(view);
+                resources = view.getResources();
+                mPackage = view.getContext().getPackageName();
                 nameTextView = view.findViewById(R.id.categoryNameTextView);
+                categoryIconImageView = view.findViewById(R.id.categoryIconImageView);
                 view.setOnClickListener(__ -> itemListener.onCategoryClick(category));
             }
 
             public void bind(Category category){
                 this.category = category;
                 nameTextView.setText(category.getName());
+                /*if(category.getIcon() != null && !category.getIcon().equals(""))
+                    categoryIconImageView.setImageBitmap(BitmapFactory.decodeStream(resources.openRawResource(resources.getIdentifier(category.getIcon(), "raw", mPackage))));*/
             }
         }
     }

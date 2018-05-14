@@ -71,6 +71,7 @@ public class DebtDetailAndEditPresenter implements DebtDetailAndEditContract.Pre
         view.showDescription(debt.getDescription());
         view.showBorrowDate(debt.getBorrowDate());
         view.showRepayDate(debt.getRepayDate());
+        view.showAccount(debt.getAccount().getName());
     }
 
     private void deleteDebt(int debtId){

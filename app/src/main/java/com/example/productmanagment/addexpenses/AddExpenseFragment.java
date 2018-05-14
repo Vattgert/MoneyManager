@@ -37,6 +37,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -73,12 +75,6 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @return A new instance of fragment AddExpenseFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static AddExpenseFragment newInstance() {
         AddExpenseFragment fragment = new AddExpenseFragment();
         return fragment;
@@ -91,9 +87,6 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
                 android.R.layout.simple_spinner_item, new ArrayList<>(0),
                 android.R.layout.simple_spinner_dropdown_item);
     }
-
-    //TODO: Доделать чипсы (метки)
-
 
     @Override
     public void onResume() {
@@ -125,7 +118,6 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
         placeNameTextView = view.findViewById(R.id.placeTextView);
 
-        //dateEditText.setOnFocusChangeListener(editTextFocus);
         dateEditText.setOnClickListener(editTextClick);
         categoryEditText.setOnClickListener(editTextClick);
         timeEditText.setOnClickListener(editTextClick);
@@ -293,7 +285,10 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         else
             expenseType = "Дохід";
         String receiver = receiverEditText.getText().toString();
-        String place = ""; /*placeTextView.getText().toString();*/
+        String place = String.format("%s", presenter.getChosenPlace().getAddress());
+        String addressCoordinates = String.format("%f;%f",
+                new DecimalFormat("#.#", DecimalFormatSymbols.getInstance()).format(presenter.getChosenPlace().getLatLng().latitude),
+                new DecimalFormat("#.#", DecimalFormatSymbols.getInstance()).format(presenter.getChosenPlace().getLatLng().longitude));
         String date = dateEditText.getText().toString();
         String time = timeEditText.getText().toString();
         if(date.equals("")){
@@ -302,7 +297,6 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         }
         String typeOfPayment = typeOfPaymentSpinner.getSelectedItem().toString();
         String addition = "";
-        String addressCoordinates = "";
         Expense expense = new Expense(cost, expenseType, note, receiver, date, time, typeOfPayment,
                 place, addition, addressCoordinates, category, account, null);
         expense.setExpenseType(expenseType);

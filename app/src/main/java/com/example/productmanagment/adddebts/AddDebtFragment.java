@@ -155,13 +155,12 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
         String description = debtDescriptionEditText.getText().toString();
         String borrowDate = borrowDateEditText.getText().toString();
         String repayDate = repayDateEditText.getText().toString();
-        int accountId = 0;
-        Debt debt = new Debt(sum, description, borrowDate, repayDate, receiver, debtType, accountId);
+        Account account = (Account) debtAccountSpinner.getSelectedItem();
+        Debt debt = new Debt(sum, description, borrowDate, repayDate, receiver, debtType, account);
         Expense debtExpense = new Expense();
         debtExpense.setDebtId(debt.getId());
         debtExpense.setCost(Double.valueOf(debt.getSum()));
         debtExpense.setCategory(new Subcategory(82, null));
-        Account account = (Account) debtAccountSpinner.getSelectedItem();
         if(debt.getDebtType() == 1) {
             debtExpense.setExpenseType("Дохід");
             debtExpense.setNote(getContext().getResources().getString(R.string.borrowed, debt.getBorrower()));
@@ -172,7 +171,7 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
         }
         debtExpense.setDate(getCurrentDate());
         debtExpense.setReceiver(debt.getBorrower());
-        debtExpense.setAccount(account);
+        debtExpense.setAccount(debt.getAccount());
         presenter.saveDebtExpense(debtExpense);
         presenter.saveDebt(debt);
     }

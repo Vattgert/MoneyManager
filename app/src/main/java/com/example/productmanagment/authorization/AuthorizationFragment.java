@@ -40,6 +40,7 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Вхід");
         presenter.subscribe();
     }
 
@@ -98,6 +99,7 @@ public class AuthorizationFragment extends Fragment implements AuthorizationCont
     public void showMainActivityIfAuth() {
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);
+        getActivity().finish();
     }
 
     @Override

@@ -84,7 +84,7 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
         Disposable disposable = remoteDataRepository.getExpensesByAccount(accountId)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(expensesResponse -> this.processExpenses(expensesResponse.expenses));
+                .subscribe(expensesResponse -> this.processExpenses(expensesResponse.expenses), throwable -> Log.wtf("expenseLog", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
 

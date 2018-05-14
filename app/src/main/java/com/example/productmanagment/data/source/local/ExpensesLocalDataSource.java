@@ -103,7 +103,6 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         double cost = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST));
         String expenseType = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_EXPENSE_TYPE));
         String note = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NOTE));
-        String marks = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_MARKS));
         String receiver = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_RECEIVER));
         String date = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_DATE));
         String time = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_TIME));
@@ -139,7 +138,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         String borrower = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER));
         String description = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_DESCRIPTION));
         int debtType = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.DebtEntry.COLUMN_DEBT_TYPE));
-        return new Debt(id, sum, remain, description, borrowDate, repayDate, borrower, debtType, 0);
+        return new Debt(id, sum, remain, description, borrowDate, repayDate, borrower, debtType, getFullAccount(c));
     }
 
     private Account getAccount(@NonNull Cursor c){
@@ -151,7 +150,6 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Account getFullAccount(@NonNull Cursor c){
         int id = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID));
         String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_TITLE));
-        Log.wtf("AccountsLog", "Local data sourse account title: " + title);
         double amount = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_NAME_AMOUNT));
         String color = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.AccountEntry.COLUMN_COLOR));
         return new Account(id, title, new BigDecimal(amount), getCurrency(c), color);
@@ -161,6 +159,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         int subcategoryId = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID));
         String title = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
         int categoryId = c.getInt(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID));
+        //String icon = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.CategoryEntry.COLUMN_ICON));
         return new Subcategory(subcategoryId, title, categoryId);
     }
 
@@ -198,7 +197,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         String color = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_COLOR));
         String icon = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_ICON));
         int state = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS));
-        return new Goal(id, title, neededSum, accumulatedSum, startDate, wantedDate, note, color, icon, state);
+        return new Goal(id, title, neededSum, accumulatedSum, startDate, wantedDate, note, color, icon, state, getCurrency(c));
     }
 
     private MyCurrency getCurrency(Cursor c){
@@ -359,6 +358,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_DEBT, expense.getDebtId());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_ACCOUNT, expense.getAccount().getId());
         expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_EXPENSE_TYPE, expense.getExpenseType());
+        expenseValues.put(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES, expense.getAddressCoordinates());
         databaseHelper.insert(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, expenseValues, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -567,9 +567,13 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<List<Debt>> getDebts() {
-        String sql = String.format("SELECT %s FROM %s",
+        String sql = String.format("SELECT %s,%s, %s FROM %s INNER JOIN %s on debt.account_id = account.id_account INNER JOIN %s ON account.currency = currency.id_currency",
                 TextUtils.join(",", getDebtProjection()),
-                ExpensePersistenceContract.DebtEntry.TABLE_NAME);
+                TextUtils.join(",", getAccountProjection()),
+                TextUtils.join(",", getCurrencyProjection()),
+                ExpensePersistenceContract.DebtEntry.TABLE_NAME,
+                ExpensePersistenceContract.AccountEntry.TABLE_NAME,
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME);
         return databaseHelper.createQuery(ExpensePersistenceContract.DebtEntry.TABLE_NAME, sql)
                 .mapToList(debtMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
@@ -577,7 +581,13 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<Debt> getDebtById(@NonNull int debtId) {
-        String sql = String.format("SELECT * FROM debt WHERE id_debt LIKE ?");
+        String sql = String.format("SELECT %s,%s, %s FROM %s INNER JOIN %s on debt.account_id = account.id_account INNER JOIN %s ON account.currency = currency.id_currency WHERE id_debt LIKE ?",
+                TextUtils.join(",", getDebtProjection()),
+                TextUtils.join(",", getAccountProjection()),
+                TextUtils.join(",", getCurrencyProjection()),
+                ExpensePersistenceContract.DebtEntry.TABLE_NAME,
+                ExpensePersistenceContract.AccountEntry.TABLE_NAME,
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME);
         return databaseHelper.createQuery(ExpensePersistenceContract.DebtEntry.TABLE_NAME, sql, String.valueOf(debtId))
                 .mapToOne(cursor -> debtMapperFunction.apply(cursor))
                 .toFlowable(BackpressureStrategy.BUFFER);
@@ -592,6 +602,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROW_DATE, debt.getBorrowDate());
         contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_REPAY_DATE, debt.getRepayDate());
         contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_BORROWER, debt.getBorrower());
+        contentValues.put(ExpensePersistenceContract.DebtEntry.COLUMN_ACCOUNT, debt.getAccount().getId());
         databaseHelper.insert(ExpensePersistenceContract.DebtEntry.TABLE_NAME, contentValues);
     }
 
@@ -727,8 +738,11 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<List<Goal>> getGoals(int state) {
-        String sql = String.format("SELECT * FROM %s WHERE %s = %d",
+        String sql = String.format("SELECT %s, %s FROM %s INNER JOIN %s ON goal.currency_id = currency.id_currency WHERE %s = %d",
+                TextUtils.join(",", getGoalProjection()),
+                TextUtils.join(",", getCurrencyProjection()),
                 ExpensePersistenceContract.GoalEntry.TABLE_NAME,
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME,
                 ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, state);
         Log.wtf("MyLog", sql);
         return databaseHelper.createQuery(ExpensePersistenceContract.GoalEntry.TABLE_NAME, sql)
@@ -738,7 +752,11 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<Goal> getGoalById(@NonNull String goalId) {
-        String sql = String.format("SELECT * FROM goal WHERE id_goal LIKE ?");
+        String sql = String.format("SELECT %s, %s FROM %s INNER JOIN %s ON goal.currency_id = currency.id_currency WHERE id_goal LIKE ?",
+                TextUtils.join(",", getGoalProjection()),
+                TextUtils.join(",", getCurrencyProjection()),
+                ExpensePersistenceContract.GoalEntry.TABLE_NAME,
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME);
         return databaseHelper.createQuery(ExpensePersistenceContract.GoalEntry.TABLE_NAME, sql, goalId)
                 .mapToOne(cursor -> goalMapperFunction.apply(cursor))
                 .toFlowable(BackpressureStrategy.BUFFER);
@@ -756,6 +774,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_STATUS, goal.getState());
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_ICON, goal.getIcon());
         contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_COLOR, goal.getColor());
+        contentValues.put(ExpensePersistenceContract.GoalEntry.COLUMN_CURRENCY, goal.getCurrency().getId());
         databaseHelper.insert(ExpensePersistenceContract.GoalEntry.TABLE_NAME, contentValues);
     }
 
@@ -893,6 +912,21 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                 ExpensePersistenceContract.AccountEntry.COLUMN_NAME_AMOUNT,
                 ExpensePersistenceContract.AccountEntry.COLUMN_CURRENCY,
                 ExpensePersistenceContract.AccountEntry.COLUMN_COLOR,
+        };
+    }
+
+    private String[] getGoalProjection(){
+        return new String[]{
+                ExpensePersistenceContract.GoalEntry.COLUMN_ID,
+                ExpensePersistenceContract.GoalEntry.COLUMN_TITLE,
+                ExpensePersistenceContract.GoalEntry.COLUMN_NOTE,
+                ExpensePersistenceContract.GoalEntry.COLUMN_NEEDED_AMOUNT,
+                ExpensePersistenceContract.GoalEntry.COLUMN_ACCUMULATED_AMOUNT,
+                ExpensePersistenceContract.GoalEntry.COLUMN_START_DATE,
+                ExpensePersistenceContract.GoalEntry.COLUMN_WANTED_DATE,
+                ExpensePersistenceContract.GoalEntry.COLUMN_ICON,
+                ExpensePersistenceContract.GoalEntry.COLUMN_COLOR,
+                ExpensePersistenceContract.GoalEntry.COLUMN_STATUS
         };
     }
 

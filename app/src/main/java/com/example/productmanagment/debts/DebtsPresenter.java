@@ -85,7 +85,7 @@ public class DebtsPresenter implements DebtsContract.Presenter {
     public void closeDebtPart(Debt debt, String sum) {
         Expense expense = closingDebtExpense(debt);
         expense.setCost(Double.valueOf(sum));
-        expensesRepository.saveDebtPayment(expense);
+        expensesRepository.saveExpense(expense);
         loadDebts();
     }
 
@@ -115,7 +115,7 @@ public class DebtsPresenter implements DebtsContract.Presenter {
     }
 
     private String getCurrentDate(){
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         return dateFormat.format(date);
     }
@@ -125,8 +125,7 @@ public class DebtsPresenter implements DebtsContract.Presenter {
         debtClose.setDebtId(debt.getId());
         debtClose.setCost(Double.valueOf(debt.getRemain()));
         debtClose.setCategory(new Subcategory(82, null));
-        Account account = new Account();
-        account.setId(debt.getAccountId());
+        Account account = debt.getAccount();
         debtClose.setAccount(account);
         if(debt.getDebtType() == 1) {
             debtClose.setNote(resources.getString(R.string.borrowed, debt.getBorrower()));
