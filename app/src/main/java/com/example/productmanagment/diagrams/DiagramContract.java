@@ -17,5 +17,6 @@ public interface DiagramContract {
 
     interface Presenter extends BasePresenter{
         void showDiagram(int type);
+        void showDiagramByDate(int type, String fdate, String sdate);
     }
 }

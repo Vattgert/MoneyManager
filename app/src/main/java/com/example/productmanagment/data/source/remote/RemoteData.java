@@ -5,11 +5,14 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
+
+import java.util.Currency;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -44,4 +47,10 @@ public interface RemoteData {
     //Діаграми
     Single<DiagramResponse> getExpensesByCategoryDiagram(String groupId);
     Single<DiagramResponse> getExpensesByUserDiagram(String groupId);
+
+    //Валюти
+    Single<CurrencyResponse> getCurrencies(String groupId);
+    Single<Currency> getCurrencyById(String currencyId);
+    Single<SuccessResponse> addCurrency(Currency currency);
+    Single<SuccessResponse> updateCurrency(Currency currency);
 }

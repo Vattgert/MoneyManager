@@ -38,7 +38,6 @@ public class DiagramPresenter implements DiagramContract.Presenter {
     private DiagramContract.View view;
     private BaseSchedulerProvider provider;
     CompositeDisposable compositeDisposable;
-    Chart chart = null;
 
     public DiagramPresenter(int groupId, ExpensesRepository repository,
                             DiagramContract.View view, BaseSchedulerProvider provider) {
@@ -63,15 +62,22 @@ public class DiagramPresenter implements DiagramContract.Presenter {
 
     @Override
     public void showDiagram(int type) {
+        Chart chart = null;
         switch (type){
             case 0:
                 chart = AnyChart.pie();
                 if(groupId == -1)
+
                     loadExpenseStructureData((Pie)chart, "Витрата");
                 else
                     loadExpenseStructureRemoteData((Pie)chart);
                 break;
             case 1:
+                chart = AnyChart.pie();
+                if(groupId == -1)
+                    loadExpenseStructureData((Pie)chart, "Дохід");
+                else
+                    loadExpenseStructureRemoteData((Pie)chart);
                 break;
             case 2:
                 chart = AnyChart.vertical();
@@ -83,6 +89,46 @@ public class DiagramPresenter implements DiagramContract.Presenter {
             case 3:
                 break;
             case 4:
+                chart = AnyChart.pie();
+                if(groupId != -1)
+                    loadExpenseStructureByUserRemoteData((Pie)chart);
+                break;
+            default:
+                break;
+        }
+        if(chart != null)
+            view.setChart(chart);
+    }
+
+    @Override
+    public void showDiagramByDate(int type, String fdate, String sdate) {
+        Chart chart = null;
+        switch (type){
+            case 0:
+                chart = AnyChart.pie();
+                if(groupId == -1)
+                    loadExpenseStructureData((Pie)chart, "Витрата");
+                else
+                    loadExpenseStructureRemoteData((Pie)chart);
+                break;
+            case 1:
+                chart = AnyChart.pie();
+                if(groupId == -1)
+                    loadExpenseStructureData((Pie)chart, "Дохід");
+                else
+                    loadExpenseStructureRemoteData((Pie)chart);
+                break;
+            case 2:
+                chart = AnyChart.vertical();
+                if(groupId == -1)
+                    loadExpenseByCategoryData((Cartesian)chart);
+                else
+                    loadExpenseByCategoryRemoteData((Cartesian)chart);
+                break;
+            case 3:
+                break;
+            case 4:
+                chart = AnyChart.pie();
                 if(groupId != -1)
                     loadExpenseStructureByUserRemoteData((Pie)chart);
                 break;
@@ -107,8 +153,24 @@ public class DiagramPresenter implements DiagramContract.Presenter {
         compositeDisposable.add(disposable);
     }
 
+    public void loadExpenseStructureData(Pie chart, String type, String fdate, String sdate) {
+        Disposable disposable = repository.getExpensesStructureDataByDate(type, fdate, sdate)
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(stringIntegerHashMap -> {
+                            chart.setData(processExpenseStructureData(stringIntegerHashMap));
+                            chart.getLegend()
+                                    .setPosition("center-bottom")
+                                    .setItemsLayout(LegendLayout.HORIZONTAL)
+                                    .setAlign(EnumsAlign.CENTER);;},
+                        throwable -> Log.wtf("myLog", throwable.getMessage()));
+        compositeDisposable.add(disposable);
+    }
+
+
+
     public void loadExpenseByCategoryData(Cartesian chart) {
-        Disposable disposable = repository.getExpensesStructureData("1")
+        Disposable disposable = repository.getExpensesStructureData("Витрата")
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .subscribe(stringIntegerHashMap ->
@@ -172,12 +234,10 @@ public class DiagramPresenter implements DiagramContract.Presenter {
         compositeDisposable.add(disposable);
     }
 
-    private List<DataEntry> processExpenseStructureData(HashMap<String, Integer> map){
+    private List<DataEntry> processExpenseStructureData(List<ExpensesByCategory> list){
         List<DataEntry> data = new ArrayList<>();
-        for(String key : map.keySet()){
-            data.add(new ValueDataEntry(key, map.get(key)));
-            Log.wtf("myLog", key);
-            Log.wtf("myLog", map.get(key) + "");
+        for(ExpensesByCategory key : list){
+            data.add(new ValueDataEntry(key.getCategory().getName(), key.getBalance()));
         }
         return data;
     }

@@ -104,16 +104,4 @@ public class AddCurrencyPresenter implements AddCurrencyContract.Presenter {
             }
         });
     }
-
-    JsonHttpResponseHandler rate = new JsonHttpResponseHandler(){
-        @Override
-        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-            super.onSuccess(statusCode, headers, response);
-        }
-
-        @Override
-        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-            super.onFailure(statusCode, headers, throwable, errorResponse);
-        }
-    };
 }

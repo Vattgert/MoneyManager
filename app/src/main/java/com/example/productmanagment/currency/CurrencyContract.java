@@ -10,6 +10,7 @@ import java.util.List;
 public interface CurrencyContract {
     interface Presenter extends BasePresenter{
         void loadCurrencies();
+        void loadRemoteCurrencies(int groupId);
         void openAddCurrency();
         void openDetailAndEditCurrency(String currencyId);
     }
@@ -17,6 +18,6 @@ public interface CurrencyContract {
     interface View extends BaseView<Presenter>{
         void showCurrencies(List<MyCurrency> currencies);
         void showAddCurrency();
-        void showDetailAndEditCurrency(String currencyId);
+        void showDetailAndEditCurrency(int groupId, String currencyId);
     }
 }

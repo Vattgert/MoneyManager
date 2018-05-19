@@ -5,6 +5,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
@@ -122,4 +123,8 @@ public interface MoneyManagerApi {
 
     @GET("diagramdata/expensesByUserDiagram.php")
     Single<DiagramResponse> getExpensesByUserDiagram(@Query("groupId") String groupId);
+
+    /* Валюти */
+    @GET("currencies/getCurrencies.php")
+    Single<CurrencyResponse> getCurrencies(@Query("groupId") String groupId);
 }

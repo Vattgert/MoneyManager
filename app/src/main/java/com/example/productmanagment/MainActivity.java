@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_currencies:
                 view = CurrencyFragment.newInstance();
-                presenter = new CurrencyPresenter((CurrencyFragment)view,
+                presenter = new CurrencyPresenter(group.getGroupId(), (CurrencyFragment)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;

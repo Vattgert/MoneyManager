@@ -1,14 +1,23 @@
 package com.example.productmanagment.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Currency;
 
 public class MyCurrency{
+    @SerializedName("id_currency")
     private int id;
+    @SerializedName("currency_title")
     private String title;
+    @SerializedName("code")
     private String code;
+    @SerializedName("symbol")
     private String symbol;
+    @SerializedName("rate_to_base_currency")
     private double rateToBaseCurrency;
+    @SerializedName("rate_base_currency_to_this")
     private double rateBaseToThis;
+    @SerializedName("is_base")
     private int isBase;
 
     public MyCurrency(){}

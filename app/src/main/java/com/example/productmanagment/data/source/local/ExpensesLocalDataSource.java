@@ -20,6 +20,7 @@ import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.models.UserRight;
+import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
 import com.example.productmanagment.data.models.report.SubcategoryReport;
 import com.example.productmanagment.data.source.categories.CategoryPersistenceContract;
@@ -51,7 +52,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, PlannedPayment> plannedPaymentMapperFunction;
     private Function<Cursor, Debt> debtMapperFunction;
     private Function<Cursor, PurchaseList> purchaseListMapperFunction;
-    private Function<Cursor, HashMap<String, Integer>> expenseStructureMapperFunction;
+    private Function<Cursor, ExpensesByCategory> expenseStructureMapperFunction;
     private Function<Cursor, Account> accountMapperFunction;
     private Function<Cursor, Account> fullAccountMapperFunction;
     private Function<Cursor, Goal> goalMapperFunction;
@@ -176,14 +177,13 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         return new UserRight(id, title, description);
     }
 
-    private HashMap<String, Integer> getExpensesStructureData(Cursor c){
-        HashMap<String, Integer> map = new HashMap<>();
-        while (c.moveToNext()){
-            Integer i = c.getInt(0);
-            String s = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
-            map.put(s, i);
-        }
-        return map;
+    private ExpensesByCategory getExpensesStructureData(Cursor c){
+        ExpensesByCategory expensesByCategory = new ExpensesByCategory();
+        int i = c.getInt(0);
+        String s = c.getString(c.getColumnIndexOrThrow(CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE));
+        expensesByCategory.setBalance((double)i);
+        expensesByCategory.setCategory(getCategory(c));
+        return expensesByCategory;
     }
 
     private Goal getGoal(Cursor c){
@@ -465,7 +465,12 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<MyCurrency> getCurrencyById(String id) {
-        return null;
+        String sql = String.format("SELECT * FROM %s WHERE %s = %s",
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME,
+                ExpensePersistenceContract.CurrencyEntry.COLUMN_ID, id);
+        return databaseHelper.createQuery(ExpensePersistenceContract.CurrencyEntry.TABLE_NAME, sql)
+                .mapToOne(currencyMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
     }
 
     @Override
@@ -496,8 +501,21 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
-    public void updateCurrency(MyCurrency currency) {
+    public void updateCurrency(String currencyId, MyCurrency currency) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_CODE, currency.getCode());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_SYMBOL, currency.getSymbol());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_RATE_TO_BASE, currency.getRateToBaseCurrency());
+        contentValues.put(ExpensePersistenceContract.CurrencyEntry.COLUMN_RATE_BASE_TO_THIS, currency.getRateBaseToThis());
+        databaseHelper.update(ExpensePersistenceContract.CurrencyEntry.TABLE_NAME, contentValues,
+                String.format("%s=%s", ExpensePersistenceContract.CurrencyEntry.COLUMN_ID, currencyId));
+    }
 
+    @Override
+    public void deleteCurrency(String currencyId) {
+        String selection = ExpensePersistenceContract.CurrencyEntry.COLUMN_ID + " LIKE ?";
+        String[] selectionArgs = {currencyId};
+        databaseHelper.delete(ExpensePersistenceContract.CurrencyEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     @Override
@@ -710,31 +728,35 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
-    public Flowable<HashMap<String, Integer>> getExpensesStructureData(String type) {
+    public Flowable<List<ExpensesByCategory>> getExpensesStructureData(String type) {
         String[] sInnerJoin = {CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
                 CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID};
         String[] fInnerJoin = {ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY};
-        String sql = String.format("SELECT SUM(%s), %s FROM %s INNER JOIN %s ON %s = %s WHERE %s = %s GROUP BY %s",
+        String sql = String.format("SELECT SUM(%s), %s FROM %s INNER JOIN %s ON %s = %s WHERE %s LIKE ? GROUP BY %s",
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST,
-                TextUtils.join(".", new String[]{CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME, CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE} ),
+                TextUtils.join(",", new String[]{
+                        CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID,
+                        CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE,
+                        CategoryPersistenceContract.SubcategoryEntry.COLUMN_CATEGORY_ID}
+                        ),
                 ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
                 CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
                 TextUtils.join(".", fInnerJoin),
                 TextUtils.join(".", sInnerJoin),
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_EXPENSE_TYPE,
-                type,
                 TextUtils.join(".", new String[]{CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME, CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE} ));
         Log.wtf("myLog", sql);
-        return databaseHelper.createQuery(getExpenseTableList(), sql)
-                .mapToOne(expenseStructureMapperFunction)
+        return databaseHelper.createQuery(getExpenseTableList(), sql, type)
+                .mapToList(expenseStructureMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
     }
 
     @Override
-    public Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate) {
+    public Flowable<List<ExpensesByCategory>> getExpensesStructureDataByDate(String type, String fdate, String sdate) {
         return null;
     }
+
 
     @Override
     public Flowable<List<Goal>> getGoals(int state) {

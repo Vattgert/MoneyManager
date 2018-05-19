@@ -5,6 +5,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
@@ -15,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -152,5 +154,25 @@ public class RemoteDataSource implements RemoteData{
     @Override
     public Single<DiagramResponse> getExpensesByUserDiagram(String groupId) {
         return moneyManagerApi.getExpensesByUserDiagram(groupId);
+    }
+
+    @Override
+    public Single<CurrencyResponse> getCurrencies(String groupId) {
+        return moneyManagerApi.getCurrencies(groupId);
+    }
+
+    @Override
+    public Single<Currency> getCurrencyById(String currencyId) {
+        return null;
+    }
+
+    @Override
+    public Single<SuccessResponse> addCurrency(Currency currency) {
+        return null;
+    }
+
+    @Override
+    public Single<SuccessResponse> updateCurrency(Currency currency) {
+        return null;
     }
 }

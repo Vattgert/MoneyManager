@@ -11,6 +11,7 @@ import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.models.UserRight;
+import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
 import com.example.productmanagment.data.models.report.SubcategoryReport;
 
@@ -138,12 +139,12 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
-    public Flowable<HashMap<String, Integer>> getExpensesStructureData(String type) {
+    public Flowable<List<ExpensesByCategory>> getExpensesStructureData(String type) {
         return localExpenseDataSource.getExpensesStructureData(type);
     }
 
     @Override
-    public Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate) {
+    public Flowable<List<ExpensesByCategory>> getExpensesStructureDataByDate(String type, String fdate, String sdate) {
         return null;
     }
 
@@ -233,8 +234,13 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
-    public void updateCurrency(MyCurrency currency) {
-        localExpenseDataSource.updateCurrency(currency);
+    public void updateCurrency(String currencyId, MyCurrency currency) {
+        localExpenseDataSource.updateCurrency(currencyId, currency);
+    }
+
+    @Override
+    public void deleteCurrency(String currencyId) {
+        localExpenseDataSource.deleteCurrency(currencyId);
     }
 
     @Override

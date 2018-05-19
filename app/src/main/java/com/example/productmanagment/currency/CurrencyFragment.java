@@ -80,8 +80,9 @@ public class CurrencyFragment extends Fragment implements CurrencyContract.View{
     }
 
     @Override
-    public void showDetailAndEditCurrency(String currencyId) {
+    public void showDetailAndEditCurrency(int groupId, String currencyId) {
         Intent intent = new Intent(getContext(), CurrencyDetailAndEditActivity.class);
+        intent.putExtra("groupId", groupId);
         intent.putExtra("currencyId", currencyId);
         startActivity(intent);
     }

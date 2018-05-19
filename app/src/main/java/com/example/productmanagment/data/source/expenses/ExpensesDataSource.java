@@ -12,6 +12,7 @@ import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.models.UserRight;
+import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
 import com.example.productmanagment.data.models.report.SubcategoryReport;
 
@@ -65,8 +66,8 @@ public interface ExpensesDataSource {
     void renamePurchaseList(int purchaseListId, String name);
 
     //Діаграми
-    Flowable<HashMap<String, Integer>> getExpensesStructureData(String type);
-    Flowable<HashMap<String, String>> getExpensesDataByDate(String fdate, String sdate);
+    Flowable<List<ExpensesByCategory>> getExpensesStructureData(String type);
+    Flowable<List<ExpensesByCategory>> getExpensesStructureDataByDate(String type, String fdate, String sdate);
 
     //Цілі
     Flowable<List<Goal>> getGoals(int state);
@@ -89,7 +90,8 @@ public interface ExpensesDataSource {
     Flowable<MyCurrency> getCurrencyByCode(String code);
     Flowable<MyCurrency> getBaseCurrency();
     void saveCurrency(MyCurrency currency);
-    void updateCurrency(MyCurrency currency);
+    void updateCurrency(String currencyId, MyCurrency currency);
+    void deleteCurrency(String currencyId);
 
     Flowable<List<UserRight>> getUserRightsList();
 

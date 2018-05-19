@@ -5,11 +5,14 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
+
+import java.util.Currency;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -134,5 +137,25 @@ public class RemoteDataRepository implements RemoteData {
     @Override
     public Single<DiagramResponse> getExpensesByUserDiagram(String groupId) {
         return remoteDataSource.getExpensesByUserDiagram(groupId);
+    }
+
+    @Override
+    public Single<CurrencyResponse> getCurrencies(String groupId) {
+        return remoteDataSource.getCurrencies(groupId);
+    }
+
+    @Override
+    public Single<Currency> getCurrencyById(String currencyId) {
+        return null;
+    }
+
+    @Override
+    public Single<SuccessResponse> addCurrency(Currency currency) {
+        return null;
+    }
+
+    @Override
+    public Single<SuccessResponse> updateCurrency(Currency currency) {
+        return null;
     }
 }

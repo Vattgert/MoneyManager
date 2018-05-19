@@ -124,7 +124,8 @@ public class DiagramFragment extends Fragment implements DiagramContract.View{
     };
 
     SmoothDateRangePickerFragment.OnDateRangeSetListener callBack = (view, yearStart, monthStart, dayStart, yearEnd, monthEnd, dayEnd) -> {
-
+        String fdate = String.format("%s-%s-%s", yearStart, monthStart, dayStart);
+        String sdate = String.format("%s-%s-%s", yearStart, monthStart, dayStart);
     };
 
     @Override

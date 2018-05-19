@@ -18,6 +18,7 @@ public class Account {
     @SerializedName("account_title")
     private String name;
     private BigDecimal value;
+    @SerializedName("currency")
     private MyCurrency currency;
     @SerializedName("color")
     private String color;
