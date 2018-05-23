@@ -3,22 +3,26 @@ package com.example.productmanagment.places;
 import android.util.Log;
 
 import com.example.productmanagment.BasePresenter;
+import com.example.productmanagment.data.models.Place;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class PlacesPresenter implements PlacesContract.Presenter {
     private PlacesContract.View view;
     private ExpensesRepository repository;
     private BaseSchedulerProvider baseSchedulerProvider;
+    private CompositeDisposable compositeDisposable;
 
     public PlacesPresenter(PlacesContract.View view, ExpensesRepository repository, BaseSchedulerProvider baseSchedulerProvider) {
         this.view = view;
         this.repository = repository;
         this.baseSchedulerProvider = baseSchedulerProvider;
+        this.compositeDisposable = new CompositeDisposable();
         this.view.setPresenter(this);
     }
 
@@ -29,7 +33,7 @@ public class PlacesPresenter implements PlacesContract.Presenter {
                 .observeOn(baseSchedulerProvider.ui())
                 .subscribe(this::processAddresses,
                         throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
-
+        compositeDisposable.add(disposable);
     }
 
     @Override
@@ -39,6 +43,7 @@ public class PlacesPresenter implements PlacesContract.Presenter {
                 .observeOn(baseSchedulerProvider.ui())
                 .subscribe(this::processAddresses,
                         throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+        compositeDisposable.add(disposable);
     }
 
     @Override
@@ -48,12 +53,10 @@ public class PlacesPresenter implements PlacesContract.Presenter {
 
     @Override
     public void unsubscribe() {
-
+        compositeDisposable.clear();
     }
 
-    private void processAddresses(List<String> addresses){
-        for(String s : addresses)
-            Log.wtf("MyLog", s);
+    private void processAddresses(List<Place> addresses){
         view.showAddresses(addresses);
     }
 }

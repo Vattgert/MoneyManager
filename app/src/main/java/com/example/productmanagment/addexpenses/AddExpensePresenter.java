@@ -107,8 +107,8 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
                 case AddExpenseActivity.REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(context,data);
                     this.chosenPlace = place;
-                    view.setChosenPlace(String.format("%s", place.getAddress()));
-                    view.setAddress(place);
+                    view.setChosenPlace(String.format("%s", chosenPlace.getAddress()));
+                    view.setAddress(chosenPlace);
                     break;
             }
         }

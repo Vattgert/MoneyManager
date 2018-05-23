@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.MyCurrency;
+import com.example.productmanagment.data.models.Place;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
@@ -16,11 +17,13 @@ import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
 import com.example.productmanagment.data.models.report.SubcategoryReport;
 
+import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 /**
  * Created by Ivan on 30.01.2018.
@@ -81,8 +84,8 @@ public interface ExpensesDataSource {
     void addAmount(String goalId, double amount);
 
     //Місця
-    Flowable<List<String>> getExpenseAddresses();
-    Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate);
+    Flowable<List<Place>> getExpenseAddresses();
+    Flowable<List<Place>> getExpenseAddressesByDate(String fdate, String sdate);
 
     //Валюти
     Flowable<List<MyCurrency>> getCurrencies();
@@ -100,4 +103,8 @@ public interface ExpensesDataSource {
     Flowable<List<SubcategoryReport>> getSubcategoryReport(String categoryId);
     Flowable<List<CategoryReport>> getCategoryReportByDate(String fdate, String sdate);
     Flowable<List<SubcategoryReport>> getSubcategoryReportByDate(String categoryId, String fdate, String sdate);
+
+    //Головна
+    Flowable<BigDecimal> getBalance();
+    Flowable<List<Expense>> getLastFiveRecords();
 }

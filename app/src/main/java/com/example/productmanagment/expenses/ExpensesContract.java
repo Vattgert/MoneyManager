@@ -18,6 +18,7 @@ public interface ExpensesContract {
         void setLoadingIndicator(boolean active);
         void showExpenses(List<Expense> expenses);
         void showAccounts(List<Account> accounts);
+        void showTrueAccounts(List<Account> accounts);
         void showAddExpense(int groupId);
         void showLoadingExpensesError();
         void showNoExpenses();

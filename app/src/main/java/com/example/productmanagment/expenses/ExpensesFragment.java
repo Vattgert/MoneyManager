@@ -161,6 +161,11 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
     }
 
     @Override
+    public void showTrueAccounts(List<Account> accounts) {
+        adapter.setTrueData(accounts);
+    }
+
+    @Override
     public void showAddExpense(int groupId) {
         Intent intent = new Intent(getContext(), AddExpenseActivity.class);
         intent.putExtra("group_id", groupId);
@@ -219,6 +224,11 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         }
 
         @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
         public ExpensesFragment.ExpensesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                             int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense,
@@ -239,6 +249,7 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
         }
 
         public void setData(List<Expense> expenseList){
+            this.expenseList.clear();
             this.expenseList = expenseList;
             notifyDataSetChanged();
         }
@@ -299,6 +310,9 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 if(data != null && !data.equals("")){
                     textView.setVisibility(View.VISIBLE);
                     textView.setText(data);
+                }
+                else {
+                    textView.setVisibility(View.GONE);
                 }
             }
         }

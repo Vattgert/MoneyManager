@@ -23,5 +23,7 @@ public interface AddCurrencyContract {
         void setRate(String rate, String currencyCode);
         void setReverseRate(String reverseRate, String currencyCode);
         void showCreateCurrencyMessage();
+        void showMessage(String message);
+        void finish();
     }
 }

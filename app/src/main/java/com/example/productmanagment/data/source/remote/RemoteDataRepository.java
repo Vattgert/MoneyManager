@@ -3,12 +3,14 @@ package com.example.productmanagment.data.source.remote;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
+import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
 
@@ -130,8 +132,18 @@ public class RemoteDataRepository implements RemoteData {
     }
 
     @Override
+    public Single<ExpensesResponse> getExpensesByCategory(String category, String groupId) {
+        return remoteDataSource.getExpensesByCategory(category, groupId);
+    }
+
+    @Override
     public Single<DiagramResponse> getExpensesByCategoryDiagram(String groupId) {
         return remoteDataSource.getExpensesByCategoryDiagram(groupId);
+    }
+
+    @Override
+    public Single<DiagramResponse> getIncomesByCategoryDiagram(String groupId) {
+        return remoteDataSource.getIncomesByCategoryDiagram(groupId);
     }
 
     @Override
@@ -145,17 +157,27 @@ public class RemoteDataRepository implements RemoteData {
     }
 
     @Override
-    public Single<Currency> getCurrencyById(String currencyId) {
-        return null;
+    public Single<MyCurrency> getCurrencyById(String currencyId) {
+        return remoteDataSource.getCurrencyById(currencyId);
     }
 
     @Override
-    public Single<SuccessResponse> addCurrency(Currency currency) {
-        return null;
+    public Single<SuccessResponse> addCurrency(MyCurrency currency) {
+        return remoteDataSource.addCurrency(currency);
     }
 
     @Override
-    public Single<SuccessResponse> updateCurrency(Currency currency) {
-        return null;
+    public Single<SuccessResponse> updateCurrency(MyCurrency currency) {
+        return remoteDataSource.updateCurrency(currency);
+    }
+
+    @Override
+    public Single<SuccessResponse> deleteCurrency(String currencyId) {
+        return remoteDataSource.deleteCurrency(currencyId);
+    }
+
+    @Override
+    public Single<ReportResponse> getReport(String categoryId, String groupId) {
+        return remoteDataSource.getReport(categoryId, groupId);
     }
 }

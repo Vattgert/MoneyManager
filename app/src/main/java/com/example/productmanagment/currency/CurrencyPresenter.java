@@ -1,5 +1,7 @@
 package com.example.productmanagment.currency;
 
+import android.util.Log;
+
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
@@ -8,7 +10,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class CurrencyPresenter implements CurrencyContract.Presenter{
-    int groupId = -1;
+    int groupId;
     CurrencyContract.View view;
     ExpensesRepository repository;
     RemoteDataRepository remoteDataRepository;
@@ -46,7 +48,7 @@ public class CurrencyPresenter implements CurrencyContract.Presenter{
 
     @Override
     public void openAddCurrency() {
-        view.showAddCurrency();
+        view.showAddCurrency(this.groupId);
     }
 
     @Override
@@ -56,6 +58,7 @@ public class CurrencyPresenter implements CurrencyContract.Presenter{
 
     @Override
     public void subscribe() {
+        Log.wtf("CurrencyLog", groupId + "");
         if(groupId == -1)
             loadCurrencies();
         else

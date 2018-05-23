@@ -17,7 +17,7 @@ public interface CurrencyContract {
 
     interface View extends BaseView<Presenter>{
         void showCurrencies(List<MyCurrency> currencies);
-        void showAddCurrency();
+        void showAddCurrency(int groupId);
         void showDetailAndEditCurrency(int groupId, String currencyId);
     }
 }

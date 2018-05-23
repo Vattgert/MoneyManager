@@ -1,19 +1,26 @@
 package com.example.productmanagment.data.models.report;
 
+import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Subcategory;
+import com.google.gson.annotations.SerializedName;
 
 public class SubcategoryReport {
-    Subcategory subcategory;
+    @SerializedName("subcategory")
+    Category subcategory;
+    @SerializedName("balance")
+    ReportBalance.Balance balance;
     double amount;
-    int percentage;
+    @SerializedName("incomes")
+    double incomes;
+    @SerializedName("expenses")
+    double expenses;
 
-    public SubcategoryReport(Subcategory subcategory, double amount, int percentage) {
+    public SubcategoryReport(Subcategory subcategory, double amount) {
         this.subcategory = subcategory;
         this.amount = amount;
-        this.percentage = percentage;
     }
 
-    public Subcategory getSubcategory() {
+    public Category getSubcategory() {
         return subcategory;
     }
 
@@ -29,11 +36,5 @@ public class SubcategoryReport {
         this.amount = amount;
     }
 
-    public int getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(int percentage) {
-        this.percentage = percentage;
-    }
+    public double getBalance(){return balance.incomes - balance.expenses;}
 }

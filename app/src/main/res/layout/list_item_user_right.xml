@@ -26,7 +26,7 @@
         android:layout_marginTop="8dp"
         android:inputType="textMultiLine"
         android:scrollHorizontally="false"
-        android:text="Дозволяє користувачам переглядати дані групи"
+        android:text="Місцевадлповадлповдфалжпофжапожадполфждвалпофджвлаопжфдвлаопжфвдлаопжфдвлаопжфдлопждфлвоап"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guideline7"
         app:layout_constraintHorizontal_bias="0.0"

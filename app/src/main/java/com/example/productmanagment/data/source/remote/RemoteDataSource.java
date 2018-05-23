@@ -3,12 +3,14 @@ package com.example.productmanagment.data.source.remote;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
+import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
 import com.google.gson.Gson;
@@ -147,8 +149,18 @@ public class RemoteDataSource implements RemoteData{
     }
 
     @Override
+    public Single<ExpensesResponse> getExpensesByCategory(String category, String groupId) {
+        return moneyManagerApi.getExpensesByCategory(category, groupId);
+    }
+
+    @Override
     public Single<DiagramResponse> getExpensesByCategoryDiagram(String groupId) {
         return moneyManagerApi.getExpensesByCategoryDiagram(groupId);
+    }
+
+    @Override
+    public Single<DiagramResponse> getIncomesByCategoryDiagram(String groupId) {
+        return moneyManagerApi.getIncomesByCategoryDiagram(groupId);
     }
 
     @Override
@@ -162,17 +174,27 @@ public class RemoteDataSource implements RemoteData{
     }
 
     @Override
-    public Single<Currency> getCurrencyById(String currencyId) {
-        return null;
+    public Single<MyCurrency> getCurrencyById(String currencyId) {
+        return moneyManagerApi.getCurrencyById(currencyId);
     }
 
     @Override
-    public Single<SuccessResponse> addCurrency(Currency currency) {
-        return null;
+    public Single<SuccessResponse> addCurrency(MyCurrency currency) {
+        return moneyManagerApi.addCurrency(currency);
     }
 
     @Override
-    public Single<SuccessResponse> updateCurrency(Currency currency) {
-        return null;
+    public Single<SuccessResponse> updateCurrency(MyCurrency currency) {
+        return moneyManagerApi.editCurrency(currency);
+    }
+
+    @Override
+    public Single<SuccessResponse> deleteCurrency(String currencyId) {
+        return moneyManagerApi.deleteCurrency(currencyId);
+    }
+
+    @Override
+    public Single<ReportResponse> getReport(String categoryId, String groupId) {
+        return moneyManagerApi.getReport(categoryId, groupId);
     }
 }

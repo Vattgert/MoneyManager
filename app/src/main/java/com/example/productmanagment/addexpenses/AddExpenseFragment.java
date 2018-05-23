@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +35,7 @@ import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.Subcategory;
+import com.example.productmanagment.utils.schedulers.UIUtils;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -102,6 +106,7 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         setHasOptionsMenu(true);
 
         costEditText = view.findViewById(R.id.costAddEditText);
+        costEditText.addTextChangedListener(textWatcher);
         noteEditText = view.findViewById(R.id.noteAddEditText);
         dateEditText = view.findViewById(R.id.dateAddEditText);
         timeEditText = view.findViewById(R.id.timeAddEditText);
@@ -253,6 +258,32 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         }
     };
 
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String temp = editable.toString ();
+            int posDot = temp .indexOf (".");
+
+            if (posDot <= 0)
+            {
+                return ;
+            }
+            if ((temp.length() - posDot - 1) > 2){
+                editable.delete(posDot + 3, posDot + 4);
+            }
+        }
+    };
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         presenter.result(requestCode, resultCode, data);
@@ -286,9 +317,10 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
             expenseType = "Дохід";
         String receiver = receiverEditText.getText().toString();
         String place = String.format("%s", presenter.getChosenPlace().getAddress());
-        String addressCoordinates = String.format("%f;%f",
-                new DecimalFormat("#.#", DecimalFormatSymbols.getInstance()).format(presenter.getChosenPlace().getLatLng().latitude),
-                new DecimalFormat("#.#", DecimalFormatSymbols.getInstance()).format(presenter.getChosenPlace().getLatLng().longitude));
+        String addressCoordinates = String.format("%s;%s",
+                new DecimalFormat("#.######").format(presenter.getChosenPlace().getLatLng().latitude).replace(",", "."),
+                new DecimalFormat("#.######").format(presenter.getChosenPlace().getLatLng().longitude).replace(",", "."));
+        Log.wtf("MyLog", addressCoordinates);
         String date = dateEditText.getText().toString();
         String time = timeEditText.getText().toString();
         if(date.equals("")){

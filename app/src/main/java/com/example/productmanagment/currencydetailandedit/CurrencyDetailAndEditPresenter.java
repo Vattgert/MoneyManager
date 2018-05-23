@@ -1,5 +1,7 @@
 package com.example.productmanagment.currencydetailandedit;
 
+import android.util.Log;
+
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
@@ -42,15 +44,22 @@ public class CurrencyDetailAndEditPresenter implements CurrencyDetailAndEditCont
         if(currency.getIsBase() == 0)
             if(groupId == -1)
                 repository.deleteCurrency(this.currencyId);
+            else
+                remoteDataRepository.deleteCurrency(this.currencyId);
         else
             view.showMessage("Базову валюту неможливо видалити");
     }
 
     @Override
     public void updateCurrency(MyCurrency myCurrency) {
-        if(currency.getIsBase() == 0)
-            if(groupId == -1)
+        if(currency.getIsBase() == 0) {
+            if (groupId == -1)
                 repository.updateCurrency(this.currencyId, myCurrency);
+            else {
+                myCurrency.setId(this.currency.getId());
+                remoteDataRepository.updateCurrency(myCurrency).subscribeOn(provider.io()).observeOn(provider.ui()).subscribe();
+            }
+        }
         else
             view.showMessage("Базову валюту неможливо змінити");
 
@@ -60,6 +69,11 @@ public class CurrencyDetailAndEditPresenter implements CurrencyDetailAndEditCont
     public void subscribe() {
         if(groupId == -1)
             loadCurrencyById(this.currencyId);
+        else
+            remoteDataRepository.getCurrencyById(this.currencyId)
+            .subscribeOn(provider.io())
+            .observeOn(provider.ui())
+            .subscribe(this::processCurrency);
     }
 
     @Override
@@ -69,6 +83,7 @@ public class CurrencyDetailAndEditPresenter implements CurrencyDetailAndEditCont
 
     private void processCurrency(MyCurrency currency){
         this.currency = currency;
+        Log.wtf("CurrencyLog", currency.toString());
         view.setCurrencyTitle(currency.getTitle());
         view.setCurrencyRate(String.valueOf(currency.getRateToBaseCurrency()));
         view.setCurrencyReverseRate(String.valueOf(currency.getRateBaseToThis()));

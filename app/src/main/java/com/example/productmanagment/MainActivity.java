@@ -46,7 +46,9 @@ import com.example.productmanagment.goals.GoalsPresenter;
 import com.example.productmanagment.groups.GroupsContract;
 import com.example.productmanagment.groups.GroupsFragment;
 import com.example.productmanagment.groups.GroupsPresenter;
+import com.example.productmanagment.main.MainContract;
 import com.example.productmanagment.main.MainFragment;
+import com.example.productmanagment.main.MainPresenter;
 import com.example.productmanagment.places.PlacesContract;
 import com.example.productmanagment.places.PlacesFragment;
 import com.example.productmanagment.places.PlacesPresenter;
@@ -184,6 +186,9 @@ public class MainActivity extends AppCompatActivity
         switch (id){
             case R.id.nav_main:
                 view = MainFragment.newInstance();
+                presenter = new MainPresenter((MainContract.View)view,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider());
                 break;
             case R.id.nav_accounts:
                 view = AccountFragment.newInstance();
@@ -252,7 +257,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_report:
                 view = IncomesAndExpensesFragment.newInstance();
-                presenter = new IncomesAndExpensesPresenter((IncomesAndExpensesContract.View)view,
+                presenter = new IncomesAndExpensesPresenter(group.getGroupId(), (IncomesAndExpensesContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;

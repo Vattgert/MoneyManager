@@ -55,6 +55,7 @@ public class SubcategoryFragment extends Fragment implements SubcategoriesContra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Підкатегорії");
         if (getArguments() != null) {
             categoryId = getArguments().getInt(ARG_CATEGORY_ID);
         }
@@ -76,7 +77,6 @@ public class SubcategoryFragment extends Fragment implements SubcategoriesContra
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_subcategory, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.subcategoryRecyclerView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);

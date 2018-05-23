@@ -17,6 +17,7 @@ public class CurrencyDetailAndEditActivity extends AppCompatActivity {
 
         String currencyId = getIntent().getExtras().getString("currencyId");
         int groupId = getIntent().getExtras().getInt("groupId");
+
         CurrencyDetailAndEditFragment fragment = CurrencyDetailAndEditFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.currencyDetailAndEditContent, fragment).commit();

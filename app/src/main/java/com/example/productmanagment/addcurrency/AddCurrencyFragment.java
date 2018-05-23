@@ -111,7 +111,6 @@ public class AddCurrencyFragment extends Fragment implements AddCurrencyContract
             default:
                 return super.onOptionsItemSelected(item);
         }
-        getActivity().finish();
         return true;
     }
 
@@ -145,6 +144,16 @@ public class AddCurrencyFragment extends Fragment implements AddCurrencyContract
     @Override
     public void showCreateCurrencyMessage() {
         Toast.makeText(getContext(), "Валюта успішно додана", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void finish() {
+        getActivity().finish();
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.MyCurrency;
+import com.example.productmanagment.data.models.Place;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
@@ -30,6 +31,8 @@ import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
 
+import org.w3c.dom.Text;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +41,7 @@ import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.functions.Function;
 
 /**
@@ -230,7 +234,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private SubcategoryReport getSubcategoryReport(Cursor c){
         Subcategory subcategory = getCategory(c);
         double amount = c.getDouble(c.getColumnIndexOrThrow("amount_by_subcategory"));
-        return new SubcategoryReport(subcategory, amount, 0);
+        return new SubcategoryReport(subcategory, amount);
     }
 
     private ArrayList<String> getExpenseTableList(){
@@ -565,6 +569,44 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
+    public Flowable<BigDecimal> getBalance() {
+        String sql = "SELECT round(ifnull(T.A, 0) - ifnull(I.B, 0), 2) as balance FROM (SELECT ifnull(sum(expense.cost * currency.rateBaseToThis),0) as A FROM expense \n" +
+                "INNER JOIN account ON account.id_account = expense.account_id INNER JOIN currency ON currency.id_currency = account.currency WHERE expense.expense_type = 'Дохід') AS T  \n" +
+                "LEFT JOIN\n" + "(SELECT ifnull(sum(expense.cost * currency.rateBaseToThis), 0) as B FROM expense \n" + "INNER JOIN account ON account.id_account = expense.account_id \n" +
+                "INNER JOIN currency ON currency.id_currency = account.currency WHERE expense.expense_type = 'Витрата') AS I";
+        return databaseHelper.createQuery(Arrays.asList(getExpenseProjection()), sql)
+                .mapToOne(new Function<Cursor, BigDecimal>() {
+                    @Override
+                    public BigDecimal apply(Cursor cursor) throws Exception {
+                        double balance = cursor.getDouble(cursor.getColumnIndexOrThrow("balance"));
+                        return new BigDecimal(balance);
+                    }
+                }).toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<Expense>> getLastFiveRecords() {
+        String sql = String.format("SELECT %s,%s,%s,%s FROM %s INNER JOIN %s ON %s = %s INNER JOIN %s ON %s = %s INNER JOIN %s ON %s = %s order by expense.date desc limit 5",
+                TextUtils.join(",", getExpenseProjection()),
+                TextUtils.join(",", getCategoryProjection()),
+                TextUtils.join(",", getAccountProjection()),
+                TextUtils.join(",", getCurrencyProjection()),
+                ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                TextUtils.join(".", fInnerJoin),
+                TextUtils.join(".", sInnerJoin),
+                ExpensePersistenceContract.AccountEntry.TABLE_NAME,
+                TextUtils.join(".", tInnerJoin),
+                TextUtils.join(".", frInnerJoin),
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME,
+                TextUtils.join(".", currencyInnerJoin),
+                TextUtils.join(".", currencyToAccount));
+        return databaseHelper.createQuery(getExpenseTableList(), sql)
+                .mapToList(expenseMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
     public Flowable<List<PlannedPayment>> getPlannedPayments() {
         String[] fInnerJoin = {CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
                 CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID };
@@ -733,8 +775,9 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                 CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID};
         String[] fInnerJoin = {ExpensePersistenceContract.ExpenseEntry.TABLE_NAME,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_CATEGORY};
-        String sql = String.format("SELECT SUM(%s), %s FROM %s INNER JOIN %s ON %s = %s WHERE %s LIKE ? GROUP BY %s",
+        String sql = String.format("SELECT SUM(%s * %s), %s FROM %s INNER JOIN %s ON %s = %s INNER JOIN account on expense.account_id = account.id_account INNER JOIN currency on account.currency = currency.id_currency WHERE %s LIKE ? GROUP BY %s",
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_COST,
+                ExpensePersistenceContract.CurrencyEntry.COLUMN_RATE_BASE_TO_THIS,
                 TextUtils.join(",", new String[]{
                         CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID,
                         CategoryPersistenceContract.SubcategoryEntry.COLUMN_TITLE,
@@ -847,29 +890,39 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     }
 
     @Override
-    public Flowable<List<String>> getExpenseAddresses() {
-        String sql = String.format("SELECT %s FROM %s WHERE address_coordinates IS NOT NULL", ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES, ExpensePersistenceContract.ExpenseEntry.TABLE_NAME);
+    public Flowable<List<Place>> getExpenseAddresses() {
+        String sql = String.format("SELECT %s FROM %s WHERE address_coordinates IS NOT NULL GROUP BY address_coordinates",
+                TextUtils.join(",", new String[]{
+                        ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES,
+                        ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_PLACE
+                }), ExpensePersistenceContract.ExpenseEntry.TABLE_NAME);
         return databaseHelper.createQuery(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, sql)
-                .mapToList(new Function<Cursor, String>() {
+                .mapToList(new Function<Cursor, Place>() {
                     @Override
-                    public String apply(Cursor cursor) throws Exception {
-                        return cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES));
+                    public Place apply(Cursor cursor) throws Exception {
+                        String coordinates = cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES));
+                        String title = cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_PLACE));
+                        return new Place(title, coordinates);
                     }
                 })
                 .toFlowable(BackpressureStrategy.BUFFER);
     }
 
     @Override
-    public Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate) {
-        String sql = String.format("SELECT %s FROM %s WHERE address_coordinates IS NOT NULL AND date >= '%s' AND date <= '%s'",
-                ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES,
-                ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, fdate, sdate);
+    public Flowable<List<Place>> getExpenseAddressesByDate(String fdate, String sdate) {
+        String sql = String.format("SELECT %s FROM %s WHERE address_coordinates IS NOT NULL AND date >= '%s' AND date <= '%s' GROUP BY address_coordinates",
+                TextUtils.join(",", new String[]{
+                        ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES,
+                        ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_PLACE
+                }), ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, fdate, sdate);
         Log.wtf("MyLog", sql);
         return databaseHelper.createQuery(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME, sql)
-                .mapToList(new Function<Cursor, String>() {
+                .mapToList(new Function<Cursor, Place>() {
                     @Override
-                    public String apply(Cursor cursor) throws Exception {
-                        return cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES));
+                    public Place apply(Cursor cursor) throws Exception {
+                        String coordinates = cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES));
+                        String title = cursor.getString(cursor.getColumnIndexOrThrow(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_PLACE));
+                        return new Place(title, coordinates);
                     }
                 })
                 .toFlowable(BackpressureStrategy.BUFFER);

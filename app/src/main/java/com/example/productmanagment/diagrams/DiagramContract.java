@@ -13,10 +13,13 @@ import com.example.productmanagment.BaseView;
 public interface DiagramContract {
     interface View extends BaseView<Presenter>{
         void setChart(Chart anyChart);
+        void showMessage(String message);
+        void showCategoryExpenses(int groupId, String category);
     }
 
     interface Presenter extends BasePresenter{
         void showDiagram(int type);
         void showDiagramByDate(int type, String fdate, String sdate);
+
     }
 }

@@ -10,6 +10,9 @@ public class DiagramResponse {
     @SerializedName("expensesByCategoryData")
     public List<ExpensesByCategory> expensesByCategoryList;
 
+    @SerializedName("incomesByCategoryData")
+    public List<ExpensesByCategory> incomesByCategoryList;
+
     @SerializedName("expensesByUserData")
     public List<ExpensesByUser> expensesByUserList;
 }

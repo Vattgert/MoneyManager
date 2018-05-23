@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.productmanagment.R;
+import com.example.productmanagment.data.models.Place;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,7 +39,7 @@ import java.util.List;
 public class PlacesFragment extends Fragment implements OnMapReadyCallback, PlacesContract.View{
     private GoogleMap mMap;
     private PlacesContract.Presenter presenter;
-    private List<String> addresses;
+    private List<Place> addresses;
     SupportMapFragment mapFragment;
 
     public PlacesFragment() {
@@ -119,7 +120,7 @@ public class PlacesFragment extends Fragment implements OnMapReadyCallback, Plac
     }
 
     @Override
-    public void showAddresses(List<String> addresses) {
+    public void showAddresses(List<Place> addresses) {
         this.addresses = addresses;
         updateMap();
     }
@@ -133,11 +134,11 @@ public class PlacesFragment extends Fragment implements OnMapReadyCallback, Plac
         mMap.clear();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         LatLngBounds bounds;
-        for(String address : addresses){
-            String[] coordinates = address.split(";");
+        for(Place address : addresses){
+            String[] coordinates = address.getCoordinates().split(";");
             Log.wtf("MyLog", coordinates[0] + " " + coordinates[1]);
             LatLng ltlg = new LatLng(Double.valueOf(coordinates[0]), Double.valueOf(coordinates[1]));
-            Marker marker = mMap.addMarker(new MarkerOptions().position(ltlg));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(ltlg).title(address.getTitle()));
             //builder.include(marker.getPosition());
         }
 

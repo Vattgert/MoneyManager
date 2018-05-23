@@ -73,6 +73,12 @@ public class AccountSpinnerAdapter extends ArrayAdapter<Account> {
         notifyDataSetChanged();
     }
 
+    public void setTrueData(List<Account> accounts){
+        this.items.clear();
+        this.items.addAll(accounts);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return items.size();

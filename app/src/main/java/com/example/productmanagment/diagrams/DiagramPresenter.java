@@ -13,6 +13,8 @@ import com.anychart.anychart.Pie;
 import com.anychart.anychart.SeriesBar;
 import com.anychart.anychart.Set;
 import com.anychart.anychart.ValueDataEntry;
+import com.anychart.anychart.chart.common.Event;
+import com.anychart.anychart.chart.common.ListenersInterface;
 import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.diagram.ExpensesByUser;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
@@ -67,7 +69,6 @@ public class DiagramPresenter implements DiagramContract.Presenter {
             case 0:
                 chart = AnyChart.pie();
                 if(groupId == -1)
-
                     loadExpenseStructureData((Pie)chart, "Витрата");
                 else
                     loadExpenseStructureRemoteData((Pie)chart);
@@ -77,7 +78,7 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                 if(groupId == -1)
                     loadExpenseStructureData((Pie)chart, "Дохід");
                 else
-                    loadExpenseStructureRemoteData((Pie)chart);
+                    loadIncomesStructureRemoteData((Pie)chart);
                 break;
             case 2:
                 chart = AnyChart.vertical();
@@ -116,7 +117,7 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                 if(groupId == -1)
                     loadExpenseStructureData((Pie)chart, "Дохід");
                 else
-                    loadExpenseStructureRemoteData((Pie)chart);
+                    loadIncomesStructureRemoteData((Pie)chart);
                 break;
             case 2:
                 chart = AnyChart.vertical();
@@ -148,7 +149,7 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                             chart.getLegend()
                                     .setPosition("center-bottom")
                                     .setItemsLayout(LegendLayout.HORIZONTAL)
-                                    .setAlign(EnumsAlign.CENTER);;},
+                                    .setAlign(EnumsAlign.CENTER);},
                         throwable -> Log.wtf("myLog", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
@@ -178,11 +179,17 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                             Set set = new Set(processExpenseStructureData(stringIntegerHashMap));
                             Mapping barData = set.mapAs("{ x: 'x', value: 'value' }");
                             SeriesBar bar = chart.bar(barData);
-                            bar.getLabels().setFormat("{%Value}");
+                            bar.getLabels().setFormat("{%Value}₴");
                             chart.setLabels(true);
                             chart.setTooltip(false);
-                            chart.getYAxis().getLabels().setFormat("{%Value}");
+                            chart.getYAxis().getLabels().setFormat("{%Value}₴");
                             chart.setYAxis(true);
+                            chart.setOnClickListener(new ListenersInterface.OnClickListener(new String[]{"x", "value"}) {
+                                @Override
+                                public void onClick(Event event) {
+                                    view.showCategoryExpenses(groupId, event.getData().get("x"));
+                                }
+                            });
                         },
                         throwable -> Log.wtf("myLog", throwable.getMessage()));
         compositeDisposable.add(disposable);
@@ -197,11 +204,17 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                         Set set = new Set(processResponse(diagramResponse));
                         Mapping barData = set.mapAs("{ x: 'x', value: 'value' }");
                         SeriesBar bar = chart.bar(barData);
-                        bar.getLabels().setFormat("{%Value}");
+                        bar.getLabels().setFormat("{%Value}₴");
                         chart.setLabels(true);
                         chart.setTooltip(false);
-                        chart.getYAxis().getLabels().setFormat("{%Value}");
+                        chart.getYAxis().getLabels().setFormat("{%Value}₴");
                         chart.setYAxis(true);
+                        chart.setOnClickListener(new ListenersInterface.OnClickListener(new String[]{"x", "value"}) {
+                            @Override
+                            public void onClick(Event event) {
+                                view.showCategoryExpenses(groupId, event.getData().get("x"));
+                            }
+                        });
                     });
         compositeDisposable.add(disposable);
     }
@@ -212,6 +225,20 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                 .observeOn(provider.ui())
                 .subscribe(diagramResponse -> {
                             chart.setData(processResponse(diagramResponse));
+                            chart.getLegend()
+                                    .setPosition("center-bottom")
+                                    .setItemsLayout(LegendLayout.HORIZONTAL)
+                                    .setAlign(EnumsAlign.CENTER);},
+                        throwable -> Log.wtf("myLog", throwable.getMessage()));
+        compositeDisposable.add(disposable);
+    }
+
+    public void loadIncomesStructureRemoteData(Pie chart) {
+        Disposable disposable = remoteDataRepository.getIncomesByCategoryDiagram(String.valueOf(groupId))
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(diagramResponse -> {
+                            chart.setData(processResponseIncomes(diagramResponse));
                             chart.getLegend()
                                     .setPosition("center-bottom")
                                     .setItemsLayout(LegendLayout.HORIZONTAL)
@@ -245,6 +272,15 @@ public class DiagramPresenter implements DiagramContract.Presenter {
     private List<DataEntry> processResponse(DiagramResponse diagramResponse){
         List<DataEntry> data = new ArrayList<>();
         List<ExpensesByCategory> diagram = diagramResponse.expensesByCategoryList;
+        for(ExpensesByCategory d : diagram){
+            data.add(new ValueDataEntry(d.getCategory().getName(), d.getBalance()));
+        }
+        return data;
+    }
+
+    private List<DataEntry> processResponseIncomes(DiagramResponse diagramResponse){
+        List<DataEntry> data = new ArrayList<>();
+        List<ExpensesByCategory> diagram = diagramResponse.incomesByCategoryList;
         for(ExpensesByCategory d : diagram){
             data.add(new ValueDataEntry(d.getCategory().getName(), d.getBalance()));
         }

@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
+import com.example.productmanagment.data.source.remote.RemoteDataRepository;
+import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
+import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -21,14 +24,20 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 
 public class AddCurrencyPresenter implements AddCurrencyContract.Presenter {
+    int groupId;
     private AddCurrencyContract.View view;
     private ExpensesRepository repository;
+    private RemoteDataRepository remoteDataRepository;
     private AsyncHttpClient asyncHttpClient;
+    private BaseSchedulerProvider provider;
 
-    public AddCurrencyPresenter(AddCurrencyContract.View view, ExpensesRepository repository) {
+    public AddCurrencyPresenter(int groupId, AddCurrencyContract.View view, ExpensesRepository repository, BaseSchedulerProvider provider) {
+        this.groupId = groupId;
         this.view = view;
         this.repository = repository;
+        this.remoteDataRepository = new RemoteDataRepository();
         asyncHttpClient = new AsyncHttpClient();
+        this.provider = provider;
         this.view.setPresenter(this);
     }
 
@@ -57,8 +66,18 @@ public class AddCurrencyPresenter implements AddCurrencyContract.Presenter {
 
     @Override
     public void createCurrency(MyCurrency currency) {
-        repository.saveCurrency(currency);
-        view.showCreateCurrencyMessage();
+        if(groupId == -1)
+            repository.saveCurrency(currency);
+        else {
+            currency.setGroupId(this.groupId);
+            Log.wtf("CurrencyLog", currency.toString());
+            remoteDataRepository.addCurrency(currency)
+                    .subscribeOn(provider.io())
+                    .observeOn(provider.ui())
+                    .subscribe(response -> processResponse(response),
+                            throwable -> Log.wtf("CurrencyLog", throwable.getMessage()));
+            view.showCreateCurrencyMessage();
+        }
     }
 
     @Override
@@ -68,12 +87,20 @@ public class AddCurrencyPresenter implements AddCurrencyContract.Presenter {
 
     @Override
     public void subscribe() {
+        Log.wtf("CurrencyLog", "group id = " + this.groupId);
         uploadCurrencies();
     }
 
     @Override
     public void unsubscribe() {
 
+    }
+
+    private void processResponse(SuccessResponse response){
+        if(response.response.equals("success"))
+            view.showMessage(response.data);
+        else
+            view.showMessage(response.errorData);
     }
 
     private void currencyRateRequest(String fcode, String scode) {

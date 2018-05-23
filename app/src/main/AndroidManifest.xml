@@ -55,12 +55,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".authorization.AuthorizationActivity">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".authorization.AuthorizationActivity"></activity>
         <activity android:name=".userinfo.UserInfoActivity" />
         <activity android:name=".addgroup.AddGroupActivity" />
         <activity android:name=".groupeditanddetail.GroupDetailAndEditActivity" />
@@ -68,6 +64,7 @@
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -79,7 +76,8 @@
         <activity android:name=".currencydetailandedit.CurrencyDetailAndEditActivity" />
         <activity android:name=".goaldetailandedit.GoalDetailAndEditActivity" />
         <activity android:name=".goalDetail.GoalDetailActivity" />
-        <activity android:name=".goalEdit.GoalEditActivity"></activity>
+        <activity android:name=".goalEdit.GoalEditActivity" />
+        <activity android:name=".categoryexpenses.CategoryExpensesActivity"></activity>
     </application>
 
 </manifest>

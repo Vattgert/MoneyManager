@@ -140,9 +140,9 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     }
 
     private void processAccounts(List<Account> accounts){
-        for (Account a: accounts) {
-            Log.wtf("MyLog", a.getName());
-        }
-        view.showAccounts(accounts);
+        if(groupId == -1)
+            view.showAccounts(accounts);
+        else
+            view.showTrueAccounts(accounts);
     }
 }

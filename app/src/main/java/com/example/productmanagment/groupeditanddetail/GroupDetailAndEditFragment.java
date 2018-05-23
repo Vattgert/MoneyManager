@@ -63,7 +63,6 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_detail_and_edit, container, false);
         groupTitleEditText = view.findViewById(R.id.groupTitleEditText);
         groupTitleEditText.setOnClickListener(__ -> presenter.openRenameGroupDialog());
@@ -221,22 +220,14 @@ public class GroupDetailAndEditFragment extends Fragment implements GroupDetailA
                 letterIcon = view.findViewById(R.id.groupParticipantEmailIcon);
 
 
-                if(itemListener != null)
-                    view.setOnClickListener(__ -> itemListener.onParticipantClick(user));
+                /*if(itemListener != null)
+                    view.setOnClickListener(__ -> itemListener.onParticipantClick(user));*/
             }
 
             public void bind(User user){
                 this.user = user;
                 groupParticipantEmailTextView.setText(user.getEmail());
                 letterIcon.setLetter(user.getEmail().substring(0,3));
-            }
-
-            private MaterialLetterIcon.Builder createLetterBuilder(){
-                return new MaterialLetterIcon.Builder(context)
-                        .shapeColor(context.getResources().getColor(R.color.colorAccent))
-                        .letterColor(context.getResources().getColor(R.color.white))
-                        .letterSize(30)
-                        .lettersNumber(2);
             }
         }
     }

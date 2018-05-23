@@ -144,9 +144,9 @@ public class IncomesAndExpensesFragment extends Fragment implements IncomesAndEx
             CategoryReport report = getGroup(i);
             ImageView categoryIcon = view.findViewById(R.id.reportCategoryIconImageView);
             TextView categoryTitleTextView = view.findViewById(R.id.reportCategoryTitleTextView);
-            TextView categorySumTextView = view.findViewById(R.id.categorySumTextView);
+            //TextView categorySumTextView = view.findViewById(R.id.categorySumTextView);
             categoryTitleTextView.setText(getGroup(i).getCategory().getName());
-            if(getGroup(i).getCategory().getId() != 10) {
+            /*if(getGroup(i).getCategory().getId() != 10) {
                 categorySumTextView.setTextColor(Color.RED);
                 categorySumTextView.setText(view.getResources().getString(R.string.report_item_expense_amount, String.valueOf(getGroup(i).getAmount())));
             }
@@ -154,7 +154,7 @@ public class IncomesAndExpensesFragment extends Fragment implements IncomesAndEx
                 categorySumTextView.setTextColor(Color.GREEN);
                 categorySumTextView.setText(view.getResources().getString(R.string.report_item_expense_amount, String.valueOf(getGroup(i).getAmount())));
                 categorySumTextView.setText(view.getResources().getString(R.string.report_item_income_amount, String.valueOf(getGroup(i).getAmount())));
-            }
+            }*/
             return view;
         }
 
@@ -167,7 +167,7 @@ public class IncomesAndExpensesFragment extends Fragment implements IncomesAndEx
             TextView subcategoryTitleTextView = view.findViewById(R.id.reportSubategoryTitleTextView);
             TextView subcategorySumTextView = view.findViewById(R.id.subcategorySumTextView);
             subcategoryTitleTextView.setText(getChild(i, i1).getSubcategory().getName());
-            subcategorySumTextView.setText(String.valueOf(getChild(i, i1).getAmount()));
+            subcategorySumTextView.setText(String.valueOf(getChild(i, i1).getBalance()));
             return view;
         }
 
@@ -188,11 +188,14 @@ public class IncomesAndExpensesFragment extends Fragment implements IncomesAndEx
         public void setChildData(CategoryReport category, List<SubcategoryReport> subcategories){
             subItems.put(category, subcategories);
             notifyDataSetChanged();
-
         }
 
         public List<CategoryReport> getHeaders(){
             return headers;
+        }
+
+        public void setChildSum(double childSum){
+
         }
     }
 }

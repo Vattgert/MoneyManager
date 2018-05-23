@@ -19,6 +19,8 @@ public class MyCurrency{
     private double rateBaseToThis;
     @SerializedName("is_base")
     private int isBase;
+    @SerializedName("group_id")
+    private int groupId;
 
     public MyCurrency(){}
 
@@ -95,5 +97,23 @@ public class MyCurrency{
 
     public void setIsBase(int isBase) {
         this.isBase = isBase;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    @Override
+    public String toString() {
+        return title + "\n".concat(code + "\n")
+                .concat (symbol + "\n")
+                .concat(isBase  + "\n")
+                .concat(rateToBaseCurrency  + "\n")
+                .concat(rateBaseToThis  + "\n")
+                .concat(groupId  + "\n");
     }
 }

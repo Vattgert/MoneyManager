@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
 import com.example.productmanagment.data.source.categories.CategoriesRepository;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
+import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.HashMap;
@@ -16,16 +17,20 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class IncomesAndExpensesPresenter implements IncomesAndExpensesContract.Presenter {
+    int groupId;
     IncomesAndExpensesContract.View view;
     ExpensesRepository repository;
+    RemoteDataRepository remoteDataRepository;
     BaseSchedulerProvider provider;
     CompositeDisposable compositeDisposable;
 
-    public IncomesAndExpensesPresenter(IncomesAndExpensesContract.View view,
+    public IncomesAndExpensesPresenter(int groupId, IncomesAndExpensesContract.View view,
                                        ExpensesRepository repository,
                                        BaseSchedulerProvider provider) {
+        this.groupId = groupId;
         this.view = view;
         this.repository = repository;
+        this.remoteDataRepository = new RemoteDataRepository();
         this.provider = provider;
         compositeDisposable = new CompositeDisposable();
         this.view.setPresenter(this);
@@ -68,12 +73,17 @@ public class IncomesAndExpensesPresenter implements IncomesAndExpensesContract.P
         }
         for (CategoryReport c :  categoryList) {
             Category category = c.getCategory();
-            Disposable disposable = repository.getSubcategoryReport(String.valueOf(category.getId()))
-                    .subscribeOn(provider.io())
-                    .observeOn(provider.ui())
-                    .subscribe(subcategories -> {
-                        view.setSubItemsListData(c, subcategories);
-                    });
+            if(groupId == -1) {
+                Disposable disposable = repository.getSubcategoryReport(String.valueOf(category.getId())).subscribeOn(provider.io()).observeOn(provider.ui()).subscribe(subcategories -> {
+                    view.setSubItemsListData(c, subcategories);
+                });
+            }
+            else{
+                Disposable disposable = remoteDataRepository.getReport(String.valueOf(category.getId()), String.valueOf(this.groupId))
+                        .subscribeOn(provider.io())
+                        .observeOn(provider.ui())
+                        .subscribe(reportResponse -> view.setSubItemsListData(c, reportResponse.reportBalances));
+            }
         }
     }
 }

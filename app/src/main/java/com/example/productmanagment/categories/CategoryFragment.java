@@ -64,6 +64,7 @@ public class CategoryFragment extends Fragment implements CategoriesContract.Vie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Категорії");
         categoriesAdapter = new CategoriesAdapter(new ArrayList<Category>(0), itemListener);
     }
 

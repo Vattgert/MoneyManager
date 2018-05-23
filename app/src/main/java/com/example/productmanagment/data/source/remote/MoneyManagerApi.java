@@ -3,12 +3,14 @@ package com.example.productmanagment.data.source.remote;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
+import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
+import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
 
@@ -108,6 +110,9 @@ public interface MoneyManagerApi {
     @GET("expenses/getExpenseById.php")
     Single<Expense> getExpenseById(@Query("expenseId") String expenseId);
 
+    @GET("expenses/getExpensesByCategory.php")
+    Single<ExpensesResponse> getExpensesByCategory(@Query("category") String category, @Query("groupId") String groupId);
+
     @GET("expenses/getExpensesByGroup.php")
     Single<ExpensesResponse> getExpensesByGroup(@Query("groupId") String groupId);
 
@@ -121,10 +126,30 @@ public interface MoneyManagerApi {
     @GET("diagramdata/expensesByCategoryDiagram.php")
     Single<DiagramResponse> getExpensesByCategoryDiagram(@Query("groupId") String groupId);
 
+    @GET("diagramdata/incomesByCategoryDiagram.php")
+    Single<DiagramResponse> getIncomesByCategoryDiagram(@Query("groupId") String groupId);
+
     @GET("diagramdata/expensesByUserDiagram.php")
     Single<DiagramResponse> getExpensesByUserDiagram(@Query("groupId") String groupId);
 
     /* Валюти */
     @GET("currencies/getCurrencies.php")
     Single<CurrencyResponse> getCurrencies(@Query("groupId") String groupId);
+
+    @GET("currencies/getCurrencyById.php")
+    Single<MyCurrency> getCurrencyById(@Query("id_currency") String currencyId);
+
+    @POST("currencies/addCurrency.php")
+    Single<SuccessResponse> addCurrency(@Body MyCurrency currency);
+
+    @POST("currencies/editCurrency.php")
+    Single<SuccessResponse> editCurrency(@Body MyCurrency currency);
+
+    @FormUrlEncoded
+    @POST("currencies/deleteCurrency.php")
+    Single<SuccessResponse> deleteCurrency(@Field("id_currency") String id_currency);
+
+    /* Звіти */
+    @GET("report/getReport.php")
+    Single<ReportResponse> getReport(@Query("categoryId") String categoryId, @Query("groupId") String groupId);
 }

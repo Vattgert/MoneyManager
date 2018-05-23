@@ -1,6 +1,7 @@
 package com.example.productmanagment.diagrams;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,12 +17,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.anychart.anychart.AnyChart;
 import com.anychart.anychart.AnyChartView;
 import com.anychart.anychart.Chart;
 import com.anychart.anychart.Resource;
 import com.example.productmanagment.R;
+import com.example.productmanagment.categoryexpenses.CategoryExpensesActivity;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
 import java.text.SimpleDateFormat;
@@ -31,29 +34,13 @@ import java.util.Date;
 public class DiagramFragment extends Fragment implements DiagramContract.View{
     Spinner diagramSpinner;
     ArrayAdapter<String> diagramSpinnerAdapter;
-
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM = "param";
-
-
-    // TODO: Rename and change types of parameters
     private DiagramContract.Presenter presenter;
-    private String diagramParameter = "";
     private AnyChartView anyChartView;
 
     public DiagramFragment() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment DiagramFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DiagramFragment newInstance() {
         return new DiagramFragment();
     }
@@ -62,8 +49,8 @@ public class DiagramFragment extends Fragment implements DiagramContract.View{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle("Діаграми");
-        diagramSpinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.diagram_types));
-        diagramSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        diagramSpinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.list_item_spinner, getResources().getStringArray(R.array.diagram_types));
+        diagramSpinnerAdapter.setDropDownViewResource(R.layout.list_item_dropdown_spinner);
     }
 
     @Override
@@ -136,5 +123,18 @@ public class DiagramFragment extends Fragment implements DiagramContract.View{
     @Override
     public void setChart(Chart anyChart) {
         anyChartView.setChart(anyChart);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showCategoryExpenses(int groupId, String category) {
+        Intent intent = new Intent(getContext(), CategoryExpensesActivity.class);
+        intent.putExtra("groupId", groupId);
+        intent.putExtra("category", category);
+        startActivity(intent);
     }
 }

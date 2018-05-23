@@ -2,6 +2,7 @@ package com.example.productmanagment.places;
 
 import com.example.productmanagment.BasePresenter;
 import com.example.productmanagment.BaseView;
+import com.example.productmanagment.data.models.Place;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface PlacesContract {
     }
 
     interface View extends BaseView<Presenter>{
-        void showAddresses(List<String> addresses);
+        void showAddresses(List<Place> addresses);
         void getMap();
     }
 }

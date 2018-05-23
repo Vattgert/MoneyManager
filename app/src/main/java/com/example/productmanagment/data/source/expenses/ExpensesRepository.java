@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Debt;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.MyCurrency;
+import com.example.productmanagment.data.models.Place;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
@@ -15,10 +16,12 @@ import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
 import com.example.productmanagment.data.models.report.SubcategoryReport;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 /**
  * Created by Ivan on 30.01.2018.
@@ -199,12 +202,12 @@ public class ExpensesRepository implements ExpensesDataSource {
     }
 
     @Override
-    public Flowable<List<String>> getExpenseAddresses() {
+    public Flowable<List<Place>> getExpenseAddresses() {
         return localExpenseDataSource.getExpenseAddresses();
     }
 
     @Override
-    public Flowable<List<String>> getExpenseAddressesByDate(String fdate, String sdate) {
+    public Flowable<List<Place>> getExpenseAddressesByDate(String fdate, String sdate) {
         return localExpenseDataSource.getExpenseAddressesByDate(fdate, sdate);
     }
 
@@ -266,6 +269,16 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<SubcategoryReport>> getSubcategoryReportByDate(String categoryId, String fdate, String sdate) {
         return getSubcategoryReportByDate(categoryId, fdate, sdate);
+    }
+
+    @Override
+    public Flowable<BigDecimal> getBalance() {
+        return localExpenseDataSource.getBalance();
+    }
+
+    @Override
+    public Flowable<List<Expense>> getLastFiveRecords() {
+        return localExpenseDataSource.getLastFiveRecords();
     }
 
     @Override
