@@ -66,7 +66,7 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
             User user = new User();
             user.setEmail(email);
             user.setLogin(login);
-            user.setPassword(new String(Hex.encodeHex(DigestUtils.md5(password))));
+            user.setPassword(password);
             presenter.signUp(user);
         }
     }

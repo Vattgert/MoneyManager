@@ -157,6 +157,11 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        view = MainFragment.newInstance();
+        presenter = new MainPresenter((MainContract.View)view,
+                Injection.provideExpensesRepository(getApplicationContext()),
+                Injection.provideSchedulerProvider());
+        fragmentTransaction(view);
     }
 
     @Override
@@ -228,13 +233,13 @@ public class MainActivity extends AppCompatActivity
                         getResources()
                 );
                 break;
-            case R.id.nav_planned_payments:
+            /*case R.id.nav_planned_payments:
                 view = PlannedPaymentFragment.newInstance();
                 presenter = new PlannedPaymentPresenter(
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider(), (PlannedPaymentContract.View)view
                 );
-                break;
+                break;*/
             case R.id.nav_diagrams:
                 view = DiagramFragment.newInstance();
                 presenter = new DiagramPresenter(group.getGroupId(),

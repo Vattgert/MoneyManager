@@ -20,10 +20,6 @@
             android:id="@+id/nav_diagrams"
             android:icon="@drawable/ic_nav_diagram"
             android:title="@string/naw_drawer_diagrams" />
-        <item
-            android:id="@+id/nav_planned_payments"
-            android:icon="@drawable/ic_nav_planned_payment"
-            android:title="@string/naw_drawer_planned_payments" />
     </group>
 
 
