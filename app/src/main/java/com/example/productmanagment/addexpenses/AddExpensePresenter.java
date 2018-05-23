@@ -119,7 +119,6 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
         expense.setUser(userSession.getUserDetails());
         if(groupId == -1) {
             expensesRepository.saveExpense(expense);
-            view.showExpenses();
         }
         else
             remoteDataRepository.addExpense(expense)
