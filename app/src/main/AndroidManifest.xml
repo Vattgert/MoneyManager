@@ -55,8 +55,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".authorization.AuthorizationActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".authorization.AuthorizationActivity" />
         <activity android:name=".userinfo.UserInfoActivity" />
         <activity android:name=".addgroup.AddGroupActivity" />
         <activity android:name=".groupeditanddetail.GroupDetailAndEditActivity" />
@@ -77,7 +77,9 @@
         <activity android:name=".goaldetailandedit.GoalDetailAndEditActivity" />
         <activity android:name=".goalDetail.GoalDetailActivity" />
         <activity android:name=".goalEdit.GoalEditActivity" />
-        <activity android:name=".categoryexpenses.CategoryExpensesActivity"></activity>
+        <activity android:name=".categoryexpenses.CategoryExpensesActivity" />
+        <activity android:name=".addtemplate.AddTemplateActivity" />
+        <activity android:name=".templatedetailandedit.TemplateDetailAndEditActivity"></activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.models.Subcategory;
+import com.example.productmanagment.data.models.Template;
 import com.example.productmanagment.data.models.UserRight;
 import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
@@ -107,4 +108,12 @@ public interface ExpensesDataSource {
     //Головна
     Flowable<BigDecimal> getBalance();
     Flowable<List<Expense>> getLastFiveRecords();
+
+    //Шаблони
+    Flowable<List<Template>> getTemplates();
+    Flowable<Template> getTemplateById(String id);
+    void saveTemplate(@NonNull Template template);
+    void deleteTemplate(@NonNull String templateId);
+    void updateTemplate(@NonNull String expenseId, Template template);
+
 }

@@ -20,6 +20,8 @@ import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
 import com.example.productmanagment.data.models.Subcategory;
+import com.example.productmanagment.data.models.Template;
+import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.models.UserRight;
 import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
@@ -65,6 +67,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
     private Function<Cursor, UserRight> userRightMapperFunction;
     private Function<Cursor, CategoryReport> categoryReportMapperFunction;
     private Function<Cursor, SubcategoryReport> subcategoryReportMapperFunction;
+    private Function<Cursor, Template> templateMapperFunction;
 
 
     private ExpensesLocalDataSource(Context context, BaseSchedulerProvider schedulerProvider) {
@@ -85,6 +88,7 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         userRightMapperFunction = this::getUserRight;
         categoryReportMapperFunction = this::getCategoryReport;
         subcategoryReportMapperFunction = this::getSubcategoryReport;
+        templateMapperFunction = this::getTemplate;
     }
 
     public static ExpensesLocalDataSource getInstance(@NonNull Context context,
@@ -120,6 +124,24 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         return new Expense(itemId, cost, expenseType, note, receiver, date, time, typeOfPayment,
                 place, addition, addressCoordinates, plannedPaymentId, debtId, getCategory(c),
                 getFullAccount(c), null);
+    }
+
+    @NonNull
+    private Template getTemplate(@NonNull Cursor c) {
+        int itemId = c.getInt(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_ID));
+        double cost = c.getDouble(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_COST));
+        String expenseType = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_EXPENSE_TYPE));
+        String note = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_NOTE));
+        String receiver = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_RECEIVER));
+        String date = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_DATE));
+        String time = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_TIME));
+        String typeOfPayment = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_TYPE_OF_PAYMENT));
+        String place = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_PLACE));
+        String addition = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_ADDITION));
+        String addressCoordinates = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_ADDRESS_COORDINATES));
+        String title = c.getString(c.getColumnIndexOrThrow(ExpensePersistenceContract.TemplateEntry.COLUMN_TITLE));
+        return new Template(itemId, cost, expenseType, note, receiver, date, time, typeOfPayment,
+                place, addition, addressCoordinates, getCategory(c), getFullAccount(c), null, title);
     }
 
     private PlannedPayment getPlannedPayment(@NonNull Cursor c){
@@ -239,6 +261,12 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     private ArrayList<String> getExpenseTableList(){
         return new ArrayList<>(Arrays.asList(ExpensePersistenceContract.ExpenseEntry.TABLE_NAME
+                ,CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                ExpensePersistenceContract.AccountEntry.TABLE_NAME));
+    }
+
+    private ArrayList<String> getTemplateTableList(){
+        return new ArrayList<>(Arrays.asList(ExpensePersistenceContract.TemplateEntry.TABLE_NAME
                 ,CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
                 ExpensePersistenceContract.AccountEntry.TABLE_NAME));
     }
@@ -559,7 +587,6 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
 
     @Override
     public Flowable<List<CategoryReport>> getCategoryReportByDate(String fdate, String sdate) {
-
         return null;
     }
 
@@ -604,6 +631,93 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
         return databaseHelper.createQuery(getExpenseTableList(), sql)
                 .mapToList(expenseMapperFunction)
                 .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<Template>> getTemplates() {
+        String sql = String.format("SELECT %s,%s,%s,%s FROM %s INNER JOIN %s ON template_category = %s INNER JOIN %s ON template_account_id = %s INNER JOIN %s ON %s = %s",
+                TextUtils.join(",", getTemplateProjection()),
+                TextUtils.join(",", getCategoryProjection()),
+                TextUtils.join(",", getAccountProjection()),
+                TextUtils.join(",", getCurrencyProjection()),
+                ExpensePersistenceContract.TemplateEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID,
+                ExpensePersistenceContract.AccountEntry.TABLE_NAME,
+                ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID,
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME,
+                TextUtils.join(".", currencyInnerJoin),
+                TextUtils.join(".", currencyToAccount));
+        Log.wtf("sqlite", sql);
+
+        return databaseHelper.createQuery(getTemplateTableList(), sql)
+                .mapToList(templateMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<Template> getTemplateById(String id) {
+        String sql = String.format("SELECT %s,%s,%s,%s FROM %s INNER JOIN %s ON template_category = %s INNER JOIN %s ON template_account_id = %s INNER JOIN %s ON %s = %s WHERE id_template = %s",
+                TextUtils.join(",", getTemplateProjection()),
+                TextUtils.join(",", getCategoryProjection()),
+                TextUtils.join(",", getAccountProjection()),
+                TextUtils.join(",", getCurrencyProjection()),
+                ExpensePersistenceContract.TemplateEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.TABLE_NAME,
+                CategoryPersistenceContract.SubcategoryEntry.COLUMN_ID,
+                ExpensePersistenceContract.AccountEntry.TABLE_NAME,
+                ExpensePersistenceContract.AccountEntry.COLUMN_NAME_ID,
+                ExpensePersistenceContract.CurrencyEntry.TABLE_NAME,
+                TextUtils.join(".", currencyInnerJoin),
+                TextUtils.join(".", currencyToAccount),
+                id);
+        Log.wtf("sqlite", sql);
+
+        return databaseHelper.createQuery(getTemplateTableList(), sql)
+                .mapToOne(templateMapperFunction)
+                .toFlowable(BackpressureStrategy.BUFFER);
+
+    }
+
+    @Override
+    public void saveTemplate(@NonNull Template template) {
+        ContentValues expenseValues = new ContentValues();
+        Log.wtf("PurchaseLog", "expense local data source expense cost " + template.getCost());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_COST, template.getCost());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_CATEGORY, template.getCategory().getId());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NOTE, template.getNote());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_RECEIVER, template.getReceiver());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_TYPE_OF_PAYMENT, template.getTypeOfPayment());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_DATE, template.getDate());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_TIME, template.getTime());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_PLACE, template.getPlace());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_ACCOUNT, template.getAccount().getId());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_EXPENSE_TYPE, template.getExpenseType());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_ADDRESS_COORDINATES, template.getAddressCoordinates());
+        expenseValues.put(ExpensePersistenceContract.TemplateEntry.COLUMN_TITLE, template.getTitle());
+        databaseHelper.insert(ExpensePersistenceContract.TemplateEntry.TABLE_NAME, expenseValues, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    @Override
+    public void deleteTemplate(@NonNull String templateId) {
+        String selection = ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_ID + " LIKE ?";
+        String[] selectionArgs = {templateId};
+        databaseHelper.delete(ExpensePersistenceContract.TemplateEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    @Override
+    public void updateTemplate(@NonNull String expenseId, Template template) {
+        ContentValues values = new ContentValues();
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_COST, template.getCost());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NOTE, template.getNote());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_CATEGORY, template.getCategory().getId());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_RECEIVER, template.getReceiver());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_DATE, template.getDate());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_TIME, template.getTime());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_TYPE_OF_PAYMENT, template.getTypeOfPayment());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_PLACE, template.getPlace());
+        values.put(ExpensePersistenceContract.TemplateEntry.COLUMN_TITLE, template.getTitle());
+        databaseHelper.update(ExpensePersistenceContract.TemplateEntry.TABLE_NAME, values, String.format(ExpensePersistenceContract.ExpenseEntry.COLUMN_NAME_ID + "=%s", expenseId));
     }
 
     @Override
@@ -946,6 +1060,24 @@ public class ExpensesLocalDataSource implements ExpensesDataSource {
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_ADDRESS_COORDINATES,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_PLANNED_PAYMENT,
                 ExpensePersistenceContract.ExpenseEntry.COLUMN_DEBT};
+    }
+
+    private String[] getTemplateProjection(){
+        return new String[]{
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_ID,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_COST,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_CATEGORY,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_EXPENSE_TYPE,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NOTE,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_RECEIVER,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_DATE,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_TIME,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_TYPE_OF_PAYMENT,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_NAME_PLACE,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_ADDITION,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_ACCOUNT,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_ADDRESS_COORDINATES,
+                ExpensePersistenceContract.TemplateEntry.COLUMN_TITLE};
     }
 
     private String[] getCategoryProjection(){

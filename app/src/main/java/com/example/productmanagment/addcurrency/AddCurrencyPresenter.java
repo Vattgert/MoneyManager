@@ -115,9 +115,11 @@ public class AddCurrencyPresenter implements AddCurrencyContract.Presenter {
                     String rate = result.getString("val");
                     if(fcode == "UAH") {
                         view.setRate(rate, "UAH");
+                        Log.wtf("MyLog", "rate = " + rate);
                     }
                     else{
                         view.setReverseRate(rate, fcode);
+                        Log.wtf("MyLog", "reverse rate = " + rate);
                     }
 
                 } catch (JSONException e) {

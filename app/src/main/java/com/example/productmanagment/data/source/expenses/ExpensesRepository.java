@@ -11,6 +11,7 @@ import com.example.productmanagment.data.models.Place;
 import com.example.productmanagment.data.models.PlannedPayment;
 import com.example.productmanagment.data.models.Purchase;
 import com.example.productmanagment.data.models.PurchaseList;
+import com.example.productmanagment.data.models.Template;
 import com.example.productmanagment.data.models.UserRight;
 import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.report.CategoryReport;
@@ -279,6 +280,31 @@ public class ExpensesRepository implements ExpensesDataSource {
     @Override
     public Flowable<List<Expense>> getLastFiveRecords() {
         return localExpenseDataSource.getLastFiveRecords();
+    }
+
+    @Override
+    public Flowable<List<Template>> getTemplates() {
+        return localExpenseDataSource.getTemplates();
+    }
+
+    @Override
+    public Flowable<Template> getTemplateById(String id) {
+        return localExpenseDataSource.getTemplateById(id);
+    }
+
+    @Override
+    public void saveTemplate(@NonNull Template template) {
+        localExpenseDataSource.saveTemplate(template);
+    }
+
+    @Override
+    public void deleteTemplate(@NonNull String templateId) {
+        localExpenseDataSource.deleteTemplate(templateId);
+    }
+
+    @Override
+    public void updateTemplate(@NonNull String expenseId, Template template) {
+        localExpenseDataSource.updateTemplate(expenseId, template);
     }
 
     @Override

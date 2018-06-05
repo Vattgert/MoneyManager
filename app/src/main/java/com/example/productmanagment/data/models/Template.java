@@ -1,55 +1,36 @@
 package com.example.productmanagment.data.models;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-
 import io.reactivex.annotations.Nullable;
 
-/**
- * Created by Ivan on 22.01.2018.
- */
-
-public class Expense {
-    //Expense type 1 = expense, 2 = income
-    @SerializedName("id_expense")
+public class Template{
+    String title;
     private int id;
-    @SerializedName("cost")
-    private double cost;
-    @SerializedName("expense_type")
+    private String cost;
     private String expenseType;
-    @SerializedName("note")
     private String note;
-    @SerializedName("receiver")
     private String receiver;
-    @SerializedName("date")
     private String date;
-    @SerializedName("time")
     private String time;
-    @SerializedName("typeOfPayment")
     private String typeOfPayment;
-    @SerializedName("place")
     private String place;
-    @SerializedName("addition")
-    private String addition;
-    @SerializedName("address_coordinates")
     private String addressCoordinates;
-    private int plannedPaymentId = -1;
-    private int debtId = -1;
-    @SerializedName("category")
     private Category category;
-    @SerializedName("account")
     private Account account;
-    @SerializedName("user")
     private User user;
-
-    public Expense() {
+    public Template() {
     }
 
-    public Expense(int id, double cost, String expenseType, @Nullable String note, @Nullable String receiver, String date,
-                    String time, String typeOfPayment, @Nullable String place, @Nullable String addition,
-                    @Nullable String addressCoordinates, @Nullable int plannedPaymentId, @Nullable int debtId,
-                    Category category, Account account, @Nullable User user) {
+    public Template(int id, double cost, String expenseType, String note, String receiver,
+                    String date, String time, String typeOfPayment, String place, String addition,
+                    String addressCoordinates, Category category,
+                    Account account, User user, String title) {
+        this.title = title;
+    }
+
+    public Template(int id, String cost, String expenseType, String note, String receiver, String date,
+                    String time, String typeOfPayment, String place, String addressCoordinates,
+                    Category category, Account account, User user, String title) {
+        this.title = title;
         this.id = id;
         this.cost = cost;
         this.expenseType = expenseType;
@@ -59,20 +40,16 @@ public class Expense {
         this.time = time;
         this.typeOfPayment = typeOfPayment;
         this.place = place;
-        this.addition = addition;
         this.addressCoordinates = addressCoordinates;
-        this.plannedPaymentId = plannedPaymentId;
-        this.debtId = debtId;
         this.category = category;
         this.account = account;
         this.user = user;
     }
 
-    public Expense(int id, double cost, String expenseType, @Nullable String note, @Nullable String receiver, String date,
-                   String time, String typeOfPayment, @Nullable String place, @Nullable String addition,
-                   @Nullable String addressCoordinates,
-                   Category category, Account account, @Nullable User user) {
-        this.id = id;
+    public Template(String cost, String expenseType, String note, String receiver,
+                    String date, String time, String typeOfPayment,
+                    String place, String addressCoordinates, Category category, Account account, User user, String title) {
+        this.title = title;
         this.cost = cost;
         this.expenseType = expenseType;
         this.note = note;
@@ -81,29 +58,18 @@ public class Expense {
         this.time = time;
         this.typeOfPayment = typeOfPayment;
         this.place = place;
-        this.addition = addition;
         this.addressCoordinates = addressCoordinates;
         this.category = category;
         this.account = account;
         this.user = user;
     }
 
-    public Expense(double cost, String expenseType, String note, String receiver, String date,
-                   String time, String typeOfPayment, String place, String addition,
-                   String addressCoordinates, Category category, Account account, @Nullable  User user) {
-        this.cost = cost;
-        this.expenseType = expenseType;
-        this.note = note;
-        this.receiver = receiver;
-        this.date = date;
-        this.time = time;
-        this.typeOfPayment = typeOfPayment;
-        this.place = place;
-        this.addition = addition;
-        this.addressCoordinates = addressCoordinates;
-        this.category = category;
-        this.account = account;
-        this.user = user;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getId() {
@@ -114,11 +80,11 @@ public class Expense {
         this.id = id;
     }
 
-    public double getCost() {
+    public String getCost() {
         return cost;
     }
 
-    public void setCost(double cost) {
+    public void setCost(String cost) {
         this.cost = cost;
     }
 
@@ -178,36 +144,12 @@ public class Expense {
         this.place = place;
     }
 
-    public String getAddition() {
-        return addition;
-    }
-
-    public void setAddition(String addition) {
-        this.addition = addition;
-    }
-
     public String getAddressCoordinates() {
         return addressCoordinates;
     }
 
     public void setAddressCoordinates(String addressCoordinates) {
         this.addressCoordinates = addressCoordinates;
-    }
-
-    public int getPlannedPaymentId() {
-        return plannedPaymentId;
-    }
-
-    public void setPlannedPaymentId(int plannedPaymentId) {
-        this.plannedPaymentId = plannedPaymentId;
-    }
-
-    public int getDebtId() {
-        return debtId;
-    }
-
-    public void setDebtId(int debtId) {
-        this.debtId = debtId;
     }
 
     public Category getCategory() {

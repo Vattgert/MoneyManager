@@ -108,4 +108,22 @@ public class ExpensePersistenceContract {
         public static final String COLUMN_TITLE = "user_right_title";
         public static final String COLUMN_DESCRIPTION = "user_right_description";
     }
+
+    public class TemplateEntry{
+        public static final String TABLE_NAME = "template";
+        public static final String COLUMN_NAME_ID = "id_template";
+        public static final String COLUMN_NAME_COST = "template_cost";
+        public static final String COLUMN_NAME_EXPENSE_TYPE = "template_expense_type";
+        public static final String COLUMN_NOTE = "template_note";
+        public static final String COLUMN_NAME_CATEGORY = "template_category";
+        public static final String COLUMN_NAME_RECEIVER = "template_receiver";
+        public static final String COLUMN_DATE = "template_date";
+        public static final String COLUMN_TIME = "template_time";
+        public static final String COLUMN_NAME_TYPE_OF_PAYMENT = "template_typeOfPayment";
+        public static final String COLUMN_NAME_PLACE = "template_place";
+        public static final String COLUMN_ADDRESS_COORDINATES = "template_address_coordinates";
+        public static final String COLUMN_ADDITION = "template_addition";
+        public static final String COLUMN_ACCOUNT = "template_account_id";
+        public static final String COLUMN_TITLE = "template_title";
+    }
 }

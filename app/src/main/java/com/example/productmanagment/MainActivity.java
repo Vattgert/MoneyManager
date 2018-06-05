@@ -61,6 +61,9 @@ import com.example.productmanagment.purchaseslist.PurchaseListPresenter;
 import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesContract;
 import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesFragment;
 import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesPresenter;
+import com.example.productmanagment.templates.TemplateContract;
+import com.example.productmanagment.templates.TemplateFragment;
+import com.example.productmanagment.templates.TemplatePresenter;
 import com.example.productmanagment.userinfo.UserInfoActivity;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.github.ivbaranov.mli.MaterialLetterIcon;
@@ -269,6 +272,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_purchase_list:
                 view = PurchaseListFragment.newInstance();
                 presenter = new PurchaseListPresenter((PurchaseListContract.View)view,
+                        Injection.provideExpensesRepository(getApplicationContext()),
+                        Injection.provideSchedulerProvider());
+                break;
+            case R.id.nav_templates:
+                view = TemplateFragment.newInstance();
+                presenter = new TemplatePresenter((TemplateContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;

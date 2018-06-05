@@ -31,8 +31,7 @@ public class PlacesPresenter implements PlacesContract.Presenter {
         Disposable disposable = repository.getExpenseAddresses()
                 .subscribeOn(baseSchedulerProvider.io())
                 .observeOn(baseSchedulerProvider.ui())
-                .subscribe(this::processAddresses,
-                        throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+                .subscribe(this::processAddresses);
         compositeDisposable.add(disposable);
     }
 

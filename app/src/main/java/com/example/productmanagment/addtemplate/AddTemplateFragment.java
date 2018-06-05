@@ -1,16 +1,12 @@
-package com.example.productmanagment.addexpenses;
+package com.example.productmanagment.addtemplate;
 
-import android.app.Activity;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,28 +21,22 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.productmanagment.R;
 import com.example.productmanagment.adapters.SimpleAccountSpinnerAdapter;
+import com.example.productmanagment.addexpenses.AddExpenseActivity;
 import com.example.productmanagment.categories.CategoryActivity;
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
-import com.example.productmanagment.data.models.ExpenseInformation;
-import com.example.productmanagment.data.models.Subcategory;
-import com.example.productmanagment.utils.schedulers.UIUtils;
+import com.example.productmanagment.data.models.Template;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,20 +44,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import belka.us.androidtoggleswitch.widgets.BaseToggleSwitch;
 import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link AddExpenseFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class AddExpenseFragment extends Fragment implements AddExpenseContract.View {
-    private AddExpenseContract.Presenter presenter;
-    private EditText costEditText, noteEditText, categoryEditText, receiverEditText, dateEditText, timeEditText,
-                     placeTextView, additionTextView;
+public class AddTemplateFragment extends Fragment implements AddTemplateContract.View{
+    private AddTemplateContract.Presenter presenter;
+    private EditText titleEditText, costEditText, noteEditText, categoryEditText, receiverEditText, dateEditText, timeEditText,
+            placeTextView, additionTextView;
     private ImageButton choosePlaceButton;
     private Spinner typeOfPaymentSpinner, accountSpinner;
     private ToggleSwitch expenseTypeToggleSwitch;
@@ -75,12 +57,12 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
     private SimpleAccountSpinnerAdapter accountSpinnerAdapter;
 
-    public AddExpenseFragment() {
-        // Required empty public constructor
+    public AddTemplateFragment() {
+
     }
 
-    public static AddExpenseFragment newInstance() {
-        AddExpenseFragment fragment = new AddExpenseFragment();
+    public static AddTemplateFragment newInstance() {
+        AddTemplateFragment fragment = new AddTemplateFragment();
         return fragment;
     }
 
@@ -93,18 +75,11 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        presenter.subscribe();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_expense, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.fragment_add_template, container, false);
 
+        titleEditText = view.findViewById(R.id.templateTitleEditText);
         costEditText = view.findViewById(R.id.costAddEditText);
         costEditText.addTextChangedListener(textWatcher);
         noteEditText = view.findViewById(R.id.noteAddEditText);
@@ -117,7 +92,7 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         accountSpinner = view.findViewById(R.id.addAccountSpinner);
         accountSpinner.setAdapter(accountSpinnerAdapter);
 
-        expenseTypeToggleSwitch = view.findViewById(R.id.expenseTypeToggle);
+        expenseTypeToggleSwitch = view.findViewById(R.id.templateTypeToggle);
 
         choosePlaceButton = view.findViewById(R.id.choosePlaceButton);
 
@@ -150,23 +125,12 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
     }
 
     @Override
-    public void setPresenter(AddExpenseContract.Presenter presenter) {
-        this.presenter = presenter;
-    }
-
-    @Override
     public void setChosenCategory(String title) {
         categoryEditText.setText(title);
     }
 
     @Override
-    public void showExpenses() {
-        getActivity().finish();
-    }
-
-    @Override
     public void showChoosePlacePicker() {
-
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {
@@ -195,9 +159,13 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
     @Override
     public void showMessage(String message) {
-        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+
     }
 
+    @Override
+    public void setPresenter(AddTemplateContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
 
     private DatePickerDialog getDatePickerDialog(){
         Calendar calendar = GregorianCalendar.getInstance();
@@ -229,22 +197,19 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
         }
     };
 
-    View.OnClickListener editTextClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.dateAddEditText:
-                    getDatePickerDialog().show();
-                    break;
-                case R.id.timeAddEditText:
-                    getTimePickerDialog().show();
-                    break;
-                case R.id.categoryAddEditText:
-                    Intent intent = new Intent(getContext(), CategoryActivity.class);
-                    startActivityForResult(intent, CategoryActivity.GET_CATEGORY_REQUEST);
-            }
-
+    View.OnClickListener editTextClick = view -> {
+        switch (view.getId()){
+            case R.id.dateAddEditText:
+                getDatePickerDialog().show();
+                break;
+            case R.id.timeAddEditText:
+                getTimePickerDialog().show();
+                break;
+            case R.id.categoryAddEditText:
+                Intent intent = new Intent(getContext(), CategoryActivity.class);
+                startActivityForResult(intent, CategoryActivity.GET_CATEGORY_REQUEST);
         }
+
     };
 
     View.OnClickListener buttonClickListener = new View.OnClickListener() {
@@ -286,6 +251,7 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.wtf("MyLog", "requestCode = " + requestCode + " resultCode = " + resultCode);
         presenter.result(requestCode, resultCode, data);
     }
 
@@ -306,8 +272,9 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
 
     private void getDataAndSave(){
-        double cost = Double.valueOf(costEditText.getText().toString());
+        String cost = costEditText.getText().toString();
         String note = noteEditText.getText().toString();
+        String title = titleEditText.getText().toString();
         Category category = presenter.getChosenCategory();
         Account account = (Account) accountSpinner.getSelectedItem();
         String expenseType = "";
@@ -331,11 +298,10 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
             date = format.format(new Date());
         }
         String typeOfPayment = typeOfPaymentSpinner.getSelectedItem().toString();
-        String addition = "";
-        Expense expense = new Expense(cost, expenseType, note, receiver, date, time, typeOfPayment,
-                place, addition, addressCoordinates, category, account, null);
+        Template expense = new Template(cost, expenseType, note, receiver, date, time, typeOfPayment,
+                place, addressCoordinates, category, account, null, title);
         expense.setExpenseType(expenseType);
-        if(cost > 0 && category != null && account != null)
-            presenter.saveExpense(expense);
+        if(category != null && account != null)
+            presenter.saveTemplate(expense);
     }
 }

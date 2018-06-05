@@ -122,6 +122,7 @@ public class PlacesFragment extends Fragment implements OnMapReadyCallback, Plac
     @Override
     public void showAddresses(List<Place> addresses) {
         this.addresses = addresses;
+        this.addresses.remove(0);
         updateMap();
     }
 
@@ -132,9 +133,9 @@ public class PlacesFragment extends Fragment implements OnMapReadyCallback, Plac
 
     private void updateMap(){
         mMap.clear();
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        LatLngBounds bounds;
+        Log.wtf("MyLog", "address capacity = " + addresses.size());
         for(Place address : addresses){
+            Log.wtf("MyLog", "start address = " + address.getCoordinates());
             String[] coordinates = address.getCoordinates().split(";");
             Log.wtf("MyLog", coordinates[0] + " " + coordinates[1]);
             LatLng ltlg = new LatLng(Double.valueOf(coordinates[0]), Double.valueOf(coordinates[1]));
