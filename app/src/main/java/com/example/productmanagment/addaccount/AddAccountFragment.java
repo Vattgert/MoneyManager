@@ -143,15 +143,14 @@ public class AddAccountFragment extends Fragment implements AddAccountContract.V
     }
 
     private void getDataAndSave(){
-        //TODO: Сделать еще валюты
-        Account account;
-        String accountName = accountNameEditText.getText().toString();
-        BigDecimal accountStartValue = BigDecimal.valueOf(Double.valueOf(accountStartValueEditText.getText().toString()));
-        MyCurrency currency = null;
-        String color = accountColorEditText.getText().toString();
-        account = new Account(accountName, accountStartValue, currency, color);
-        presenter.createAccount(account);
+        if(!accountNameEditText.getText().toString().equals("")) {
+            Account account;
+            String accountName = accountNameEditText.getText().toString();
+            BigDecimal accountStartValue = BigDecimal.valueOf(Double.valueOf(accountStartValueEditText.getText().toString()));
+            MyCurrency currency = null;
+            String color = accountColorEditText.getText().toString();
+            account = new Account(accountName, accountStartValue, currency, color);
+            presenter.createAccount(account);
+        }
     }
-
-
 }

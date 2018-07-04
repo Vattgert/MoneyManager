@@ -263,24 +263,24 @@ public class MainActivity extends AppCompatActivity
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;
-            case R.id.nav_report:
+            /*case R.id.nav_report:
                 view = IncomesAndExpensesFragment.newInstance();
                 presenter = new IncomesAndExpensesPresenter(group.getGroupId(), (IncomesAndExpensesContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
-                break;
+                break;*/
             case R.id.nav_purchase_list:
                 view = PurchaseListFragment.newInstance();
                 presenter = new PurchaseListPresenter((PurchaseListContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;
-            case R.id.nav_templates:
+            /*case R.id.nav_templates:
                 view = TemplateFragment.newInstance();
                 presenter = new TemplatePresenter((TemplateContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
-                break;
+                break;*/
             default:
                 view = MainFragment.newInstance();
                 break;

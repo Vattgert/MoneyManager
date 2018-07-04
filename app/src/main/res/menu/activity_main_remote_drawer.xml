@@ -14,10 +14,10 @@
             android:id="@+id/nav_diagrams"
             android:icon="@drawable/ic_nav_diagram"
             android:title="@string/naw_drawer_diagrams" />
-        <item
+        <!--<item
             android:id="@+id/nav_report"
             android:icon="@drawable/ic_nav_planned_payment"
-            android:title="Звіти" />
+            android:title="Звіти" />-->
         <item
             android:id="@+id/nav_accounts"
             android:icon="@drawable/ic_nav_account"

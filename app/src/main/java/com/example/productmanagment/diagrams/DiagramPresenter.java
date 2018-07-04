@@ -87,9 +87,9 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                 else
                     loadExpenseByCategoryRemoteData((Cartesian)chart);
                 break;
-            case 3:
-                break;
             case 4:
+                break;
+            case 3:
                 chart = AnyChart.pie();
                 if(groupId != -1)
                     loadExpenseStructureByUserRemoteData((Pie)chart);

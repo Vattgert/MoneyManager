@@ -118,7 +118,8 @@ public class GroupsFragment extends Fragment implements GroupsContract.View{
                 .setPositiveButton(R.string.group_participant_email_ok, (dialog, id) -> {
                     EditText groupTitleEditText = view.findViewById(R.id.groupNewParticipantEmailEditText);
                     String title = groupTitleEditText.getText().toString();
-                    presenter.createNewGroup(title);
+                    if(!title.equals(""))
+                        presenter.createNewGroup(title);
                 })
                 .setNegativeButton(R.string.group_participant_email_reject, (dialog, id) -> {
 

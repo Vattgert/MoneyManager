@@ -134,7 +134,7 @@ public class AddGoalFragment extends Fragment implements AddGoalContract.View {
         String note = goalNoteEditText.getText().toString();
         MyCurrency currency = new MyCurrency();
         currency.setId(1);
-        if(neededAmount > accumulatedAmount){
+        if(neededAmount > accumulatedAmount && neededAmount > 0 && !goalTitleEditText.getText().equals("") && !goalNeededAmountEditText.getText().equals("")){
             Goal goal = new Goal(title, neededAmount, accumulatedAmount, startDate,
                     wantedDate, note, color, icon, status, currency);
             presenter.createGoal(goal);

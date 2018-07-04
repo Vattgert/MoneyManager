@@ -145,8 +145,12 @@ public class GoalEditFragment extends Fragment implements GoalEditContract.View 
 
     private void getDataAndUpdate(){
         String title = goalTitleEditText.getText().toString();
-        double neededAmount = Double.valueOf(goalNeededAmountEditText.getText().toString());
-        double accumulatedAmount = Double.valueOf(goalAccumulatedAmountEditText.getText().toString());
+        double neededAmount = 0.0;
+        if(!goalNeededAmountEditText.getText().toString().equals(""))
+            neededAmount = Double.valueOf(goalNeededAmountEditText.getText().toString());
+        double accumulatedAmount = 0.0;
+        if(!goalAccumulatedAmountEditText.getText().toString().equals(""))
+            accumulatedAmount = Double.valueOf(goalAccumulatedAmountEditText.getText().toString());
         String wantedDate = goalWantedDateEditText.getText().toString();
         String note = goalNoteEditText.getText().toString();
 
@@ -156,7 +160,8 @@ public class GoalEditFragment extends Fragment implements GoalEditContract.View 
         goal.setAccumulatedAmount(accumulatedAmount);
         goal.setWantedDate(wantedDate);
         goal.setNote(note);
-        presenter.updateGoal(goal);
+        if(neededAmount > accumulatedAmount)
+            presenter.updateGoal(goal);
     }
 
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {

@@ -257,7 +257,9 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
     }
 
     private void editExpense(){
-        double cost = Double.valueOf(costEditText.getText().toString());
+        double cost = 0.0;
+        if(!costEditText.getText().toString().equals(""))
+            cost = Double.valueOf(costEditText.getText().toString());
         String note = noteEditText.getText().toString();
         String receiver = receiverEditText.getText().toString();
         String place = ""; /*placeTextView.getText().toString();*/
@@ -267,8 +269,9 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
         String expenseType = expenseTypeToggleSwitch.getCheckedTogglePosition() == 0 ? "Витрата" : "Дохід";
         Account account = accountSpinnerAdapter.getItem(accountSpinner.getSelectedItemPosition());
         Category category = presenter.getChosenCategory();
-        Expense expense = new Expense(cost, expenseType, note,
-                receiver, date, time, typeOfPayment, place, "", "", category, account, presenter.getCurrentUser());
-        presenter.editExpense(expense);
+        if(account != null && category != null) {
+            Expense expense = new Expense(cost, expenseType, note, receiver, date, time, typeOfPayment, place, "", "", category, account, presenter.getCurrentUser());
+            presenter.editExpense(expense);
+        }
     }
 }

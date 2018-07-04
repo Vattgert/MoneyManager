@@ -162,13 +162,15 @@ public class AddCurrencyFragment extends Fragment implements AddCurrencyContract
     }
 
     private void getDataAndSave(){
-        String title = ((Currency)currencySpinner.getSelectedItem()).getDisplayName();
-        String code = currencyCodeEditText.getText().toString();
-        String symbol = currencySymbolEditText.getText().toString();
-        double rateToBaseCurrency = Double.valueOf(currencyRateEditText.getText().toString());
-        double rateBaseToThis = Double.valueOf(currencyReverseRateEditText.getText().toString());
-        int isBase = 0;
-        MyCurrency myCurrency = new MyCurrency(title, code, symbol, rateToBaseCurrency, rateBaseToThis, isBase);
-        presenter.createCurrency(myCurrency);
+        if(!currencyRateEditText.getText().toString().equals("") && !currencyReverseRateEditText.getText().toString().equals("")) {
+            String title = ((Currency) currencySpinner.getSelectedItem()).getDisplayName();
+            String code = currencyCodeEditText.getText().toString();
+            String symbol = currencySymbolEditText.getText().toString();
+            double rateToBaseCurrency = Double.valueOf(currencyRateEditText.getText().toString());
+            double rateBaseToThis = Double.valueOf(currencyReverseRateEditText.getText().toString());
+            int isBase = 0;
+            MyCurrency myCurrency = new MyCurrency(title, code, symbol, rateToBaseCurrency, rateBaseToThis, isBase);
+            presenter.createCurrency(myCurrency);
+        }
     }
 }

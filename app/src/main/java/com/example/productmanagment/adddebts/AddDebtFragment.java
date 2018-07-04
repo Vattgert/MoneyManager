@@ -146,6 +146,8 @@ public class AddDebtFragment extends Fragment implements AddDebtContract.View {
 
     private void getDataAndSave() {
         String sum = debtSumEditText.getText().toString();
+        if(sum.equals(""))
+            sum = "0.0";
         String receiver = debtReceiverEditText.getText().toString();
         int debtType;
         if (debtTypeSpinner.getSelectedItemPosition() == 0)

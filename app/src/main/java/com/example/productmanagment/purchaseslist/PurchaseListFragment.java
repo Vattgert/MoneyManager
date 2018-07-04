@@ -233,7 +233,9 @@ public class PurchaseListFragment extends Fragment implements PurchaseListContra
                         String date = dateFormat.format(current);
                         String time = dateFormat.format(Calendar.getInstance().getTime());
                         String note = purchasesAdapter.getPurchasesRecordNote();
-                        double amount = Double.valueOf(recordEditText.getText().toString());
+                        double amount = 0.0;
+                        if(!recordEditText.getText().toString().equals(""))
+                            amount = Double.valueOf(recordEditText.getText().toString());
                         Account account = (Account) accountSpinner.getSelectedItem();
                         Expense expense = new Expense(amount, "Витрата", note, "", date,
                                 time, "1", "", "",

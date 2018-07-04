@@ -306,7 +306,9 @@ public class AddExpenseFragment extends Fragment implements AddExpenseContract.V
 
 
     private void getDataAndSave(){
-        double cost = Double.valueOf(costEditText.getText().toString());
+        double cost = 0.0;
+        if(!costEditText.getText().toString().equals(""))
+            cost = Double.valueOf(costEditText.getText().toString());
         String note = noteEditText.getText().toString();
         Category category = presenter.getChosenCategory();
         Account account = (Account) accountSpinner.getSelectedItem();
