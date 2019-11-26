@@ -10,6 +10,7 @@ import com.example.productmanagment.data.source.remote.responses.CurrencyRespons
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
+import com.example.productmanagment.data.source.remote.responses.NewAPI;
 import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
@@ -17,20 +18,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
-import java.math.BigDecimal;
-import java.util.Currency;
-import java.util.List;
-
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.http.Part;
 
 public class RemoteDataSource implements RemoteData{
     private MoneyManagerApi moneyManagerApi;
+    private NewAPI newAPI;
+
     private Retrofit retrofit;
+    private Retrofit retrofit2;
 
     public RemoteDataSource() {
         retrofit = new Retrofit.Builder()
@@ -38,8 +36,13 @@ public class RemoteDataSource implements RemoteData{
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
+        retrofit2 = new Retrofit.Builder().baseUrl(NewAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
 
         moneyManagerApi = retrofit.create(MoneyManagerApi.class);
+        newAPI = retrofit2.create(NewAPI.class);
     }
 
 
@@ -49,9 +52,12 @@ public class RemoteDataSource implements RemoteData{
     }
 
     @Override
-    public Single<User> signInUser(String email, String password) {
-        return moneyManagerApi.signInUser(email, password);
+    public Single<User> signInUser(String  email, String password) {
+        //return moneyManagerApi.signInUser(email, password);
+        return newAPI.signInUser(email, password);
     }
+
+    //////////
 
     @Override
     public Single<GroupsResponse> getGroupsByCreator(String groupCreator) {
