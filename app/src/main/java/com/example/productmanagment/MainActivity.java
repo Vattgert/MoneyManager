@@ -2,9 +2,7 @@ package com.example.productmanagment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -15,7 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -24,8 +22,12 @@ import android.widget.TextView;
 import com.example.productmanagment.account.AccountContract;
 import com.example.productmanagment.account.AccountFragment;
 import com.example.productmanagment.account.AccountPresenter;
-import com.example.productmanagment.adapters.SimpleAccountSpinnerAdapter;
+
 import com.example.productmanagment.adapters.SimpleGroupSpinnerAdapter;
+import com.example.productmanagment.aisystem.predictions.SubcategoryPredictionsContract;
+import com.example.productmanagment.aisystem.predictions.SubcategoryPredictionsFragment;
+import com.example.productmanagment.aisystem.predictions.SubcategoryPredictionsPresenter;
+import com.example.productmanagment.aisystem.recommendations.RecommendationsFragment;
 import com.example.productmanagment.currency.CurrencyFragment;
 import com.example.productmanagment.currency.CurrencyPresenter;
 import com.example.productmanagment.data.models.Group;
@@ -52,28 +54,15 @@ import com.example.productmanagment.main.MainPresenter;
 import com.example.productmanagment.places.PlacesContract;
 import com.example.productmanagment.places.PlacesFragment;
 import com.example.productmanagment.places.PlacesPresenter;
-import com.example.productmanagment.plannedpayment.PlannedPaymentContract;
-import com.example.productmanagment.plannedpayment.PlannedPaymentFragment;
-import com.example.productmanagment.plannedpayment.PlannedPaymentPresenter;
+
 import com.example.productmanagment.purchaseslist.PurchaseListContract;
 import com.example.productmanagment.purchaseslist.PurchaseListFragment;
 import com.example.productmanagment.purchaseslist.PurchaseListPresenter;
-import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesContract;
-import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesFragment;
-import com.example.productmanagment.report.incomesandexpenses.IncomesAndExpensesPresenter;
-import com.example.productmanagment.templates.TemplateContract;
-import com.example.productmanagment.templates.TemplateFragment;
-import com.example.productmanagment.templates.TemplatePresenter;
+
 import com.example.productmanagment.userinfo.UserInfoActivity;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 import com.github.ivbaranov.mli.MaterialLetterIcon;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,6 +99,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                Log.wtf("MyTag", String.valueOf(userSession.getUserDetails().getUserId()));
                 getGroups(String.valueOf(userSession.getUserDetails().getUserId()));
             }
 
@@ -236,13 +226,6 @@ public class MainActivity extends AppCompatActivity
                         getResources()
                 );
                 break;
-            /*case R.id.nav_planned_payments:
-                view = PlannedPaymentFragment.newInstance();
-                presenter = new PlannedPaymentPresenter(
-                        Injection.provideExpensesRepository(getApplicationContext()),
-                        Injection.provideSchedulerProvider(), (PlannedPaymentContract.View)view
-                );
-                break;*/
             case R.id.nav_diagrams:
                 view = DiagramFragment.newInstance();
                 presenter = new DiagramPresenter(group.getGroupId(),
@@ -263,24 +246,21 @@ public class MainActivity extends AppCompatActivity
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;
-            /*case R.id.nav_report:
-                view = IncomesAndExpensesFragment.newInstance();
-                presenter = new IncomesAndExpensesPresenter(group.getGroupId(), (IncomesAndExpensesContract.View)view,
-                        Injection.provideExpensesRepository(getApplicationContext()),
-                        Injection.provideSchedulerProvider());
-                break;*/
             case R.id.nav_purchase_list:
                 view = PurchaseListFragment.newInstance();
                 presenter = new PurchaseListPresenter((PurchaseListContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
                         Injection.provideSchedulerProvider());
                 break;
-            /*case R.id.nav_templates:
-                view = TemplateFragment.newInstance();
-                presenter = new TemplatePresenter((TemplateContract.View)view,
-                        Injection.provideExpensesRepository(getApplicationContext()),
+            case R.id.nav_recommendations:
+                break;
+            case R.id.nav_expenses_forecast:
+                view = SubcategoryPredictionsFragment.newInstance();
+                presenter = new SubcategoryPredictionsPresenter(group.getGroupId(),
+                        (SubcategoryPredictionsContract.View)view,
+                        new RemoteDataRepository(),
                         Injection.provideSchedulerProvider());
-                break;*/
+                break;
             default:
                 view = MainFragment.newInstance();
                 break;
@@ -297,10 +277,11 @@ public class MainActivity extends AppCompatActivity
 
     private void getGroups(String userId){
         BaseSchedulerProvider provider = Injection.provideSchedulerProvider();
-        repository.getGroups(userId)
+        repository.getHouseholds(userId)
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .subscribe(groupsResponse -> {
+                    Log.wtf("MyTag", groupsResponse.groupList.toString());
                     List<Group> groups = groupsResponse.groupList;
                     adapter.setData(groups);
                 });

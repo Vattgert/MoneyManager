@@ -5,23 +5,26 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
+import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
+import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
-import com.example.productmanagment.data.source.remote.responses.NewAPI;
 import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
+import com.example.productmanagment.data.source.remote.responses.TimeSeriesForecast;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import io.reactivex.Single;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Part;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public class RemoteDataSource implements RemoteData{
     private MoneyManagerApi moneyManagerApi;
@@ -30,7 +33,14 @@ public class RemoteDataSource implements RemoteData{
     private Retrofit retrofit;
     private Retrofit retrofit2;
 
+    private HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+    private OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+
     public RemoteDataSource() {
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClient.addInterceptor(logging);  // <-- this is the important line!
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(MoneyManagerApi.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -39,6 +49,7 @@ public class RemoteDataSource implements RemoteData{
         retrofit2 = new Retrofit.Builder().baseUrl(NewAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(httpClient.build())
                 .build();
 
         moneyManagerApi = retrofit.create(MoneyManagerApi.class);
@@ -49,12 +60,6 @@ public class RemoteDataSource implements RemoteData{
     @Override
     public Single<SuccessResponse> signUpUser(User user) {
         return moneyManagerApi.signUpUser(user.getEmail(), user.getLogin(), user.getPassword());
-    }
-
-    @Override
-    public Single<User> signInUser(String  email, String password) {
-        //return moneyManagerApi.signInUser(email, password);
-        return newAPI.signInUser(email, password);
     }
 
     //////////
@@ -202,5 +207,25 @@ public class RemoteDataSource implements RemoteData{
     @Override
     public Single<ReportResponse> getReport(String categoryId, String groupId) {
         return moneyManagerApi.getReport(categoryId, groupId);
+    }
+    //New API
+
+    @Override
+    public Single<User> signInUser(String  email, String password) {
+        //return moneyManagerApi.signInUser(email, password);
+        return newAPI.signInUser(email, password);
+    }
+
+
+    public Single<GroupsResponse> getHouseholds(String userId){
+        return newAPI.getHouseholds(userId);
+    }
+
+    public Single<ExpensePredictionResponse> getSubcategoryForecast(String household_id, String subcategoryId, String period) {
+        return newAPI.getSubcategoryForecast(household_id, subcategoryId, period);
+    }
+
+    public Single<SubcategoryResponse> getSubcategories() {
+        return newAPI.getSubcategories();
     }
 }

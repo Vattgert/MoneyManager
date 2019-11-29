@@ -3,12 +3,27 @@ package com.example.productmanagment.aisystem.predictions;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
 import com.example.productmanagment.R;
+import com.example.productmanagment.data.source.remote.remotemodels.ExpensePrediction;
+import com.example.productmanagment.data.source.remote.remotemodels.Subcategory;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,15 +33,13 @@ import com.example.productmanagment.R;
  * Use the {@link SubcategoryPredictionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubcategoryPredictionsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class SubcategoryPredictionsFragment extends Fragment implements SubcategoryPredictionsContract.View {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    SubcategoryPredictionsContract.Presenter presenter;
+    Spinner spinner;
+    CustomAdapter adapter;
+    FloatingActionButton getForecastFab;
+    EditText periodEditText;
 
     private OnFragmentInteractionListener mListener;
 
@@ -34,56 +47,49 @@ public class SubcategoryPredictionsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SubcategoryPredictionsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SubcategoryPredictionsFragment newInstance(String param1, String param2) {
+    public static SubcategoryPredictionsFragment newInstance() {
         SubcategoryPredictionsFragment fragment = new SubcategoryPredictionsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.subscribe();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unsubscribe();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_subcategory_predictions, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_subcategory_predictions, container, false);
+        spinner = view.findViewById(R.id.categoriesSpinner);
+        periodEditText = view.findViewById(R.id.periodEditText);
+        getForecastFab = view.findViewById(R.id.getForecastFab);
+        getForecastFab.setOnClickListener(view1 -> {
+            Subcategory subcategory = null; int period = 0;
+            if(spinner != null && spinner.getSelectedItem() !=null && adapter != null) {
+                subcategory = (Subcategory)spinner.getSelectedItem();
+                period = Integer.valueOf(periodEditText.getText().toString());
+                if(subcategory != null && period != 0){
+                    presenter.getPredictions("", subcategory.getSubcategoryId(), String.valueOf(period));
+                }
+            }
+        });
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        return view;
     }
 
     @Override
@@ -92,18 +98,97 @@ public class SubcategoryPredictionsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void showMessage(String message) {
+
+    }
+
+    @Override
+    public void showPredictionResults(String predictionResults) {
+
+    }
+
+    @Override
+    public void setCategories(List<Subcategory> subcategoryList) {
+        adapter = new CustomAdapter(this.getContext(), subcategoryList);
+        spinner.setAdapter(adapter);
+    }
+
+    @Override
+    public void setPredictionsResults(List<ExpensePrediction> predictionsResults) {
+        setTable(predictionsResults);
+    }
+
+    @Override
+    public void setPresenter(SubcategoryPredictionsContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void setTable(List<ExpensePrediction> predictions){
+        CardView cardView = this.getView().findViewById(R.id.forecastCardView);
+        TableLayout forecast = (TableLayout)this.getView().findViewById(R.id.forecastTable);
+        TableRow header =  new TableRow(this.getContext());
+        TextView h1 =  new TextView(this.getContext());
+        h1.setText("Дата");
+        TextView h2 =  new TextView(this.getContext());
+        h2.setText("Прогноз витрат");
+        forecast.setStretchAllColumns(true);
+        forecast.bringToFront();
+        header.addView(h1);
+        header.addView(h2);
+        forecast.addView(header);
+        for(ExpensePrediction ex : predictions){
+            TableRow tr =  new TableRow(this.getContext());
+            TextView c1 = new TextView(this.getContext());
+            c1.setText(ex.getDate());
+            TextView c2 = new TextView(this.getContext());
+            c2.setText(ex.getExpense());
+            tr.addView(c1);
+            tr.addView(c2);
+            forecast.addView(tr);
+        }
+        cardView.setVisibility(View.VISIBLE);
+    }
+
+
+    public class CustomAdapter extends BaseAdapter {
+        Context context;
+        List<Subcategory> subcategoryArrayList;
+        LayoutInflater inflter;
+
+        public CustomAdapter(Context applicationContext, List<Subcategory> subcategories) {
+            this.context = applicationContext;
+            this.subcategoryArrayList = subcategories;
+            inflter = (LayoutInflater.from(applicationContext));
+        }
+
+        @Override
+        public int getCount() {
+            return subcategoryArrayList.size();
+        }
+
+        @Override
+        public Subcategory getItem(int i) {
+            return subcategoryArrayList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = inflter.inflate(android.R.layout.simple_spinner_item, null);
+            TextView names = view.findViewById(android.R.id.text1);
+            names.setText(subcategoryArrayList.get(i).getSubcategoryTitle());
+            return view;
+        }
     }
 }

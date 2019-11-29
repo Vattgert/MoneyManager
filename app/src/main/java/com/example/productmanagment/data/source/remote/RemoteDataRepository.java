@@ -5,6 +5,8 @@ import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
+import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
+import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
@@ -12,6 +14,7 @@ import com.example.productmanagment.data.source.remote.responses.ExpensesRespons
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
+import com.example.productmanagment.data.source.remote.responses.TimeSeriesForecast;
 import com.example.productmanagment.data.source.remote.responses.UsersResponse;
 
 import java.util.Currency;
@@ -176,8 +179,20 @@ public class RemoteDataRepository implements RemoteData {
         return remoteDataSource.deleteCurrency(currencyId);
     }
 
+    public Single<GroupsResponse> getHouseholds(String userId){
+        return remoteDataSource.getHouseholds(userId);
+    }
+
     @Override
     public Single<ReportResponse> getReport(String categoryId, String groupId) {
         return remoteDataSource.getReport(categoryId, groupId);
+    }
+
+    public Single<ExpensePredictionResponse> getSubcategoryForecast(String household_id, String subcategotyId, String period) {
+        return remoteDataSource.getSubcategoryForecast(household_id, subcategotyId, period);
+    }
+
+    public Single<SubcategoryResponse> getSubcategories() {
+        return remoteDataSource.getSubcategories();
     }
 }

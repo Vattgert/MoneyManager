@@ -26,5 +26,17 @@
             android:id="@+id/nav_currencies"
             android:icon="@drawable/ic_naw_groups"
             android:title="Валюти" />
+        <item
+            android:id="@+id/nav_goals"
+            android:icon="@drawable/ic_nav_goals"
+            android:title="Цілі" />
+        <item
+            android:id="@+id/nav_expenses_forecast"
+            android:icon="@drawable/ic_nav_forecast"
+            android:title="Прогноз витрат" />
+        <item
+            android:id="@+id/nav_recommendations"
+            android:icon="@drawable/ic_nav_recommendation"
+            android:title="Рекомендації" />
     </group>
 </menu>

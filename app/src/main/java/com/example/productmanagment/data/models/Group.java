@@ -5,16 +5,16 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Group {
-    @SerializedName("id_group")
+    @SerializedName("household_id")
     private int groupId;
 
-    @SerializedName("group_title")
+    @SerializedName("household_title")
     private String title;
 
-    @SerializedName("group_member_count")
-    private int membersCount;
+    @SerializedName("household_members_count")
+    private int membersCount = 0;
 
-    @SerializedName("id_group_creator")
+    @SerializedName("creator_id")
     private String groupOwner;
 
     private List<User> groupUsers;
