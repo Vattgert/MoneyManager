@@ -27,7 +27,9 @@ import com.example.productmanagment.adapters.SimpleGroupSpinnerAdapter;
 import com.example.productmanagment.aisystem.predictions.SubcategoryPredictionsContract;
 import com.example.productmanagment.aisystem.predictions.SubcategoryPredictionsFragment;
 import com.example.productmanagment.aisystem.predictions.SubcategoryPredictionsPresenter;
+import com.example.productmanagment.aisystem.recommendations.RecommendationsContract;
 import com.example.productmanagment.aisystem.recommendations.RecommendationsFragment;
+import com.example.productmanagment.aisystem.recommendations.RecommendationsPresenter;
 import com.example.productmanagment.currency.CurrencyFragment;
 import com.example.productmanagment.currency.CurrencyPresenter;
 import com.example.productmanagment.data.models.Group;
@@ -204,9 +206,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_goals:
                 view = GoalsFragment.newInstance();
-                presenter = new GoalsPresenter(
+                presenter = new GoalsPresenter(group.getGroupId(),
                         (GoalsContract.View)view,
                         Injection.provideExpensesRepository(getApplicationContext()),
+                        new RemoteDataRepository(),
                         Injection.provideSchedulerProvider()
                 );
                 break;
@@ -253,6 +256,11 @@ public class MainActivity extends AppCompatActivity
                         Injection.provideSchedulerProvider());
                 break;
             case R.id.nav_recommendations:
+                view = RecommendationsFragment.newInstance();
+                presenter = new RecommendationsPresenter(group.getGroupId(),
+                        (RecommendationsContract.View)view,
+                        new RemoteDataRepository(),
+                        Injection.provideSchedulerProvider());
                 break;
             case R.id.nav_expenses_forecast:
                 view = SubcategoryPredictionsFragment.newInstance();

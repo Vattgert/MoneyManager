@@ -2,6 +2,7 @@ package com.example.productmanagment.data.source.remote;
 
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
@@ -11,6 +12,7 @@ import com.example.productmanagment.data.source.remote.responses.AccountResponse
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
+import com.example.productmanagment.data.source.remote.responses.GoalResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
@@ -194,5 +196,22 @@ public class RemoteDataRepository implements RemoteData {
 
     public Single<SubcategoryResponse> getSubcategories() {
         return remoteDataSource.getSubcategories();
+    }
+
+    public Single<GoalResponse> getGoals(String household_id) {
+        return remoteDataSource.getGoals(household_id);
+    }
+
+    public Single<GoalResponse> createGoal(Goal goal, String householdId) {
+        return remoteDataSource.createGoal(goal.getTitle(),
+                goal.getStartDate(), "0.00", goal.getWantedDate(), String.valueOf(goal.getNeededAmount()),
+                String.valueOf(goal.getCurrency().getId()),
+                householdId);
+    }
+
+    public Single<GoalResponse> updateGoal(Goal goal, String householdId) {
+        return remoteDataSource.updateGoal(goal.getTitle(),
+                goal.getStartDate(), String.valueOf(goal.getGoalStartAmount()), goal.getWantedDate(), String.valueOf(goal.getNeededAmount()),
+                householdId);
     }
 }

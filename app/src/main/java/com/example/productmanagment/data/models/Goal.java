@@ -1,19 +1,40 @@
 package com.example.productmanagment.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Goal {
     /*
     Стани цілі: 1 - активна, 2 - призупинена, 3 - досягнена*/
 
+    @SerializedName("goal_id")
     private int id;
+    @SerializedName("goal_title")
     private String title;
+    @SerializedName("goal_desired_amount")
     private double neededAmount;
+    @SerializedName("goal_current_amount")
     private double accumulatedAmount;
+    @SerializedName("goal_start_date")
     private String startDate;
+    @SerializedName("goal_terms")
     private String wantedDate;
+    @SerializedName("goal_start_amount")
+    private  double goalStartAmount;
+
+    public double getGoalStartAmount() {
+        return goalStartAmount;
+    }
+
+    public void setGoalStartAmount(double goalStartAmount) {
+        this.goalStartAmount = goalStartAmount;
+    }
+
     private String note;
     private String color;
     private String icon;
+    @SerializedName("goal_status")
     private int state;
+    @SerializedName("currency")
     private MyCurrency currency;
 
     public Goal(){

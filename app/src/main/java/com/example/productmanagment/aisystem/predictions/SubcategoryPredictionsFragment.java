@@ -56,6 +56,7 @@ public class SubcategoryPredictionsFragment extends Fragment implements Subcateg
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Прогнозування витрат");
     }
 
     @Override

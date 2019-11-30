@@ -124,6 +124,7 @@ public class AddGoalFragment extends Fragment implements AddGoalContract.View {
     private void getDataAndSave(){
         String title = goalTitleEditText.getText().toString();
         double neededAmount = Double.valueOf(goalNeededAmountEditText.getText().toString());
+        double startAmount = Double.valueOf(goalAccumulatedAmountEditText.getText().toString());
         double accumulatedAmount = Double.valueOf(goalAccumulatedAmountEditText.getText().toString());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
         String startDate = format.format(new Date());

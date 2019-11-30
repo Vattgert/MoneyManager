@@ -11,6 +11,7 @@ import com.example.productmanagment.data.source.remote.responses.AccountResponse
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
+import com.example.productmanagment.data.source.remote.responses.GoalResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.ReportResponse;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
@@ -208,6 +209,8 @@ public class RemoteDataSource implements RemoteData{
     public Single<ReportResponse> getReport(String categoryId, String groupId) {
         return moneyManagerApi.getReport(categoryId, groupId);
     }
+
+
     //New API
 
     @Override
@@ -216,6 +219,19 @@ public class RemoteDataSource implements RemoteData{
         return newAPI.signInUser(email, password);
     }
 
+    public Single<GoalResponse> getGoals(String household_id) {
+        return newAPI.getGoals(household_id);
+    }
+
+    public Single<GoalResponse> createGoal(String goalTitle, String goalStartDate,
+                                           String goalStartAmount, String goalWantetDate, String goalWantedAmount, String currencyId, String householdId) {
+        return newAPI.createGoal(goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount, currencyId, householdId);
+    }
+
+    public Single<GoalResponse> updateGoal(String goalTitle, String goalStartDate,
+                                           String goalStartAmount, String goalWantetDate, String goalWantedAmount, String householdId) {
+        return newAPI.updateGoal(goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount, householdId);
+    }
 
     public Single<GroupsResponse> getHouseholds(String userId){
         return newAPI.getHouseholds(userId);

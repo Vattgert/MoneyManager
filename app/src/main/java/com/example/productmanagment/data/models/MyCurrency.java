@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Currency;
 
 public class MyCurrency{
-    @SerializedName("id_currency")
+    @SerializedName("currency_id")
     private int id;
     @SerializedName("currency_title")
     private String title;
-    @SerializedName("code")
+    @SerializedName("currency_code")
     private String code;
-    @SerializedName("symbol")
+    @SerializedName("currency_symbol")
     private String symbol;
     @SerializedName("rate_to_base_currency")
     private double rateToBaseCurrency;
@@ -19,7 +19,7 @@ public class MyCurrency{
     private double rateBaseToThis;
     @SerializedName("is_base")
     private int isBase;
-    @SerializedName("group_id")
+    @SerializedName("household_id")
     private int groupId;
 
     public MyCurrency(){}

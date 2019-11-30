@@ -18,6 +18,7 @@ public interface GoalsContract {
     interface View extends BaseView<Presenter> {
         void showGoals(List<Goal> goalList);
         void showAddGoal();
+        void showAddGoalRemote(String householdId);
         void showDetailGoal(String goalId);
         void showEditGoal();
     }

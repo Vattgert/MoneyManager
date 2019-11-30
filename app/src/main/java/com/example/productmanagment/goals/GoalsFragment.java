@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -103,8 +104,6 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
         });
     }
 
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -117,12 +116,22 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
 
     @Override
     public void showGoals(List<Goal> goalList) {
+        for(Goal goal : goalList){
+            Log.wtf("MyLog", goal.getTitle());
+        }
         adapter.setData(goalList);
     }
 
     @Override
     public void showAddGoal() {
         Intent intent = new Intent(getContext(), AddGoalActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showAddGoalRemote(String householdId) {
+        Intent intent = new Intent(getContext(), AddGoalActivity.class);
+        intent.putExtra("householdId", householdId);
         startActivity(intent);
     }
 
