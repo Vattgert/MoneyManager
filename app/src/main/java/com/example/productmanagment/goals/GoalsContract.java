@@ -20,6 +20,7 @@ public interface GoalsContract {
         void showAddGoal();
         void showAddGoalRemote(String householdId);
         void showDetailGoal(String goalId);
+        void showDetailGoalRemote(String goalId, String householdId);
         void showEditGoal();
     }
 }

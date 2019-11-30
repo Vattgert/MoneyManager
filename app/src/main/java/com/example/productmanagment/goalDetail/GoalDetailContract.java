@@ -18,6 +18,7 @@ public interface GoalDetailContract {
 
     interface View extends BaseView<Presenter> {
         void showGoalEdit(String goalId);
+        void showGoalRemoteEdit(String goalId, String householdId);
         void setTitle(String title);
         void setWantedDate(String wantedDate);
         void setNeededAmount(double neededAmount);

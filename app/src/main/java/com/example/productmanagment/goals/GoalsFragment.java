@@ -143,6 +143,14 @@ public class GoalsFragment extends Fragment implements GoalsContract.View {
     }
 
     @Override
+    public void showDetailGoalRemote(String goalId, String householdId) {
+        Intent intent = new Intent(getContext(), GoalDetailActivity.class);
+        intent.putExtra("goalId", goalId);
+        intent.putExtra("householdId", householdId);
+        startActivity(intent);
+    }
+
+    @Override
     public void showEditGoal() {
 
     }

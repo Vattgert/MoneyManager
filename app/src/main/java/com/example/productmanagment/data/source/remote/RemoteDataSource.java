@@ -2,6 +2,7 @@ package com.example.productmanagment.data.source.remote;
 
 import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Expense;
+import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
@@ -24,6 +25,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -223,14 +225,22 @@ public class RemoteDataSource implements RemoteData{
         return newAPI.getGoals(household_id);
     }
 
+    public Single<Goal> getGoalById(String goalId) {
+        return newAPI.getGoalById(goalId);
+    }
+
     public Single<GoalResponse> createGoal(String goalTitle, String goalStartDate,
                                            String goalStartAmount, String goalWantetDate, String goalWantedAmount, String currencyId, String householdId) {
         return newAPI.createGoal(goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount, currencyId, householdId);
     }
 
-    public Single<GoalResponse> updateGoal(String goalTitle, String goalStartDate,
-                                           String goalStartAmount, String goalWantetDate, String goalWantedAmount, String householdId) {
-        return newAPI.updateGoal(goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount, householdId);
+    public Single<GoalResponse> updateGoal( String goal_id, String goalTitle, String goalStartDate,
+                                           String goalStartAmount, String goalWantetDate, String goalWantedAmount) {
+        return newAPI.updateGoal(goal_id, goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount);
+    }
+
+    public Single<GoalResponse> deleteGoal(String goalId){
+        return newAPI.deleteGoal(goalId);
     }
 
     public Single<GroupsResponse> getHouseholds(String userId){

@@ -202,6 +202,10 @@ public class RemoteDataRepository implements RemoteData {
         return remoteDataSource.getGoals(household_id);
     }
 
+    public Single<Goal> getGoalById(String goalId) {
+        return remoteDataSource.getGoalById(goalId);
+    }
+
     public Single<GoalResponse> createGoal(Goal goal, String householdId) {
         return remoteDataSource.createGoal(goal.getTitle(),
                 goal.getStartDate(), "0.00", goal.getWantedDate(), String.valueOf(goal.getNeededAmount()),
@@ -209,9 +213,12 @@ public class RemoteDataRepository implements RemoteData {
                 householdId);
     }
 
-    public Single<GoalResponse> updateGoal(Goal goal, String householdId) {
-        return remoteDataSource.updateGoal(goal.getTitle(),
-                goal.getStartDate(), String.valueOf(goal.getGoalStartAmount()), goal.getWantedDate(), String.valueOf(goal.getNeededAmount()),
-                householdId);
+    public Single<GoalResponse> updateGoal(Goal goal, String goalId) {
+        return remoteDataSource.updateGoal(goalId, goal.getTitle(),
+                goal.getStartDate(), String.valueOf(goal.getGoalStartAmount()), goal.getWantedDate(), String.valueOf(goal.getNeededAmount()));
+    }
+
+    public Single<GoalResponse> deleteGoal(String goalId){
+        return remoteDataSource.deleteGoal(goalId);
     }
 }

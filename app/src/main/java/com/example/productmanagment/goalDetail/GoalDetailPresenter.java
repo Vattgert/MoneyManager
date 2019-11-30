@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
+import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 import org.joda.time.LocalDate;
@@ -13,34 +14,50 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class GoalDetailPresenter implements GoalDetailContract.Presenter {
+    int householdId;
     String goalId;
     Goal goal;
     GoalDetailContract.View view;
     ExpensesRepository repository;
     BaseSchedulerProvider provider;
     CompositeDisposable compositeDisposable;
+    RemoteDataRepository remoteDataRepository;
 
-    public GoalDetailPresenter(String goalId, GoalDetailContract.View view, ExpensesRepository repository, BaseSchedulerProvider provider) {
+    public GoalDetailPresenter(int householdId, String goalId, GoalDetailContract.View view, ExpensesRepository repository, RemoteDataRepository remoteDataRepository, BaseSchedulerProvider provider) {
+        this.householdId = householdId;
         this.goalId = goalId;
         this.view = view;
         this.repository = repository;
         this.provider = provider;
         compositeDisposable = new CompositeDisposable();
+        this.remoteDataRepository = remoteDataRepository;
         this.view.setPresenter(this);
     }
 
     @Override
     public void openGoal(String goalId) {
-        Disposable disposable = repository.getGoalById(goalId)
-                .subscribeOn(provider.io())
-                .observeOn(provider.ui())
-                .subscribe(this::processGoal);
-        compositeDisposable.add(disposable);
+        if(householdId == -1) {
+            Disposable disposable = repository.getGoalById(goalId)
+                    .subscribeOn(provider.io())
+                    .observeOn(provider.ui())
+                    .subscribe(this::processGoal);
+            compositeDisposable.add(disposable);
+        }
+        else{
+            Disposable disposable = remoteDataRepository.getGoalById(goalId)
+                    .subscribeOn(provider.io())
+                    .observeOn(provider.ui())
+                    .subscribe(this::processGoal);
+            compositeDisposable.add(disposable);
+        }
     }
 
     @Override
     public void openGoalEdit() {
-        view.showGoalEdit(this.goalId);
+        if(householdId == -1)
+            view.showGoalEdit(this.goalId);
+        else
+            view.showGoalRemoteEdit(goalId, String.valueOf(householdId));
     }
 
     @Override

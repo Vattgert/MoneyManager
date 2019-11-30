@@ -63,7 +63,10 @@ public class GoalsPresenter implements GoalsContract.Presenter {
 
     @Override
     public void openDetailGoal(String goalId) {
-        view.showDetailGoal(goalId);
+        if(householdId == -1)
+            view.showDetailGoal(goalId);
+        else
+            view.showDetailGoalRemote(goalId, String.valueOf(householdId));
     }
 
     @Override

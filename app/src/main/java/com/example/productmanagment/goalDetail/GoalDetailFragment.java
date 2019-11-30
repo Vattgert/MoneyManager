@@ -111,6 +111,15 @@ public class GoalDetailFragment extends Fragment implements GoalDetailContract.V
     }
 
     @Override
+    public void showGoalRemoteEdit(String goalId, String householdId) {
+        Intent intent = new Intent(getContext(), GoalEditActivity.class);
+        intent.putExtra("goalId", goalId);
+        intent.putExtra("householdId", householdId);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    @Override
     public void setTitle(String title) {
         goalTitleTextView.setText(title);
     }
