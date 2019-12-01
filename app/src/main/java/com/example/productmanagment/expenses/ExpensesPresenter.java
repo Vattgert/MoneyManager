@@ -81,10 +81,10 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
 
     @Override
     public void loadRemoteExpenses(String accountId) {
-        Disposable disposable = remoteDataRepository.getExpensesByAccount(accountId)
+        Disposable disposable = remoteDataRepository.getTransactions(accountId, String.valueOf(groupId))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(expensesResponse -> this.processExpenses(expensesResponse.expenses), throwable -> Log.wtf("expenseLog", throwable.getMessage()));
+                .subscribe(expensesResponse -> this.processExpenses(expensesResponse.getExpenses()), throwable -> Log.wtf("expenseLog", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
 
@@ -110,10 +110,10 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
 
     @Override
     public void loadRemoteAccounts(String groupId) {
-        Disposable disposable = remoteDataRepository.getAccountsByGroup(groupId)
+        Disposable disposable = remoteDataRepository.getAccounts(String.valueOf(groupId))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(accountResponse -> this.processAccounts(accountResponse.accounts));
+                .subscribe(accountResponse -> this.processAccounts(accountResponse.getAccounts()));
         compositeDisposable.add(disposable);
     }
 

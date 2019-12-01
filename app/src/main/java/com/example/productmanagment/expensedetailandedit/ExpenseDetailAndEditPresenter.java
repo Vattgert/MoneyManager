@@ -63,11 +63,19 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
             openExpense();
         }
         else{
-            remoteDataRepository.getAccountsByGroup(String.valueOf(groupId))
+            remoteDataRepository.getAccounts(String.valueOf(groupId))
                     .subscribeOn(provider.io())
                     .observeOn(provider.ui())
-                    .subscribe(accountResponse -> view.setAccounts(accountResponse.accounts));
-            remoteDataRepository.getExpenseById(expenseId)
+                    .subscribe(accountResponse -> view.setAccounts(accountResponse.getAccounts()));
+            remoteDataRepository.getSubcategories()
+                    .subscribeOn(provider.io())
+                    .observeOn(provider.ui())
+                    .subscribe();
+            remoteDataRepository.getSubcategories()
+                    .subscribeOn(provider.io())
+                    .observeOn(provider.ui())
+                    .subscribe();
+            remoteDataRepository.getTransactionById(expenseId)
                     .subscribeOn(provider.io())
                     .observeOn(provider.ui())
                     .subscribe(this::showExpense);
@@ -111,10 +119,13 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
         }
         else {
             expense.setId(Integer.valueOf(expenseId));
-            remoteDataRepository.updateExpense(expense)
+            remoteDataRepository.updateTransaction(expense)
                     .subscribeOn(provider.io())
                     .observeOn(provider.ui())
-                    .subscribe(this::processSuccessResponse);
+                    .subscribe(expensesResponse -> {
+                        if(expensesResponse.getSuccess().equals("0"))
+                            view.showMessage("Інформація про транзакцію була змінена");
+                    });
         }
 
     }

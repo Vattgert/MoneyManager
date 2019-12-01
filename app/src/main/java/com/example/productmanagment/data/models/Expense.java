@@ -12,13 +12,13 @@ import io.reactivex.annotations.Nullable;
 
 public class Expense {
     //Expense type 1 = expense, 2 = income
-    @SerializedName("id_expense")
+    @SerializedName("transaction_id")
     private int id;
-    @SerializedName("cost")
+    @SerializedName("money_amount")
     private double cost;
-    @SerializedName("expense_type")
+    @SerializedName("transaction_type")
     private String expenseType;
-    @SerializedName("note")
+    @SerializedName("transaction_title")
     private String note;
     @SerializedName("receiver")
     private String receiver;
@@ -26,9 +26,20 @@ public class Expense {
     private String date;
     @SerializedName("time")
     private String time;
-    @SerializedName("typeOfPayment")
+    @SerializedName("transaction_ts")
+    private String datetime;
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
+
+    @SerializedName("payment_type")
     private String typeOfPayment;
-    @SerializedName("place")
+    @SerializedName("transaction_place")
     private String place;
     @SerializedName("addition")
     private String addition;

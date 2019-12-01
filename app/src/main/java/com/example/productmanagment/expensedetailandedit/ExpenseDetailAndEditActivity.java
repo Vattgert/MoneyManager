@@ -10,14 +10,14 @@ import com.example.productmanagment.R;
 public class ExpenseDetailAndEditActivity extends AppCompatActivity {
     ExpenseDetailAndEditPresenter presenter;
     String expenseId;
-
+    int groupId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_detail_and_edit);
 
         expenseId = String.valueOf(getIntent().getExtras().getInt("expenseId"));
-        int groupId = getIntent().getExtras().getInt("groupId");
+        groupId = getIntent().getExtras().getInt("groupId");
 
         Log.wtf("Tag", expenseId);
         setTitle("Деталі запису");

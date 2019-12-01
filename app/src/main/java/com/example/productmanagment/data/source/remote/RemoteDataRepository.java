@@ -247,4 +247,32 @@ public class RemoteDataRepository implements RemoteData {
     }
 
     /*---------------------------------------------------------------------------------------*/
+
+    public Single<ExpensesResponse> getTransactions(String account_id, String household_id) {
+        return remoteDataSource.getTransactions(account_id, household_id);
+    }
+
+    public Single<Expense> getTransactionById(String transactionId) {
+        return remoteDataSource.getTransactionById(transactionId);
+    }
+
+    public Single<ExpensesResponse> createTransaction(Expense expense) {
+        return remoteDataSource.createTransaction(expense.getNote(), expense.getDatetime(),
+                expense.getReceiver(), String.valueOf(expense.getCost()),
+                expense.getPlace(), expense.getTypeOfPayment(), expense.getExpenseType(),
+                String.valueOf(expense.getAccount().getId()), String.valueOf(expense.getCategory().getId()),
+                String.valueOf(expense.getUser().getUserId()));
+    }
+
+    public Single<ExpensesResponse> updateTransaction(Expense expense) {
+        return remoteDataSource.updateTransaction(expense.getNote(), expense.getDatetime(),
+                expense.getReceiver(), String.valueOf(expense.getCost()),
+                expense.getPlace(), expense.getTypeOfPayment(), expense.getExpenseType(),
+                String.valueOf(expense.getAccount().getId()), String.valueOf(expense.getCategory().getId()),
+                String.valueOf(expense.getUser().getUserId()));
+    }
+
+    public Single<ExpensesResponse> deleteTransaction(String transactionId){
+        return remoteDataSource.deleteTransaction(transactionId);
+    }
 }

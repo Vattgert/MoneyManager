@@ -9,9 +9,9 @@ import java.util.ArrayList;
  */
 
 public class Category {
-    @SerializedName("id_category")
+    @SerializedName("subcategory_id")
     private int id;
-    @SerializedName("category_title")
+    @SerializedName("subcategory_title")
     private String name;
     @SerializedName("icon")
     private String icon;

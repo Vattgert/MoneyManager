@@ -38,7 +38,10 @@ import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.expensedetailandedit.ExpenseDetailAndEditActivity;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -290,18 +293,19 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                 setDataToViewIfNotNull(placeTextView, expense.getPlace());
                 setDataToViewIfNotNull(payTypeTextView, expense.getTypeOfPayment());
                 String cost = "";
-                if(expense.getExpenseType().equals("Витрата")) {
+                if(expense.getExpenseType().equals("1")) {
                     expenseTextView.setTextColor(Color.RED);
                     cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
                     //cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");
                 }
-                else if(expense.getExpenseType().equals("Дохід")) {
+                else if(expense.getExpenseType().equals("2")) {
                     expenseTextView.setTextColor(Color.GREEN);
                     cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
                     //cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");
                 }
                 expenseTextView.setText(cost);
-                dateTextView.setText(expense.getDate());
+
+                dateTextView.setText(expense.getDatetime());
                 if(expense.getUser() != null)
                     setDataToViewIfNotNull(userEmailTextView, expense.getUser().getEmail());
             }

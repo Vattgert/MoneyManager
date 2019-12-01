@@ -275,6 +275,46 @@ public class RemoteDataSource implements RemoteData{
 
     /*---------------------------------------------------------------------------------------*/
 
+    public Single<ExpensesResponse> getTransactions(String account_id, String household_id) {
+        return newAPI.getTransactions(account_id, household_id);
+    }
+
+    public Single<Expense> getTransactionById(String transactionId) {
+        return newAPI.getTransactionById(transactionId);
+    }
+
+    public Single<ExpensesResponse> createTransaction(String transactionTitle,
+                                                        String transactionTs,
+                                                        String receiver,
+                                                        String moneyAmount,
+                                                        String transactionPlace,
+                                                        String paymentType,
+                                                        String transactionType,
+                                                        String accountId,
+                                                        String categoryId,
+                                                        String userId) {
+        return newAPI.createTransaction(transactionTitle, transactionTs, receiver, moneyAmount, transactionPlace, paymentType, transactionType, accountId, categoryId, userId);
+    }
+
+    public Single<ExpensesResponse> updateTransaction(String transactionTitle,
+                                                      String transactionTs,
+                                                      String receiver,
+                                                      String moneyAmount,
+                                                      String transactionPlace,
+                                                      String paymentType,
+                                                      String transactionType,
+                                                      String accountId,
+                                                      String categoryId,
+                                                      String userId) {
+        return newAPI.updateTransaction(transactionTitle, transactionTs, receiver, moneyAmount, transactionPlace, paymentType, transactionType, accountId, categoryId, userId);
+    }
+
+    public Single<ExpensesResponse> deleteTransaction(String transactionId){
+        return newAPI.deleteTransaction(transactionId);
+    }
+
+    /*---------------------------------------------------------------------------------------*/
+
     public Single<ExpensePredictionResponse> getSubcategoryForecast(String household_id, String subcategoryId, String period) {
         return newAPI.getSubcategoryForecast(household_id, subcategoryId, period);
     }

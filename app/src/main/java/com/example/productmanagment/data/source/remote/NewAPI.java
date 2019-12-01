@@ -1,12 +1,14 @@
 package com.example.productmanagment.data.source.remote;
 
 import com.example.productmanagment.data.models.Account;
+import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
 import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GoalResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
 import com.example.productmanagment.data.source.remote.responses.RecommendationsResponse;
@@ -112,4 +114,47 @@ public interface NewAPI {
     @FormUrlEncoded
     @POST("prediction/subcategories_expenses")
     Single<RecommendationsResponse> getRecommendations(@Field("household_id") String household_id);
+
+    //Транзакції
+    @GET("transaction")
+    Single<ExpensesResponse> getTransactions(@Query("account_id") String account_id, @Query("household_id") String household_id);
+
+    @GET("transaction/{transaction_id}")
+    Single<Expense> getTransactionById(@Path("transaction_id") String transaction_id);
+
+    @FormUrlEncoded
+    @POST("transaction")
+    Single<ExpensesResponse> createTransaction(
+            @Field("transaction_title") String transactionTitle,
+            @Field("transaction_ts")String transactionTs,
+            @Field("receiver")String receiver,
+            @Field("money_amount")String moneyAmount,
+            @Field("transaction_place")String transactionPlace,
+            @Field("payment_type") String paymentType,
+            @Field("transaction_type") String transactionType,
+            @Field("account_id") String accountId,
+            @Field("category_id") String categoryId,
+            @Field("userId") String userId);
+
+    @FormUrlEncoded
+    @PUT("transaction")
+    Single<ExpensesResponse> updateTransaction(
+            @Field("transaction_title") String transactionTitle,
+            @Field("transaction_ts")String transactionTs,
+            @Field("receiver")String receiver,
+            @Field("money_amount")String moneyAmount,
+            @Field("transaction_place")String transactionPlace,
+            @Field("payment_type") String paymentType,
+            @Field("transaction_type") String transactionType,
+            @Field("account_id") String accountId,
+            @Field("category_id") String categoryId,
+            @Field("userId") String userId);
+
+    @DELETE("transaction")
+    Single<ExpensesResponse> deleteTransaction(@Query("transaction_id") String transactionId);
+
+    /*----------------------------------------------------------------------------------*/
+
+    @GET("user/household/{household_id}")
+    Single<ExpensesResponse> getHouseholdUsers(@Path("household_id") String household_id);
 }
