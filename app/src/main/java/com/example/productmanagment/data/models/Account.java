@@ -13,15 +13,26 @@ import java.util.Currency;
 
 public class Account {
     //TODO: СДелать из валюты и цвета обьекты
-    @SerializedName("id_account")
+    @SerializedName("account_id")
     private int id;
     @SerializedName("account_title")
     private String name;
+    @SerializedName("initial_amount")
     private BigDecimal value;
     @SerializedName("currency")
     private MyCurrency currency;
     @SerializedName("color")
     private String color;
+    @SerializedName("household_id")
+    private String householdId;
+
+    public String getHouseholdId() {
+        return householdId;
+    }
+
+    public void setHouseholdId(String householdId) {
+        this.householdId = householdId;
+    }
 
     public Account(){
 

@@ -100,8 +100,8 @@ public interface NewAPI {
             @Field("goal_desired_amount")String goalWantedAmount);
 
 
-    @DELETE("goal")
-    Single<AccountResponse> deleteAccount(@Query("account_id") String goalId);
+    @DELETE("account")
+    Single<AccountResponse> deleteAccount(@Query("account_id") String accountId);
 
     /* Модель оптимізації */
     @FormUrlEncoded

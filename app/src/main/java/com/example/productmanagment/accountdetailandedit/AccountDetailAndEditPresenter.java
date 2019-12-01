@@ -50,7 +50,7 @@ public class AccountDetailAndEditPresenter implements AccountDetailAndEditContra
 
     @Override
     public void openRemoteAccount(String accountId) {
-        Disposable disposable = remoteDataRepository.getAccountById(accountId)
+        Disposable disposable = remoteDataRepository.getAccountByIdRemote(accountId)
                 .subscribeOn(baseSchedulerProvider.io())
                 .observeOn(baseSchedulerProvider.ui())
                 .subscribe(this::showAccount, throwable -> {
@@ -86,10 +86,16 @@ public class AccountDetailAndEditPresenter implements AccountDetailAndEditContra
 
     @Override
     public void deleteRemoteAccount() {
-        remoteDataRepository.deleteAccount(this.accountId)
+        Disposable disposable = remoteDataRepository.deleteAccountRemote(this.accountId)
                 .subscribeOn(baseSchedulerProvider.io())
                 .observeOn(baseSchedulerProvider.ui())
-                .subscribe(this::processSuccessResponse);
+                .subscribe(accountResponse -> {
+                    if(accountResponse.getSuccess().equals("0")) {
+                        view.showMessage("Рахунок було успішно видалено");
+                        view.closeView();
+                    }
+                }, throwable -> {Log.wtf("Error", throwable.getMessage());});
+        compositeDisposable.add(disposable);
     }
 
     @Override

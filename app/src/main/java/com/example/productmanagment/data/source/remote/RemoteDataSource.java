@@ -243,9 +243,37 @@ public class RemoteDataSource implements RemoteData{
         return newAPI.deleteGoal(goalId);
     }
 
+    /*---------------------------------------------------------------------------------------*/
+
+    public Single<AccountResponse> getAccounts(String household_id) {
+        return newAPI.getAccounts(household_id);
+    }
+
+    public Single<Account> getAccountByIdRemote(String goalId) {
+        return newAPI.getAccountById(goalId);
+    }
+
+    public Single<AccountResponse> createAccountRemote(String goalTitle, String goalStartDate,
+                                           String goalStartAmount, String goalWantetDate, String goalWantedAmount, String currencyId, String householdId) {
+        return newAPI.createAccount(goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount, currencyId, householdId);
+    }
+
+    public Single<AccountResponse> updateAccountRemote( String goal_id, String goalTitle, String goalStartDate,
+                                            String goalStartAmount, String goalWantetDate, String goalWantedAmount) {
+        return newAPI.updateAccount(goal_id, goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount);
+    }
+
+    public Single<AccountResponse> deleteAccountRemote(String accountId){
+        return newAPI.deleteAccount(accountId);
+    }
+
+    /*---------------------------------------------------------------------------------------*/
+
     public Single<GroupsResponse> getHouseholds(String userId){
         return newAPI.getHouseholds(userId);
     }
+
+    /*---------------------------------------------------------------------------------------*/
 
     public Single<ExpensePredictionResponse> getSubcategoryForecast(String household_id, String subcategoryId, String period) {
         return newAPI.getSubcategoryForecast(household_id, subcategoryId, period);

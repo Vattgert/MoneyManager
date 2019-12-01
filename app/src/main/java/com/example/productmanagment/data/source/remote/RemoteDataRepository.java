@@ -221,4 +221,30 @@ public class RemoteDataRepository implements RemoteData {
     public Single<GoalResponse> deleteGoal(String goalId){
         return remoteDataSource.deleteGoal(goalId);
     }
+
+    /*---------------------------------------------------------------------------------------*/
+
+    public Single<AccountResponse> getAccounts(String household_id) {
+        return remoteDataSource.getAccounts(household_id);
+    }
+
+    public Single<Account> getAccountByIdRemote(String goalId) {
+        return remoteDataSource.getAccountByIdRemote(goalId);
+    }
+
+    public Single<AccountResponse> createAccountRemote(String goalTitle, String goalStartDate,
+                                                       String goalStartAmount, String goalWantetDate, String goalWantedAmount, String currencyId, String householdId) {
+        return remoteDataSource.createAccountRemote(goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount, currencyId, householdId);
+    }
+
+    public Single<AccountResponse> updateAccountRemote( String goal_id, String goalTitle, String goalStartDate,
+                                                        String goalStartAmount, String goalWantetDate, String goalWantedAmount) {
+        return remoteDataSource.updateAccountRemote(goal_id, goalTitle, goalStartDate, goalStartAmount, goalWantetDate, goalWantedAmount);
+    }
+
+    public Single<AccountResponse> deleteAccountRemote(String accountId){
+        return remoteDataSource.deleteAccountRemote(accountId);
+    }
+
+    /*---------------------------------------------------------------------------------------*/
 }

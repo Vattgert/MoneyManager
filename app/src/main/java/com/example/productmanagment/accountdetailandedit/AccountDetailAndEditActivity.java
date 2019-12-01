@@ -9,6 +9,7 @@ import com.example.productmanagment.R;
 
 public class AccountDetailAndEditActivity extends AppCompatActivity {
     AccountDetailAndEditPresenter presenter;
+    int groupId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,7 +17,7 @@ public class AccountDetailAndEditActivity extends AppCompatActivity {
         setTitle("Деталі рахунку");
 
         String accountId = getIntent().getExtras().getString("account_id");
-        int groupId = getIntent().getExtras().getInt("group_id");
+        groupId = getIntent().getExtras().getInt("group_id");
 
         AccountDetailAndEditFragment accountDetailAndEditFragment = AccountDetailAndEditFragment.newInstance();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

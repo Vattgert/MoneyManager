@@ -37,12 +37,24 @@ public class AccountPresenter implements AccountContract.Presenter {
 
     @Override
     public void loadAccount() {
-        Disposable disposable = repository.getAccounts()
-                .subscribeOn(baseSchedulerProvider.io())
-                .observeOn(baseSchedulerProvider.ui())
-                .subscribe(this::processAccounts,
-                        throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
-        compositeDisposable.add(disposable);
+        if (groupId == -1) {
+            Disposable disposable = repository.getAccounts()
+                    .subscribeOn(baseSchedulerProvider.io())
+                    .observeOn(baseSchedulerProvider.ui())
+                    .subscribe(this::processAccounts,
+                            throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+            compositeDisposable.add(disposable);
+        }
+        else{
+            Disposable disposable = remoteDataRepository.getAccounts(String.valueOf(groupId))
+                    .subscribeOn(baseSchedulerProvider.io())
+                    .observeOn(baseSchedulerProvider.ui())
+                    .subscribe(accountResponse -> {
+                                processAccounts(accountResponse.getAccounts());
+                            },
+                            throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
+            compositeDisposable.add(disposable);
+        }
     }
 
     @Override
@@ -67,11 +79,7 @@ public class AccountPresenter implements AccountContract.Presenter {
 
     @Override
     public void subscribe() {
-        if(groupId == -1)
-            loadAccount();
-        else{
-            loadAccountsByGroup(String.valueOf(groupId));
-        }
+        loadAccount();
     }
 
     @Override
@@ -80,10 +88,6 @@ public class AccountPresenter implements AccountContract.Presenter {
     }
 
     private void processAccounts(List<Account> accountList){
-        for(Account a : accountList){
-            Log.wtf("AccountsLog", a.getName());
-            Log.wtf("AccountsLog", a.getColor());
-        }
         view.showAccounts(accountList);
     }
 
