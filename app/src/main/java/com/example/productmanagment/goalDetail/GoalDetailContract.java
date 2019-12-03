@@ -26,6 +26,7 @@ public interface GoalDetailContract {
         void setMinAmountPerMonth(String minAmountPerMonth);
         void setProgressText(String neededAmount, String accumulatedAmount, String currency);
         void setNote(String note);
+        void setPredictedDate(String predictedDate, String startDate);
         void setGoalButtonsGone();
         void showFullAccumulatedAmount();
         void showGoalReached();

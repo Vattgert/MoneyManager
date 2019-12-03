@@ -36,7 +36,7 @@ import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator;
  */
 public class GoalDetailFragment extends Fragment implements GoalDetailContract.View {
     GoalDetailContract.Presenter presenter;
-    TextView goalTitleTextView, goalWantedDateTextView, goalProgressTextView, goalMinPerMonthTextView;
+    TextView goalTitleTextView, goalWantedDateTextView, goalProgressTextView, goalMinPerMonthTextView, goalPredictedDateTextView;
     EditText noteEditText;
     Button addAmountButton, makeReachedButton;
     CircularProgressIndicator progressIndicator;
@@ -79,6 +79,7 @@ public class GoalDetailFragment extends Fragment implements GoalDetailContract.V
         noteEditText = view.findViewById(R.id.goalNoteDetailEditText);
         progressIndicator = view.findViewById(R.id.goalProgressBar);
         addAmountButton = view.findViewById(R.id.addGoalAmountButton);
+        goalPredictedDateTextView = view.findViewById(R.id.predictedGoalAchievement);
         addAmountButton.setOnClickListener(__ -> presenter.openAddAmount());
         makeReachedButton = view.findViewById(R.id.makeGoalReachedButton);
         makeReachedButton.setOnClickListener(__->presenter.makeGoalReached());
@@ -158,6 +159,12 @@ public class GoalDetailFragment extends Fragment implements GoalDetailContract.V
         if(res == null)
             res = "Замітка";
         noteEditText.setText(res);
+    }
+
+    @Override
+    public void setPredictedDate(String predictedDate, String startDate) {
+        String res = getResources().getString(R.string.goal_detail_predicted_date, predictedDate, startDate);
+        goalPredictedDateTextView.setText(res);
     }
 
     @Override

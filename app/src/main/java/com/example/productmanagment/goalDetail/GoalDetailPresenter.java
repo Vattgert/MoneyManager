@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
+import com.example.productmanagment.data.source.users.UserSession;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
 import org.joda.time.LocalDate;
@@ -22,8 +23,12 @@ public class GoalDetailPresenter implements GoalDetailContract.Presenter {
     BaseSchedulerProvider provider;
     CompositeDisposable compositeDisposable;
     RemoteDataRepository remoteDataRepository;
+    UserSession userSession;
 
-    public GoalDetailPresenter(int householdId, String goalId, GoalDetailContract.View view, ExpensesRepository repository, RemoteDataRepository remoteDataRepository, BaseSchedulerProvider provider) {
+    public GoalDetailPresenter(int householdId, String goalId, GoalDetailContract.View view,
+                               ExpensesRepository repository, RemoteDataRepository remoteDataRepository,
+                               BaseSchedulerProvider provider, UserSession userSession) {
+        this.userSession = userSession;
         this.householdId = householdId;
         this.goalId = goalId;
         this.view = view;
@@ -76,11 +81,20 @@ public class GoalDetailPresenter implements GoalDetailContract.Presenter {
 
     @Override
     public void addAmount(double amount) {
-        double result = goal.getAccumulatedAmount() + amount;
-        if(result < goal.getNeededAmount())
-            repository.addAmount(this.goalId, result);
-        else
-            repository.addAmount(this.goalId, goal.getNeededAmount());
+        if(amount <= goal.getNeededAmount() - goal.getAccumulatedAmount()){
+            if(householdId == -1)
+                repository.addAmount(goalId, amount);
+            else
+                remoteDataRepository.addGoalAmount(goalId,
+                        String.valueOf(userSession.getUserDetails().getUserId()), amount)
+                        .subscribeOn(provider.io())
+                        .observeOn(provider.ui())
+                        .subscribe(goalResponse -> {
+                            if(goalResponse.getSuccess().equals("0"))
+                                Log.wtf("MyLog", "goal add success");
+                        });
+            openGoal(goalId);
+        }
     }
 
     @Override
@@ -111,6 +125,7 @@ public class GoalDetailPresenter implements GoalDetailContract.Presenter {
         view.setProgressText(String.valueOf(goal.getNeededAmount()),
                 String.valueOf(goal.getAccumulatedAmount()), goal.getCurrency().getSymbol());
         view.setMinAmountPerMonth(this.getMinAmountPerMonth(goal).concat(goal.getCurrency().getSymbol()));
+        view.setPredictedDate(goal.getPredictedDate(), goal.getStartDate());
         view.setNote(goal.getNote());
         if(goal.getState() == 3)
             view.setGoalButtonsGone();

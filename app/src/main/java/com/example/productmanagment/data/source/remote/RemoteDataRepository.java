@@ -222,6 +222,10 @@ public class RemoteDataRepository implements RemoteData {
         return remoteDataSource.deleteGoal(goalId);
     }
 
+    public Single<GoalResponse> addGoalAmount(String goal_id, String user_id, double amount){
+        return remoteDataSource.addGoalAmount(goal_id, user_id, amount);
+    }
+
     /*---------------------------------------------------------------------------------------*/
 
     public Single<AccountResponse> getAccounts(String household_id) {

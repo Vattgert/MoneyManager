@@ -243,6 +243,10 @@ public class RemoteDataSource implements RemoteData{
         return newAPI.deleteGoal(goalId);
     }
 
+    Single<GoalResponse> addGoalAmount( String goal_id, String user_id, double amount){
+        return newAPI.addGoalAmount(goal_id, user_id, amount);
+    }
+
     /*---------------------------------------------------------------------------------------*/
 
     public Single<AccountResponse> getAccounts(String household_id) {

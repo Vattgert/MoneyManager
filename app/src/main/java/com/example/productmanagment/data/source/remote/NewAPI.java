@@ -73,6 +73,12 @@ public interface NewAPI {
     @DELETE("goal")
     Single<GoalResponse> deleteGoal(@Query("goal_id") String goalId);
 
+    @FormUrlEncoded
+    @POST("goal_investment")
+    Single<GoalResponse> addGoalAmount(@Field("goal_id") String goal_id,
+                                       @Field("user_id") String user_id,
+                                       @Field("goal_investment_amount") double amount);
+
     //Рахунки
     @GET("account")
     Single<AccountResponse> getAccounts(@Query("household_id") String household_id);

@@ -20,6 +20,16 @@ public class Goal {
     private String wantedDate;
     @SerializedName("goal_start_amount")
     private  double goalStartAmount;
+    @SerializedName("goal_predicted_date")
+    private String predictedDate;
+
+    public String getPredictedDate() {
+        return predictedDate;
+    }
+
+    public void setPredictedDate(String predictedDate) {
+        this.predictedDate = predictedDate;
+    }
 
     public double getGoalStartAmount() {
         return goalStartAmount;

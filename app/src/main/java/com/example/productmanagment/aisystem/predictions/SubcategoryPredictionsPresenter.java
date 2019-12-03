@@ -37,12 +37,15 @@ public class SubcategoryPredictionsPresenter implements SubcategoryPredictionsCo
     @Override
     public void getPredictions(String householdId, String subcategoryId, String period) {
         if(groupId != -1)
-            remoteDataRepository.getSubcategoryForecast(String.valueOf(groupId), subcategoryId, period)
-                    .subscribeOn(provider.io())
-                    .observeOn(provider.ui())
-                    .subscribe(expensePredictionResponse -> {
-                        view.setPredictionsResults(expensePredictionResponse.getPredictionList());
-                    });
+            if(Integer.valueOf(period) <= 24)
+                remoteDataRepository.getSubcategoryForecast(String.valueOf(groupId), subcategoryId, period)
+                        .subscribeOn(provider.io())
+                        .observeOn(provider.ui())
+                        .subscribe(expensePredictionResponse -> {
+                            view.setPredictionsResults(expensePredictionResponse.getPredictionList());
+                        });
+            else
+                view.showMessage("Оберіть період в діапазоні від 0 до 24");
     }
 
     @Override
