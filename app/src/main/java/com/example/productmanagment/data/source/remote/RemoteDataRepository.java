@@ -274,7 +274,7 @@ public class RemoteDataRepository implements RemoteData {
                 expense.getReceiver(), String.valueOf(expense.getCost()),
                 expense.getPlace(), expense.getTypeOfPayment(), expense.getExpenseType(),
                 String.valueOf(expense.getAccount().getId()), String.valueOf(expense.getCategory().getId()),
-                String.valueOf(expense.getUser().getUserId()));
+                String.valueOf(expense.getUser().getUserId()), String.valueOf(expense.getId()));
     }
 
     public Single<ExpensesResponse> deleteTransaction(String transactionId){

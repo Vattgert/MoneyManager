@@ -4,6 +4,7 @@ package com.example.productmanagment.expensedetailandedit;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -15,9 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.productmanagment.R;
@@ -28,7 +31,7 @@ import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
-import com.example.productmanagment.data.models.Subcategory;
+import com.example.productmanagment.data.source.remote.remotemodels.Subcategory;
 import com.example.productmanagment.expenses.ExpensesActivity;
 import com.example.productmanagment.utils.schedulers.UIUtils;
 import com.google.android.gms.location.places.Place;
@@ -56,7 +59,8 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
     private Spinner typeOfPaymentSpinner, accountSpinner;
     private ArrayAdapter<CharSequence> spinnerAdapter;
     private ToggleSwitch expenseTypeToggleSwitch;
-
+    private Spinner categorySpinner;
+    private CustomAdapter customAdapter;
     private SimpleAccountSpinnerAdapter accountSpinnerAdapter;
 
     //TODO: Изменить весь модуль
@@ -138,7 +142,7 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
         categoryEditText = view.findViewById(R.id.categoryDetailEditText);
         typeOfPaymentSpinner = view.findViewById(R.id.typeOfPaymentDetailSpinner);
         accountSpinner = view.findViewById(R.id.accountDetailSpinner);
-
+        categorySpinner = view.findViewById(R.id.categoryDetailSpinner);
         spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.typeOfPayment, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -214,7 +218,11 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
 
     @Override
     public void showCategory(String category) {
-        categoryEditText.setText(category);
+        if(customAdapter != null) {
+            int position = customAdapter.getItem(category);
+            categorySpinner.setSelection(position);
+        }
+        //categoryEditText.setText(category);
     }
 
     @Override
@@ -229,7 +237,7 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
 
     @Override
     public void showExpenseType(String expenseType) {
-        if(expenseType.equals("Витрата"))
+        if(expenseType.equals("1"))
             expenseTypeToggleSwitch.setCheckedTogglePosition(0);
         else
             expenseTypeToggleSwitch.setCheckedTogglePosition(1);
@@ -248,6 +256,13 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
     @Override
     public void showMessage(String message) {
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setCategories(List<Subcategory> subcategories) {
+        categoryEditText.setVisibility(View.INVISIBLE);
+        customAdapter = new CustomAdapter(getContext(), subcategories);
+        categorySpinner.setAdapter(customAdapter);
     }
 
 
@@ -272,6 +287,51 @@ public class ExpenseDetailAndEditFragment extends Fragment implements ExpenseDet
         if(account != null && category != null) {
             Expense expense = new Expense(cost, expenseType, note, receiver, date, time, typeOfPayment, place, "", "", category, account, presenter.getCurrentUser());
             presenter.editExpense(expense);
+        }
+    }
+
+    public class CustomAdapter extends BaseAdapter {
+        Context context;
+        List<com.example.productmanagment.data.source.remote.remotemodels.Subcategory> subcategoryArrayList;
+        LayoutInflater inflter;
+
+        public CustomAdapter(Context applicationContext, List<com.example.productmanagment.data.source.remote.remotemodels.Subcategory> subcategories) {
+            this.context = applicationContext;
+            this.subcategoryArrayList = subcategories;
+            inflter = (LayoutInflater.from(applicationContext));
+        }
+
+        @Override
+        public int getCount() {
+            return subcategoryArrayList.size();
+        }
+
+        @Override
+        public Subcategory getItem(int i) {
+            return subcategoryArrayList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        public int getItem(String title){
+            int i = -1;
+            for(Subcategory s : subcategoryArrayList){
+                if(s.getSubcategoryTitle().equals(title)){
+                    i = subcategoryArrayList.indexOf(s);
+                }
+            }
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = inflter.inflate(android.R.layout.simple_spinner_item, null);
+            TextView names = view.findViewById(android.R.id.text1);
+            names.setText(subcategoryArrayList.get(i).getSubcategoryTitle());
+            return view;
         }
     }
 }

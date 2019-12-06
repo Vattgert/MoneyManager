@@ -310,8 +310,9 @@ public class RemoteDataSource implements RemoteData{
                                                       String transactionType,
                                                       String accountId,
                                                       String categoryId,
-                                                      String userId) {
-        return newAPI.updateTransaction(transactionTitle, transactionTs, receiver, moneyAmount, transactionPlace, paymentType, transactionType, accountId, categoryId, userId);
+                                                      String userId,
+                                                      String transactionId) {
+        return newAPI.updateTransaction(transactionTitle, transactionTs, receiver, moneyAmount, transactionPlace, paymentType, transactionType, accountId, categoryId, userId, transactionId);
     }
 
     public Single<ExpensesResponse> deleteTransaction(String transactionId){

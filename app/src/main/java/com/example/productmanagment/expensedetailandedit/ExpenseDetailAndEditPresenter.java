@@ -70,11 +70,9 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
             remoteDataRepository.getSubcategories()
                     .subscribeOn(provider.io())
                     .observeOn(provider.ui())
-                    .subscribe();
-            remoteDataRepository.getSubcategories()
-                    .subscribeOn(provider.io())
-                    .observeOn(provider.ui())
-                    .subscribe();
+                    .subscribe(subcategoryResponse -> {
+                        view.setCategories(subcategoryResponse.subcategoriesList);
+                    });
             remoteDataRepository.getTransactionById(expenseId)
                     .subscribeOn(provider.io())
                     .observeOn(provider.ui())
@@ -132,13 +130,21 @@ public class ExpenseDetailAndEditPresenter implements ExpenseDetailAndEditContra
 
     @Override
     public void deleteTask() {
-        repository.deleteExpense(expenseId);
+        if(groupId == -1)
+            repository.deleteExpense(expenseId);
+        else
+            remoteDataRepository.deleteTransaction(expenseId)
+                    .subscribeOn(provider.io())
+                    .observeOn(provider.ui())
+                    .subscribe(expensesResponse -> {
+                        if(expensesResponse.getSuccess().equals("0"))
+                            view.showMessage("Інформація про транзакцію була видалена");
+                    });
         view.finish();
     }
 
     private void showExpense(@NonNull Expense expense){
         this.currentExpense = expense;
-        Log.wtf("sqlite", "lol");
         view.showCost(expense.getCost());
         view.showNote(expense.getNote());
         view.showReceiver(expense.getReceiver());

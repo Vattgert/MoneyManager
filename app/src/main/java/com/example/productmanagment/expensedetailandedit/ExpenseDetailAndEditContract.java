@@ -9,6 +9,7 @@ import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.User;
+import com.example.productmanagment.data.source.remote.remotemodels.Subcategory;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public interface ExpenseDetailAndEditContract {
         void showAccount(int accountId);
         void showNoExpense();
         void showMessage(String message);
+        void setCategories(List<Subcategory> subcategories);
         void finish();
     }
 

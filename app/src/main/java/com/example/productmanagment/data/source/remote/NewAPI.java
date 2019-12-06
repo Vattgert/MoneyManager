@@ -153,7 +153,8 @@ public interface NewAPI {
             @Field("transaction_type") String transactionType,
             @Field("account_id") String accountId,
             @Field("category_id") String categoryId,
-            @Field("userId") String userId);
+            @Field("user_id") String userId,
+            @Field("transaction_id") String transaction_id);
 
     @DELETE("transaction")
     Single<ExpensesResponse> deleteTransaction(@Query("transaction_id") String transactionId);
