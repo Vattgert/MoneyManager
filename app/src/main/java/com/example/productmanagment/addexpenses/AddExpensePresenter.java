@@ -11,6 +11,7 @@ import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
 import com.example.productmanagment.data.models.Subcategory;
+import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.data.source.remote.responses.SuccessResponse;
@@ -36,7 +37,7 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
     private Category chosenCategory;
     private Place chosenPlace;
     private BaseSchedulerProvider provider;
-    UserSession userSession;
+    private UserSession userSession;
 
     public AddExpensePresenter(int groupId, ExpensesRepository expensesRepository, AddExpenseContract.View view,
                                Context context, BaseSchedulerProvider provider) {
@@ -55,7 +56,15 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
         if (groupId == -1)
             loadAccounts();
         else
-            remoteDataRepository.getAccountsByGroup(String.valueOf(groupId))
+            remoteDataRepository.getSubcategories()
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(subcategoryResponse -> {
+                    if(subcategoryResponse.subcategoriesList.size() > 0){
+                        view.setCategories(subcategoryResponse.subcategoriesList);
+                    }
+                });
+            remoteDataRepository.getAccounts(String.valueOf(groupId))
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .subscribe(accountResponse -> this.processAccounts(accountResponse.accounts));
@@ -121,10 +130,17 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
             expensesRepository.saveExpense(expense);
         }
         else
-            remoteDataRepository.addExpense(expense)
+            remoteDataRepository.createTransaction(expense)
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
-                .subscribe(this::processSuccessResponse);
+                .subscribe(expensesResponse -> {
+                    if(expensesResponse.getSuccess().equals("0")){
+                        view.showMessage("Транзакція створена");
+                    }
+                    else{
+                        view.showMessage("Виникла помилка створення запису");
+                    }
+                });
 
     }
 
@@ -134,6 +150,11 @@ public class AddExpensePresenter implements AddExpenseContract.Presenter {
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .subscribe(this::processAccounts);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return userSession.getUserDetails();
     }
 
     private void processAccounts(List<Account> accountList){

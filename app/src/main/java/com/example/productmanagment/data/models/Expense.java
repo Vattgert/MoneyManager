@@ -53,6 +53,7 @@ public class Expense {
     private Account account;
     @SerializedName("user")
     private User user;
+    private String subcategory;
 
     public Expense() {
     }
@@ -115,6 +116,32 @@ public class Expense {
         this.category = category;
         this.account = account;
         this.user = user;
+    }
+
+    public Expense(double cost, String expenseType, String note, String receiver, String date,
+                   String time, String typeOfPayment, String place, String addition,
+                   String addressCoordinates, String subcategory, Account account, @Nullable  User user) {
+        this.cost = cost;
+        this.expenseType = expenseType;
+        this.note = note;
+        this.receiver = receiver;
+        this.date = date;
+        this.time = time;
+        this.typeOfPayment = typeOfPayment;
+        this.place = place;
+        this.addition = addition;
+        this.addressCoordinates = addressCoordinates;
+        this.subcategory = subcategory;
+        this.account = account;
+        this.user = user;
+    }
+
+    public String getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(String subcategory) {
+        this.subcategory = subcategory;
     }
 
     public int getId() {

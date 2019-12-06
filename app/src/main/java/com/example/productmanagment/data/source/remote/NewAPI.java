@@ -139,7 +139,7 @@ public interface NewAPI {
             @Field("transaction_type") String transactionType,
             @Field("account_id") String accountId,
             @Field("category_id") String categoryId,
-            @Field("userId") String userId);
+            @Field("user_id") String userId);
 
     @FormUrlEncoded
     @PUT("transaction")

@@ -189,7 +189,15 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addAccountTextView" />
-
+            <Spinner
+                android:id="@+id/categorySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addAccountSpinner" />
             <TextView
                 android:id="@+id/typeOfPaymentTextView"
                 android:layout_width="wrap_content"
@@ -202,8 +210,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addAccountSpinner" />
-
+                app:layout_constraintTop_toBottomOf="@+id/categorySpinner" />
             <Spinner
                 android:id="@+id/typeOfPaymentSpinner"
                 android:layout_width="match_parent"

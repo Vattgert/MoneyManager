@@ -8,6 +8,8 @@ import com.example.productmanagment.data.models.Account;
 import com.example.productmanagment.data.models.Category;
 import com.example.productmanagment.data.models.Expense;
 import com.example.productmanagment.data.models.ExpenseInformation;
+import com.example.productmanagment.data.models.User;
+import com.example.productmanagment.data.source.remote.remotemodels.Subcategory;
 import com.google.android.gms.location.places.Place;
 
 import java.util.List;
@@ -26,8 +28,10 @@ public interface AddExpenseContract{
         void result(int requestCode, int resultCode, Intent data);
         void saveExpense(Expense expense);
         void loadAccounts();
+        User getCurrentUser();
     }
     interface View extends BaseView<Presenter>{
+        void setCategories(List<Subcategory> subcategories);
         void setChosenCategory(String title);
         void showExpenses();
         void showChoosePlacePicker();
