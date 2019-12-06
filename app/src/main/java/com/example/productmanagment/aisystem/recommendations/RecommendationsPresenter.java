@@ -1,5 +1,7 @@
 package com.example.productmanagment.aisystem.recommendations;
 
+import android.util.Log;
+
 import com.example.productmanagment.aisystem.predictions.SubcategoryPredictionsContract;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
 import com.example.productmanagment.data.source.remote.remotemodels.Recommendation;
@@ -30,22 +32,19 @@ public class RecommendationsPresenter implements RecommendationsContract.Present
 
     @Override
     public void loadCurrentStateRecommendations() {
-
-    }
-
-    public List<Recommendation> getRecommendations(){
-        List<Recommendation> recommendations = new ArrayList<>();
-        recommendations.add(new Recommendation( "Домогосподарство може заощадити кошти зменшивши витрати на алкоголь та тютюн."));
-        recommendations.add(new Recommendation(  "Витрачаючи гроші на азартні ігри домогосподарство ризикує потрапити у борги."));
-        recommendations.add(new Recommendation( "Домогосподарство може заощадити кошти, зменшивши витрати по категоріям з низьким пріоритетом."));
-        recommendations.add(new Recommendation( "Домогосподарству рекомендується зробити погашення боргу по кредиту пріоритетною метою."));
-        return recommendations;
+        remoteDataRepository.getRecommendations(String.valueOf(householdId))
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(recommendationsResponse -> {
+                    if(recommendationsResponse.getRecommendationList() != null){
+                        view.setRecommendations(recommendationsResponse.getRecommendationList());
+                    }
+                }, throwable -> Log.wtf("ErrorMsg", throwable.getMessage()));
     }
 
     @Override
     public void subscribe() {
-        List<Recommendation> recommendations = getRecommendations();
-        view.setRecommendations(recommendations);
+
     }
 
     @Override

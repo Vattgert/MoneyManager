@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
+import com.example.productmanagment.data.source.remote.remotemodels.RecommendationsResponse;
 import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
@@ -325,5 +326,12 @@ public class RemoteDataSource implements RemoteData{
 
     public Single<SubcategoryResponse> getSubcategories() {
         return newAPI.getSubcategories();
+    }
+
+    /*------------------------------------------------------------------------------*/
+
+
+    Single<RecommendationsResponse> getRecommendations(String household_id){
+        return newAPI.getRecommendations(household_id);
     }
 }

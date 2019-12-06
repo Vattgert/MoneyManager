@@ -6,12 +6,12 @@ import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
+import com.example.productmanagment.data.source.remote.remotemodels.RecommendationsResponse;
 import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GoalResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
-import com.example.productmanagment.data.source.remote.responses.RecommendationsResponse;
 import com.example.productmanagment.data.source.remote.responses.TimeSeriesForecast;
 
 import io.reactivex.Single;
@@ -117,9 +117,8 @@ public interface NewAPI {
     Single<ExpensePredictionResponse> getSubcategoryForecast(@Field("household_id") String household_id, @Field("subcategory_id") String subcategory_id,
                                                              @Field("period") String period);
 
-    @FormUrlEncoded
-    @POST("prediction/subcategories_expenses")
-    Single<RecommendationsResponse> getRecommendations(@Field("household_id") String household_id);
+    @GET("recommendations/current_state/{household_id}")
+    Single<RecommendationsResponse> getRecommendations(@Path("household_id") String household_id);
 
     //Транзакції
     @GET("transaction")

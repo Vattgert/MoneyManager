@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
+import com.example.productmanagment.data.source.remote.remotemodels.RecommendationsResponse;
 import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
 import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
@@ -278,5 +279,9 @@ public class RemoteDataRepository implements RemoteData {
 
     public Single<ExpensesResponse> deleteTransaction(String transactionId){
         return remoteDataSource.deleteTransaction(transactionId);
+    }
+
+    public Single<RecommendationsResponse> getRecommendations(String household_id){
+        return remoteDataSource.getRecommendations(household_id);
     }
 }

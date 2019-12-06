@@ -298,7 +298,8 @@ public class ExpensesFragment extends Fragment implements ExpensesContract.View 
                     cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
                     //cost = resources.getString(R.string.expense_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");
                 }
-                else if(expense.getExpenseType().equals("2")) {
+                else{
+                    Log.wtf("MyLog", expense.getNote());
                     expenseTextView.setTextColor(Color.GREEN);
                     cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), expense.getAccount().getCurrency().getSymbol());
                     //cost = resources.getString(R.string.income_amount, new DecimalFormat("#0.00").format(expense.getCost()), "");

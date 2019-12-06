@@ -16,7 +16,7 @@ public class Expense {
     private int id;
     @SerializedName("money_amount")
     private double cost;
-    @SerializedName("transaction_type")
+    @SerializedName("payment_type")
     private String expenseType;
     @SerializedName("transaction_title")
     private String note;
@@ -37,7 +37,7 @@ public class Expense {
         this.datetime = datetime;
     }
 
-    @SerializedName("payment_type")
+    @SerializedName("transaction_type")
     private String typeOfPayment;
     @SerializedName("transaction_place")
     private String place;
