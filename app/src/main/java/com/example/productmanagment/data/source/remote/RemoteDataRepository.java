@@ -7,6 +7,7 @@ import com.example.productmanagment.data.models.Group;
 import com.example.productmanagment.data.models.MyCurrency;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
+import com.example.productmanagment.data.source.remote.remotemodels.ExpenseStructureRemote;
 import com.example.productmanagment.data.source.remote.remotemodels.RecommendationsResponse;
 import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
@@ -283,5 +284,21 @@ public class RemoteDataRepository implements RemoteData {
 
     public Single<RecommendationsResponse> getRecommendations(String household_id){
         return remoteDataSource.getRecommendations(household_id);
+    }
+
+    public Single<ExpenseStructureRemote> getExpensesStructure(String householdId){
+        return remoteDataSource.getExpensesStructure(householdId);
+    }
+
+    public Single<ExpenseStructureRemote> getIncomesStructure(String householdId){
+        return remoteDataSource.getIncomesStructure(householdId);
+    }
+
+    public Single<ExpenseStructureRemote> getUserExpenses(String householdId){
+        return remoteDataSource.getUserExpenses(householdId);
+    }
+
+    public Single<ExpenseStructureRemote> getUserIncomes(String householdId){
+        return remoteDataSource.getUserIncomes(householdId);
     }
 }

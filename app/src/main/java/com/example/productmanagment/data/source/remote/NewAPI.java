@@ -6,6 +6,7 @@ import com.example.productmanagment.data.models.Goal;
 import com.example.productmanagment.data.models.Subcategory;
 import com.example.productmanagment.data.models.User;
 import com.example.productmanagment.data.source.remote.remotemodels.ExpensePredictionResponse;
+import com.example.productmanagment.data.source.remote.remotemodels.ExpenseStructureRemote;
 import com.example.productmanagment.data.source.remote.remotemodels.RecommendationsResponse;
 import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
@@ -160,6 +161,18 @@ public interface NewAPI {
     Single<ExpensesResponse> deleteTransaction(@Query("transaction_id") String transactionId);
 
     /*----------------------------------------------------------------------------------*/
+
+    @GET("expense_chart")
+    Single<ExpenseStructureRemote> getExpensesStructure(@Query("household_id") String householdId);
+
+    @GET("income_chart")
+    Single<ExpenseStructureRemote> getIncomesStructure(@Query("household_id") String householdId);
+
+    @GET("user_expenses")
+    Single<ExpenseStructureRemote> getUserExpenses(@Query("household_id") String householdId);
+
+    @GET("user_incomes")
+    Single<ExpenseStructureRemote> getUserIncomes(@Query("household_id") String householdId);
 
     /*----------------------------------------------------------------------------------*/
 

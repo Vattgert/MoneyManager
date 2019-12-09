@@ -19,6 +19,7 @@ import com.example.productmanagment.data.models.diagram.ExpensesByCategory;
 import com.example.productmanagment.data.models.diagram.ExpensesByUser;
 import com.example.productmanagment.data.source.expenses.ExpensesRepository;
 import com.example.productmanagment.data.source.remote.RemoteDataRepository;
+import com.example.productmanagment.data.source.remote.remotemodels.ExpenseStructureRemote;
 import com.example.productmanagment.data.source.remote.responses.DiagramResponse;
 import com.example.productmanagment.utils.schedulers.BaseSchedulerProvider;
 
@@ -84,15 +85,18 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                 chart = AnyChart.vertical();
                 if(groupId == -1)
                     loadExpenseByCategoryData((Cartesian)chart);
-                else
-                    loadExpenseByCategoryRemoteData((Cartesian)chart);
-                break;
-            case 4:
+               // else
+                    //loadExpenseByCategoryRemoteData((Cartesian)chart);
                 break;
             case 3:
                 chart = AnyChart.pie();
                 if(groupId != -1)
                     loadExpenseStructureByUserRemoteData((Pie)chart);
+                break;
+            case 4:
+                chart = AnyChart.pie();
+                if(groupId != -1)
+                    loadUserIncomesStructure((Pie)chart);
                 break;
             default:
                 break;
@@ -127,17 +131,34 @@ public class DiagramPresenter implements DiagramContract.Presenter {
                     loadExpenseByCategoryRemoteData((Cartesian)chart);
                 break;
             case 3:
+                chart = AnyChart.pie();
+                if(groupId != -1)
+                    loadExpenseStructureByUserRemoteData((Pie)chart);
                 break;
             case 4:
                 chart = AnyChart.pie();
                 if(groupId != -1)
-                    loadExpenseStructureByUserRemoteData((Pie)chart);
+                    loadUserIncomesStructure((Pie)chart);
                 break;
             default:
                 break;
         }
         if(chart != null)
             view.setChart(chart);
+    }
+
+    public void loadUserIncomesStructure(Pie chart) {
+        Disposable disposable = remoteDataRepository.getUserIncomes(String.valueOf(groupId))
+                .subscribeOn(provider.io())
+                .observeOn(provider.ui())
+                .subscribe(diagramResponse -> {
+                            chart.setData(processExpenseUserDataRemote(diagramResponse.getIncomesByUser()));
+                            chart.getLegend()
+                                    .setPosition("center-bottom")
+                                    .setItemsLayout(LegendLayout.HORIZONTAL)
+                                    .setAlign(EnumsAlign.CENTER);},
+                        throwable -> Log.wtf("myLog", throwable.getMessage()));
+        compositeDisposable.add(disposable);
     }
 
     public void loadExpenseStructureData(Pie chart, String type) {
@@ -220,25 +241,25 @@ public class DiagramPresenter implements DiagramContract.Presenter {
     }
 
     public void loadExpenseStructureRemoteData(Pie chart) {
-        Disposable disposable = remoteDataRepository.getExpensesByCategoryDiagram(String.valueOf(groupId))
+        Disposable disposable = remoteDataRepository.getExpensesStructure(String.valueOf(groupId))
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .subscribe(diagramResponse -> {
-                            chart.setData(processResponse(diagramResponse));
+                            chart.setData(processExpenseStructureDataRemote(diagramResponse.getExpensesStructure()));
                             chart.getLegend()
                                     .setPosition("center-bottom")
                                     .setItemsLayout(LegendLayout.HORIZONTAL)
-                                    .setAlign(EnumsAlign.CENTER);},
-                        throwable -> Log.wtf("myLog", throwable.getMessage()));
+                                    .setAlign(EnumsAlign.CENTER);}/*,
+                        throwable -> Log.wtf("myLog", throwable.getMessage())*/);
         compositeDisposable.add(disposable);
     }
 
     public void loadIncomesStructureRemoteData(Pie chart) {
-        Disposable disposable = remoteDataRepository.getIncomesByCategoryDiagram(String.valueOf(groupId))
+        Disposable disposable = remoteDataRepository.getIncomesStructure(String.valueOf(groupId))
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .subscribe(diagramResponse -> {
-                            chart.setData(processResponseIncomes(diagramResponse));
+                            chart.setData(processExpenseStructureDataRemote(diagramResponse.getIncomesStructure()));
                             chart.getLegend()
                                     .setPosition("center-bottom")
                                     .setItemsLayout(LegendLayout.HORIZONTAL)
@@ -248,11 +269,11 @@ public class DiagramPresenter implements DiagramContract.Presenter {
     }
 
     public void loadExpenseStructureByUserRemoteData(Pie chart) {
-        Disposable disposable = remoteDataRepository.getExpensesByUserDiagram(String.valueOf(groupId))
+        Disposable disposable = remoteDataRepository.getUserExpenses(String.valueOf(groupId))
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .subscribe(diagramResponse -> {
-                            chart.setData(processUserResponse(diagramResponse));
+                            chart.setData(processExpenseUserDataRemote(diagramResponse.getExpensesByUsers()));
                             chart.getLegend()
                                     .setPosition("center-bottom")
                                     .setItemsLayout(LegendLayout.HORIZONTAL)
@@ -265,6 +286,22 @@ public class DiagramPresenter implements DiagramContract.Presenter {
         List<DataEntry> data = new ArrayList<>();
         for(ExpensesByCategory key : list){
             data.add(new ValueDataEntry(key.getCategory().getName(), key.getBalance()));
+        }
+        return data;
+    }
+
+    private List<DataEntry> processExpenseStructureDataRemote(List<ExpenseStructureRemote.ExpenseStructure> list){
+        List<DataEntry> data = new ArrayList<>();
+        for(ExpenseStructureRemote.ExpenseStructure key : list){
+            data.add(new ValueDataEntry(key.getCategory(), key.getBalance()));
+        }
+        return data;
+    }
+
+    private List<DataEntry> processExpenseUserDataRemote(List<ExpenseStructureRemote.ExpenseUser> list){
+        List<DataEntry> data = new ArrayList<>();
+        for(ExpenseStructureRemote.ExpenseUser key : list){
+            data.add(new ValueDataEntry(key.getUser(), key.getBalance()));
         }
         return data;
     }
