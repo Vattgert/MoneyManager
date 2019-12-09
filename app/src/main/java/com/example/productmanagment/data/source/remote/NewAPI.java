@@ -161,6 +161,8 @@ public interface NewAPI {
 
     /*----------------------------------------------------------------------------------*/
 
+    /*----------------------------------------------------------------------------------*/
+
     @GET("user/household/{household_id}")
     Single<ExpensesResponse> getHouseholdUsers(@Path("household_id") String household_id);
 }
