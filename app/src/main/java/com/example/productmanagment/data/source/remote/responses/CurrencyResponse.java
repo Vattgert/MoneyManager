@@ -9,4 +9,15 @@ import java.util.List;
 public class CurrencyResponse {
     @SerializedName("currencies")
     public List<MyCurrency> currencyList;
+
+    @SerializedName("success")
+    public String success;
+
+    public List<MyCurrency> getCurrencyList() {
+        return currencyList;
+    }
+
+    public String getSuccess() {
+        return success;
+    }
 }

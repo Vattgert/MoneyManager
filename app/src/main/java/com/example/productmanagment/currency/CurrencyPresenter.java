@@ -39,10 +39,10 @@ public class CurrencyPresenter implements CurrencyContract.Presenter{
 
     @Override
     public void loadRemoteCurrencies(int groupId) {
-        Disposable disposable = remoteDataRepository.getCurrencies(String.valueOf(groupId))
+        Disposable disposable = remoteDataRepository.getCurrenciesRemote(String.valueOf(groupId))
                 .subscribeOn(provider.io())
                 .observeOn(provider.ui())
-                .subscribe(currencyResponse -> view.showCurrencies(currencyResponse.currencyList));
+                .subscribe(currencyResponse -> view.showCurrencies(currencyResponse.getCurrencyList()), throwable -> {Log.wtf("MyLog", throwable.getCause());});
         compositeDisposable.add(disposable);
     }
 

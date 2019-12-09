@@ -10,6 +10,7 @@ import com.example.productmanagment.data.source.remote.remotemodels.ExpenseStruc
 import com.example.productmanagment.data.source.remote.remotemodels.RecommendationsResponse;
 import com.example.productmanagment.data.source.remote.remotemodels.SubcategoryResponse;
 import com.example.productmanagment.data.source.remote.responses.AccountResponse;
+import com.example.productmanagment.data.source.remote.responses.CurrencyResponse;
 import com.example.productmanagment.data.source.remote.responses.ExpensesResponse;
 import com.example.productmanagment.data.source.remote.responses.GoalResponse;
 import com.example.productmanagment.data.source.remote.responses.GroupsResponse;
@@ -174,6 +175,9 @@ public interface NewAPI {
     @GET("user_incomes")
     Single<ExpenseStructureRemote> getUserIncomes(@Query("household_id") String householdId);
 
+    /*----------------------------------------------------------------------------------*/
+    @GET("currency")
+    Single<CurrencyResponse> getCurrencies(@Query("household_id") String householdId);
     /*----------------------------------------------------------------------------------*/
 
     @GET("user/household/{household_id}")

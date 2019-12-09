@@ -301,4 +301,8 @@ public class RemoteDataRepository implements RemoteData {
     public Single<ExpenseStructureRemote> getUserIncomes(String householdId){
         return remoteDataSource.getUserIncomes(householdId);
     }
+
+    public Single<CurrencyResponse> getCurrenciesRemote(String householdId){
+        return remoteDataSource.getCurrenciesRemote(householdId);
+    }
 }

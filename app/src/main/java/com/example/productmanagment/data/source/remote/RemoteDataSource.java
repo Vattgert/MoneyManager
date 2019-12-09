@@ -352,4 +352,8 @@ public class RemoteDataSource implements RemoteData{
     public Single<ExpenseStructureRemote> getUserIncomes(String householdId){
         return newAPI.getUserIncomes(householdId);
     }
+
+    Single<CurrencyResponse> getCurrenciesRemote(String householdId){
+        return newAPI.getCurrencies(householdId);
+    }
 }
